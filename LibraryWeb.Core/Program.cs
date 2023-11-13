@@ -2,6 +2,7 @@ namespace LibraryWeb.Core
 {
     class Program
     {
+        public static WebApplication app { get; private set; }
         static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions { WebRootPath = "wwwroot" });
@@ -12,7 +13,7 @@ namespace LibraryWeb.Core
 
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            app = builder.Build();
 
             app.UseStaticFiles();
 
