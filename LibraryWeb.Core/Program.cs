@@ -1,11 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace LibraryWeb.Core
 {
     class Program
     {
-        public static WebApplication app { get; private set; }
         static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(new WebApplicationOptions { WebRootPath = "wwwroot" });
+            var builder = WebApplication.CreateBuilder();
 
             builder.Services.AddRazorPages();
 
@@ -13,9 +14,11 @@ namespace LibraryWeb.Core
 
             builder.Services.AddSwaggerGen();
 
-            app = builder.Build();
+            builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-            app.UseStaticFiles();
+            var app = builder.Build();
+
+            
 
             if (app.Environment.IsDevelopment())
             {
