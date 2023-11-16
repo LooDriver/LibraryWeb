@@ -28,6 +28,8 @@ namespace LibraryWeb.Core
 
             app.MapRazorPages();
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

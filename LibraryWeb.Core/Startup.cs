@@ -33,7 +33,6 @@ namespace LibraryWeb.Core
                 // Установите путь для переадресации
                 c.RoutePrefix = "swagger";
             });
-            app.UseStaticFiles();
         }
     }
 }
