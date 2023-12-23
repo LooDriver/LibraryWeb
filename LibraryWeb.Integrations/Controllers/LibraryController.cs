@@ -6,22 +6,14 @@ using System.Linq;
 
 namespace LibraryWeb.Integrations.Controllers
 {
-
+    [Route("api/sql")]
     [ApiController]
-    [Route("[controller]")]
     public class LibraryController : ControllerBase
     {
         DatabaseContext db = DatabaseContext.GetContext();
 
-        private readonly ILogger<LibraryController> _logger;
-
-        public LibraryController(ILogger<LibraryController> logger)
-        {
-            _logger = logger;
-        }
-
         [HttpGet]
-        [Route("GetBooks")]
+        //[Route("GetBooks")]
         public IEnumerable<Книги> GetBooks() => db.Книгиs.Take(db.Книгиs.Count());
 
         [HttpGet]
