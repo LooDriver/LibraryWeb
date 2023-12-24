@@ -24,7 +24,7 @@ namespace LibraryWeb.Integrations.Controllers
         [Route("GetGenre")]
         public IEnumerable<Жанр> GetGenre() => db.Жанрs.Take(db.Жанрs.Count());
 
-        [HttpGet]
+        [HttpGet]  
         [Route("GetReaders")]
         public IEnumerable<Читатели> GetReaders() => db.Читателиs.Take(db.Читателиs.Count());
 
