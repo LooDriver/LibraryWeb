@@ -1,0 +1,17 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <script src="~/lib/jquery-3.7.0.min.js"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
+    <link href="~/css/style.css" asp-append-version="true"/>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

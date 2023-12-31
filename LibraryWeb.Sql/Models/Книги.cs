@@ -26,16 +26,6 @@ namespace LibraryWeb.Sql.Model
 
         public virtual Жанр? КодЖанраNavigation { get; set; }
 
-
-        public Книги(int кодКниги, string? название, int? кодАвтора, int? кодЖанра, int? количествоВНаличии)
-        {
-            КодКниги = кодКниги;
-            Название = название;
-            КодАвтора = кодАвтора;
-            КодЖанра = кодЖанра;
-            КоличествоВНаличии = количествоВНаличии;
-        }
-
         public virtual ICollection<КорзинаКниг> КорзинаКнигs { get; set; } = new List<КорзинаКниг>();
     }
 }

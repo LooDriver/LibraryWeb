@@ -6,24 +6,18 @@ namespace LibraryWeb.Core
     {
         static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder();
+            var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddRazorPages();
-
-            builder.Services.AddControllers();
-
-            builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            app.MapRazorPages();
-
+            // Configure the HTTP request pipeline
             app.UseStaticFiles();
-
             app.UseDefaultFiles();
 
-            app.UseHttpsRedirection();
-
+            app.UseRouting();
             app.MapControllers();
 
             app.Run();

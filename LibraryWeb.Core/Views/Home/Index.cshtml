@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Tittle"] = "Пример заголовка";
+}
+
+<p>-------------------------Добавление автора---------------------------------</p>
+<form id="formPost">
+    <p>ФИО Автора <input type="text" id="authorText"/></p>
+    <input type="submit" value="Добавить нового автора" id="btPos"/>
+</form>
+<button id="test">Тест</button>
+<p>---------------------------------------------------------------------------</p>
+<form id="formDelete">
+    <p>Удаление автора из базы данных</p>
+    <p>Введите номер автора для удаление - <input type="number" id="authorDelete"/></p>
+    <input type="submit" onclick="DataDelete()" value="Удалить запись" />
+</form>
