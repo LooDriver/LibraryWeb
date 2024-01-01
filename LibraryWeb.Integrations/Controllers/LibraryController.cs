@@ -10,7 +10,6 @@ namespace LibraryWeb.Integrations.Controllers
     {
         DatabaseContext db = DatabaseContext.GetContext();
 
-
         [HttpGet]
         public IEnumerable<Автор> GetAuthors() => db.Авторs.Take(db.Авторs.Count());
 
@@ -18,7 +17,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPost]
         public IActionResult PostAuthors([FromBody] Автор автор)
         {
-            if (автор == null)
+            if (автор.Фио == null)
             {
                 return BadRequest();
             }

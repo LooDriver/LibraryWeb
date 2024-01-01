@@ -5,7 +5,7 @@ $(function () {
         $.ajax({
             url: baseUrl,
             method: 'get',
-            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
             success: function (data) {
                 for (let i = 0; i < data.length; i++) {
                     console.log(data[i]);
@@ -16,42 +16,19 @@ $(function () {
 
     $('#btPos').on('click', function (event) {
         event.preventDefault(); // нужно если чтобы браузер не перезагружал страницу после нажатия на эту кнопку
+        let author = {
+            Фио: ""
+        };
+        author.Фио = $('#authorText').val();
         $.ajax({
             url: baseUrl,
             method: 'post',
-            dataType: 'text',
-            data: $('#authorText').val(),
+            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(author),
             success: function (result) {
                 console.log(result);
             }
         });
     })
 });
-
-
-//function DataPos() {
-//    let author = {
-//        Фио: "",
-//    };
-//    author.Фио = document.forms["formPost"].elements["authorText"].value;
-//    fetch(baseUrl, {
-//        method: 'POST',
-//        headers: {
-//            'Content-Type': 'application/json;charset=utf-8'
-//        },
-//        body: JSON.stringify(author),
-//    }).catch(exp => console.error(exp));
-//}
-//function DataDelete() {
-//    let author = {
-//        id: -1,
-//    };
-//    author.id = (Number)(document.forms["formDelete"].elements["authorDelete"].value);
-//    fetch(baseUrl + "/" + author.id, {
-//        method: 'DELETE',
-//        headers: {
-//            'Content-Type': 'application/json;charset=utf-8'
-//        },
-//        body: JSON.stringify(author),
-//    }).catch(exp => console.error(exp));
-//}
