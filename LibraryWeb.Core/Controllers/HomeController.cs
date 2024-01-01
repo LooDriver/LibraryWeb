@@ -7,5 +7,8 @@ namespace LibraryWeb.Core.Controllers
     {
         [Route("/")]
         public IActionResult Index() => View();
+
+        [Route("auth")]
+        public IActionResult Auth() => View();
     }
 }
