@@ -4,18 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryWeb.Integrations.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class LibraryController : ControllerBase
     {
         DatabaseContext db = DatabaseContext.GetContext();
 
         [HttpGet]
-        public IEnumerable<Автор> GetAuthors() => db.Авторs.Take(db.Авторs.Count());
+        public IEnumerable<Автор> GetAuthors()
+        {
+            return db.Авторs.Take(db.Авторs.Count());
+        }
 
 
         [HttpPost]
-        public IActionResult PostAuthors([FromBody] Автор автор)
+        public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
             if (автор.Фио == null)
             {
@@ -26,7 +29,7 @@ namespace LibraryWeb.Integrations.Controllers
                 try
                 {
                     db.Авторs.Add(автор);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return Ok();
                 }
                 catch (Exception ex)
@@ -37,9 +40,9 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [HttpDelete("{id?}")]
-        public IActionResult DeleteAuthors(int id)
+        public async Task<IActionResult> DeleteAuthors([FromForm] int id)
         {
-            var item = db.Авторs.Find(id);
+            var item = await db.Авторs.FindAsync(id);
             if (item == null)
             {
                 return BadRequest();
@@ -49,7 +52,7 @@ namespace LibraryWeb.Integrations.Controllers
                 try
                 {
                     db.Авторs.Remove(item);
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     return Ok();
                 }
                 catch (Exception ex)
