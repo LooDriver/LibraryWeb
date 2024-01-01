@@ -16,7 +16,6 @@ namespace LibraryWeb.Integrations.Controllers
             return db.Авторs.Take(db.Авторs.Count());
         }
 
-
         [HttpPost]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
@@ -58,6 +57,27 @@ namespace LibraryWeb.Integrations.Controllers
                 catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
+                }
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateAuthors([FromBody] Автор автор)
+        {
+            var id = автор.КодАвтора;
+            var item = await db.Авторs.FindAsync(id);
+            if (item == null) return BadRequest();
+            else
+            {
+                try
+                {
+                    item.Фио = автор.Фио;
+                    await db.SaveChangesAsync();
+                    return Ok();
+                }
+                catch(Exception exp)
+                {
+                    return BadRequest(exp.Message);
                 }
             }
         }
