@@ -5,9 +5,9 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Core", "LibraryWeb.Core.csproj", "{DE99DD9A-BDC3-42A8-B67A-883093036F5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibrayWeb.Sql", "..\LibraryWeb.Sql\LibrayWeb.Sql.csproj", "{CA3D3A30-19C4-4B11-9D4B-D851BD9D9B09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Sql", "..\LibraryWeb.Sql\LibraryWeb.Sql.csproj", "{CA3D3A30-19C4-4B11-9D4B-D851BD9D9B09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryWeb.Integrations", "..\LibraryWeb.Integrations\LibraryWeb.Integrations.csproj", "{2E239CC2-F18E-4CB2-A1D0-EBFF3C968FC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Integrations", "..\LibraryWeb.Integrations\LibraryWeb.Integrations.csproj", "{2E239CC2-F18E-4CB2-A1D0-EBFF3C968FC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

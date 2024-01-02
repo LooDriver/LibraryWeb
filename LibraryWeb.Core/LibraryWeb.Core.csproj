@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibraryWeb.Integrations\LibraryWeb.Integrations.csproj" />
-    <ProjectReference Include="..\LibraryWeb.Sql\LibrayWeb.Sql.csproj" />
+    <ProjectReference Include="..\LibraryWeb.Sql\LibraryWeb.Sql.csproj" />
   </ItemGroup>
 
 </Project>
