@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LibraryWeb.Sql.Model
+namespace LibraryWeb.Core.Models;
+
+public partial class Читатели
 {
+    public int КодЧитателя { get; set; }
 
-    public partial class Читатели
-    {
-        public int КодЧитателя { get; set; }
+    public string Фио { get; set; } = null!;
 
-        public string Фио { get; set; } = null!;
+    public int НомерБилета { get; set; }
 
-        public int НомерБилета { get; set; }
-
-        public virtual ICollection<ВыдачаКниг> ВыдачаКнигs { get; set; } = new List<ВыдачаКниг>();
-    }
+    public virtual ICollection<ВыдачаКниг> ВыдачаКнигs { get; set; } = new List<ВыдачаКниг>();
 }
