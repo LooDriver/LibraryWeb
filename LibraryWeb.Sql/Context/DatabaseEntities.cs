@@ -1,4 +1,5 @@
-﻿using LibraryWeb.Core.Models;
+﻿
+using LibraryWeb.Sql.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,8 +49,6 @@ namespace LibraryWeb.Sql.Context
         public virtual DbSet<Жанр> Жанрs { get; set; }
 
         public virtual DbSet<Книги> Книгиs { get; set; }
-
-        public virtual DbSet<КорзинаКниг> КорзинаКнигs { get; set; }
 
         public virtual DbSet<Пользователи> Пользователиs { get; set; }
 
@@ -137,20 +136,6 @@ namespace LibraryWeb.Sql.Context
                     .HasConstraintName("FK_Книги_Жанр");
             });
 
-            modelBuilder.Entity<КорзинаКниг>(entity =>
-            {
-                entity.ToTable("Корзина_книг");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
-                entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
-
-                entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.КорзинаКнигs)
-                    .HasForeignKey(d => d.КодКниги)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Корзина_книг_Книги");
-            });
 
             modelBuilder.Entity<Пользователи>(entity =>
             {

@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LibraryWeb.Core.Models;
-
-public partial class Книги
+﻿namespace LibraryWeb.Sql.Models
 {
-    public int КодКниги { get; set; }
 
-    public string? Название { get; set; }
+    public partial class Книги
+    {
+        public int КодКниги { get; set; }
 
-    public int? КодАвтора { get; set; }
+        public string? Название { get; set; }
 
-    public int? КодЖанра { get; set; }
+        public int? КодАвтора { get; set; }
 
-    public byte[]? ОбложкаКниги { get; set; }
+        public int? КодЖанра { get; set; }
 
-    public int? КоличествоВНаличии { get; set; }
+        public byte[]? ОбложкаКниги { get; set; }
 
-    public string? Описание { get; set; }
+        public int? КоличествоВНаличии { get; set; }
 
-    public virtual ICollection<ВыдачаКниг> ВыдачаКнигs { get; set; } = new List<ВыдачаКниг>();
+        public string? Описание { get; set; }
 
-    public virtual Автор? КодАвтораNavigation { get; set; }
+        public virtual ICollection<ВыдачаКниг> ВыдачаКнигs { get; set; } = new List<ВыдачаКниг>();
 
-    public virtual Жанр? КодЖанраNavigation { get; set; }
+        public virtual Автор? КодАвтораNavigation { get; set; }
 
-    public virtual ICollection<КорзинаКниг> КорзинаКнигs { get; set; } = new List<КорзинаКниг>();
+        public virtual Жанр? КодЖанраNavigation { get; set; }
+
+    }
 }

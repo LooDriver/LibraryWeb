@@ -1,5 +1,5 @@
 using LibraryWeb.Sql.Context;
-using LibraryWeb.Sql.Model;
+using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryWeb.Integrations.Controllers
