@@ -8,17 +8,19 @@ namespace LibraryWeb.Integrations.Controllers
     [Route("api/[controller]")]
     public class DataController : ControllerBase
     {
-        DatabaseContext db = DatabaseContext.GetContext();
+        DatabaseContext db;
 
         [HttpGet]
         public IEnumerable<Автор> GetAuthors()
         {
+            db = DatabaseContext.GetContext();
             return db.Авторs.Take(db.Авторs.Count());
         }
 
         [HttpPost]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
+            db = DatabaseContext.GetContext();
             if (автор.Фио == null)
             {
                 return BadRequest();
@@ -41,6 +43,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpDelete("{id?}")]
         public async Task<IActionResult> DeleteAuthors([FromForm] int id)
         {
+            db = DatabaseContext.GetContext();
             var item = await db.Авторs.FindAsync(id);
             if (item == null)
             {
@@ -64,6 +67,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAuthors([FromBody] Автор автор)
         {
+            db = DatabaseContext.GetContext();
             var id = автор.КодАвтора;
             var item = await db.Авторs.FindAsync(id);
             if (item == null) return BadRequest();
