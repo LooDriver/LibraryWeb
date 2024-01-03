@@ -1,34 +1,38 @@
 ﻿const baseUrl = 'api/data';
-$(function () {
+window.addEventListener('load', function () {
+    $.ajax({
+        url: baseUrl,
+        method: 'get',
+        contentType: 'application/json;charset=utf-8',
+        async: true
+    }).done(function (data) {
+        var htmlLines = [];
+        tilesFiller(htmlLines, data);
 
-    $('#showData').on('click', function (event) {
-        event.preventDefault();
-                $.ajax({
-                    url: baseUrl,
-                    method: 'get',
-                    contentType: 'application/json;charset=utf-8',
-                    async: true
-                }).done(function (data) {
-                    var htmlLines = [];
-                    tableFil(htmlLines, data);
-                }).fail(function (handleError) {
-                    console.log(handleError);
-                });
+    }).fail(function (handleError) {
+        console.log(handleError);
     });
+});
 
-    function tableFil(arr, data) {
+function tilesFiller(arr, data) {
+    var arr = []; // Создаем один массив для всех элементов
 
-        $('#tableData').empty();
-        arr.push('<table>')
-        arr.push('<tr><th colspan="3">Авторы</th></tr>');
-        arr.push('<tr><th>Код<th>ФИО</th></th></tr>');
-        for (var i = 0; i < data.length; i++) {
-            arr.push(`<td><th>${i + 1}</th></td>`);
-            arr.push(`<td><th>${data[i].фио}</th></td>`);
-        }
-        arr.push('</table>');
-        $('#tableData').append(arr.join('\n'));
+    for (var i = 0; i < data.length; i++) {
+        arr.push('<div class="col-md-4">');
+        arr.push('<div class="tile">');
+        arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
+        arr.push('<div class="tile-content">');
+        arr.push(`<div class="tile-description">${data[i].название}</div>`);
+        arr.push('<button class="btn About">Подробнее</button>');
+        arr.push('</div>');
+        arr.push('</div>');
+        arr.push('</div>');
     }
+
+    // Обернем массив в .row и добавим его в #tileContainer
+    $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+}
+$(function () {
 
     $('#btPos').on('click', function (event) {
             event.preventDefault(); // нужно если чтобы браузер не перезагружал страницу после нажатия на эту кнопку

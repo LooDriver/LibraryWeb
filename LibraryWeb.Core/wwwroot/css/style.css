@@ -1,3 +1,40 @@
-﻿table tr, th, td {
-    border: 1px solid black;
+﻿.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tile {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.tile img 
+{
+   padding: 20px;
+   width: 100%;
+   height: auto;
+   display: table-cell;
+}
+button {
+    margin: 0 auto;
+    display: block;
+}
+.tile-content {
+    padding: 20px;
+}
+
+.tile-description {
+
+    text-align: center;
+    color: #555;
+    padding: 20px;
+}
+footer{
+    background-color: black;
 }

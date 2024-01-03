@@ -4,17 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryWeb.Integrations.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
     public class DataController : ControllerBase
     {
         DatabaseContext db;
 
         [HttpGet]
-        public IEnumerable<Автор> GetAuthors()
+        public IEnumerable<Книги> GetBooks()
         {
             db = DatabaseContext.GetContext();
-            return db.Авторs.Take(db.Авторs.Count());
+            return db.Книгиs.Take(db.Книгиs.Count());
         }
 
         [HttpPost]
