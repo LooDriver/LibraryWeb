@@ -21,6 +21,20 @@ namespace LibraryWeb.Integrations.Controllers
             return db.Книгиs.Take(db.Книгиs.Count());
         }
 
+        [HttpGet("book/{name?}")]
+        public async Task<Книги> GetBookById([FromQuery] string name)
+        {
+            db = DatabaseContext.GetContext();
+            int id = -1;
+            foreach(var item in db.Книгиs)
+            {
+                if (item.Название == name) id = item.КодКниги;
+            }
+
+            var book = await db.Книгиs.FindAsync(id);
+            return book;
+        }
+
         [HttpPost("auth")]
         public IActionResult CheckLogin([FromBody] UsersLogins logins)
         {

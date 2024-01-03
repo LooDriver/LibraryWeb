@@ -10,5 +10,8 @@ namespace LibraryWeb.Core.Controllers
 
         [Route("auth")]
         public IActionResult Auth() => View();
+
+        [Route("book/{id?}")]
+        public IActionResult AboutBook() => View();
     }
 }

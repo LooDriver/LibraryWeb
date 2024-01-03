@@ -55,6 +55,25 @@ $(function () {
         });
     });
 
+    $('#tileContainer').on('click', '.btn-about-book', function (event) {
+        event.preventDefault();
+
+        var bookTitle = $(this).closest('.tile').find('.tile-description').text();
+
+        $.ajax({
+            url: `${baseUrl}/book`,
+            method: 'get',
+            dataType: 'json',
+            data: { 'name': bookTitle },
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function (data) {
+            console.log(data);
+        }).fail(function (handleError) {
+            console.log(handleError);
+        });
+    });
+
     $('#btPos').on('click', function (event) {
             event.preventDefault(); // нужно если чтобы браузер не перезагружал страницу после нажатия на эту кнопку
             let author = {
@@ -124,7 +143,7 @@ $(function () {
             arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
             arr.push('<div class="tile-content">');
             arr.push(`<div class="tile-description">${data[i].название}</div>`);
-            arr.push('<button class="btn About">Подробнее</button>');
+            arr.push('<button class="btn-about-book">Подробнее</button>');
             arr.push('</div>');
             arr.push('</div>');
             arr.push('</div>');
