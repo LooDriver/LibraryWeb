@@ -48,39 +48,70 @@
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     <!-- Кнопка-триггер модального окна -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Авторизация
-                    </button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Профиль
+                        </button>
+                        <ul class="dropdown-menu">
+                            <div class="container">
+                                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Авторизация
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    Избранное
+                                </button>
+                            </div>
+                        </ul>
 
-                    <!-- Модальное окно -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h2 class="modal-title fs-5" id="exampleModalLabel">Авторизация</h2>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="input form-email" class="form-label">Адрес электронной почты</label>
-                                            <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
-                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="input form-password" class="form-label">Пароль</label>
-                                            <input type="password" class="form-control" id="input-form-password">
-                                        </div>
-                                        <div class="mb-3 form-check">
-                                            <input type="checkbox" class="form-check-input" id="input form-check">
-                                            <label class="form-check-label" for="exampleCheck1">Проверить меня</label>
-                                        </div>
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                        <button type="submit" class="btn btn-primary" id="btn-form-done">Войти</button>
-                                    </form>
+                        <!-- Модальное окно -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-centred">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title" id="exampleModalLabel">Авторизация</h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="input-form-email" class="form-label">Адрес электронной почты</label>
+                                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
+                                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="input-form-password" class="form-label">Пароль</label>
+                                                <input type="password" class="form-control" id="input-form-password">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" id="btn-form-done">Отправить</button>
+                                        </form>
+                                        <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModal" role="button">Открыть первое модальное окно</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-centred">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="input-form-email" class="form-label">Адрес электронной почты</label>
+                                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
+                                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="input-form-password" class="form-label">Пароль</label>
+                                                <input type="password" class="form-control" id="input-form-password">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" id="btn-form-done">Отправить</button>
+                                        </form>
+                                        <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModal" role="button">Открыть первое модальное окно</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </nav>
