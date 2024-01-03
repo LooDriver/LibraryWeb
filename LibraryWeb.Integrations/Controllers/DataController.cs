@@ -9,7 +9,7 @@ namespace LibraryWeb.Integrations.Controllers
     public class DataController : ControllerBase
     {
         DatabaseContext db;
-        List<UsersLogins> loginsAll = new List<UsersLogins>()
+        static List<UsersLogins> loginsAll = new List<UsersLogins>()
         {
             new UsersLogins("admin", "123456789")
         };
@@ -33,15 +33,24 @@ namespace LibraryWeb.Integrations.Controllers
             {
                 return BadRequest();
             }
-            //foreach(var item in loginsAll)
-            //{
-            //    if (item.Login == logins.Login && item.Password == logins.Password) return Ok();
-            //    else return BadRequest();
-            //}
-            //return BadRequest();
 
 
         }
+
+        [HttpPost("register")]
+        public IActionResult RegisterUser([FromBody] UsersLogins logins)
+        {
+            if(logins.Login == null || logins.Password == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                loginsAll.Add(new UsersLogins(logins.Login, logins.Password));
+                return Ok();
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
