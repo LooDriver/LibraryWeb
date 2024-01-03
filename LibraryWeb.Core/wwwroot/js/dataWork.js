@@ -1,39 +1,56 @@
 ﻿const baseUrl = 'api/data';
-window.addEventListener('load', function () {
-    $.ajax({
-        url: baseUrl,
-        method: 'get',
-        contentType: 'application/json;charset=utf-8',
-        async: true
-    }).done(function (data) {
-        var htmlLines = [];
-        tilesFiller(htmlLines, data);
 
-    }).fail(function (handleError) {
-        console.log(handleError);
-    });
-});
-
-function tilesFiller(arr, data) {
-    var arr = []; // Создаем один массив для всех элементов
-
-    for (var i = 0; i < data.length; i++) {
-        arr.push('<div class="col-md-4">');
-        arr.push('<div class="tile">');
-        arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
-        arr.push('<div class="tile-content">');
-        arr.push(`<div class="tile-description">${data[i].название}</div>`);
-        arr.push('<button class="btn About">Подробнее</button>');
-        arr.push('</div>');
-        arr.push('</div>');
-        arr.push('</div>');
-    }
-
-    // Обернем массив в .row и добавим его в #tileContainer
-    $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
-}
 $(function () {
+    $(document).ready(function () {
+        $.ajax({
+            url: baseUrl,
+            method: 'get',
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function (data) {
+            var htmlLines = [];
+            tilesFiller(htmlLines, data);
 
+        }).fail(function (handleError) {
+            console.log(handleError);
+        });
+    });
+    $('#btn-form-done').on('click', function (event) {
+        event.preventDefault();
+        let login = {
+            Login: $('#input-form-email').val(),
+            Password: $('#input-form-password').val()
+        };
+        $.ajax({
+            url: `${baseUrl}/auth`,
+            method: 'post',
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify(login),
+            async: true
+        }).done(function () {
+            alert("Успешно");
+        }).catch(function (handleError) {
+            alert("Неверный логин или пароль");
+        })
+    });
+    function tilesFiller(arr, data) {
+        var arr = []; // Создаем один массив для всех элементов
+
+        for (var i = 0; i < data.length; i++) {
+            arr.push('<div class="col-md-4">');
+            arr.push('<div class="tile">');
+            arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
+            arr.push('<div class="tile-content">');
+            arr.push(`<div class="tile-description">${data[i].название}</div>`);
+            arr.push('<button class="btn About">Подробнее</button>');
+            arr.push('</div>');
+            arr.push('</div>');
+            arr.push('</div>');
+        }
+
+        // Обернем массив в .row и добавим его в #tileContainer
+        $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+    }
     $('#btPos').on('click', function (event) {
             event.preventDefault(); // нужно если чтобы браузер не перезагружал страницу после нажатия на эту кнопку
             let author = {

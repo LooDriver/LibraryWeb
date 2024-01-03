@@ -8,6 +8,7 @@
     <script src="~/lib/jquery-3.7.0.min.js"></script>
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="~/js/dataWork.js" asp-append-version="true"></script>
+    <script src="~/js/auth.js" asp-append-version="true"></script>
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" asp-append-version="true"/>
 </head>
@@ -15,14 +16,14 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand" href="#">Навбар</a>
+                <a class="navbar-brand" icon="~/favicon.ico">Онлайн-библиотека</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Главная</a>
+                            <a class="nav-link active" aria-current="page" href="/">Главная</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Ссылка</a>
@@ -46,6 +47,40 @@
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
+                    <!-- Кнопка-триггер модального окна -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Авторизация
+                    </button>
+
+                    <!-- Модальное окно -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fs-5" id="exampleModalLabel">Авторизация</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="input form-email" class="form-label">Адрес электронной почты</label>
+                                            <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
+                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="input form-password" class="form-label">Пароль</label>
+                                            <input type="password" class="form-control" id="input-form-password">
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="input form-check">
+                                            <label class="form-check-label" for="exampleCheck1">Проверить меня</label>
+                                        </div>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                        <button type="submit" class="btn btn-primary" id="btn-form-done">Войти</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

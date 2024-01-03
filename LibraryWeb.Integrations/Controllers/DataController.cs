@@ -1,6 +1,7 @@
 using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -8,6 +9,10 @@ namespace LibraryWeb.Integrations.Controllers
     public class DataController : ControllerBase
     {
         DatabaseContext db;
+        List<UsersLogins> loginsAll = new List<UsersLogins>()
+        {
+            new UsersLogins("admin", "123456789")
+        };
 
         [HttpGet]
         public IEnumerable<Книги> GetBooks()
@@ -16,6 +21,27 @@ namespace LibraryWeb.Integrations.Controllers
             return db.Книгиs.Take(db.Книгиs.Count());
         }
 
+        [HttpPost("auth")]
+        public IActionResult CheckLogin([FromBody] UsersLogins logins)
+        {
+            var item = loginsAll.Where(x => x.Login == logins.Login && x.Password == logins.Password);
+            if(item.Any())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+            //foreach(var item in loginsAll)
+            //{
+            //    if (item.Login == logins.Login && item.Password == logins.Password) return Ok();
+            //    else return BadRequest();
+            //}
+            //return BadRequest();
+
+
+        }
         [HttpPost]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
