@@ -8,7 +8,6 @@
     <script src="~/lib/jquery-3.7.0.min.js"></script>
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="~/js/dataWork.js" asp-append-version="true"></script>
-    <script src="~/js/auth.js" asp-append-version="true"></script>
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" asp-append-version="true"/>
 </head>
@@ -44,8 +43,8 @@
                         </li>
                     </ul>
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
-                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                        <input class="form-control me-2" type="search" id="input-text-search" placeholder="Поиск" aria-label="Поиск">
+                        <button class="btn btn-outline-success" id="btn-form-search" type="submit">Поиск</button>
                     </form>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

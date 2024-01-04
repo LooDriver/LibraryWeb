@@ -56,6 +56,22 @@ $(function () {
         });
     });
 
+    $('#btn-form-search').on('click', function (event) {
+        event.preventDefault();
+
+        var searchText = $('#input-text-search').val();
+
+        $('.col-md-4').each(function () {
+            var tileDescriptionText = $(this).find('.tile-description').text().toLowerCase();
+
+            if (tileDescriptionText.includes(searchText.toLowerCase())) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
 
@@ -143,7 +159,7 @@ $(function () {
             arr.push('<div class="tile">');
             arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
             arr.push('<div class="tile-content">');
-            arr.push(`<div class="tile-description">${data[i].название}</div>`);
+            arr.push(`<div class="tile-description" id="tilesData">${data[i].название}</div>`);
             arr.push('<button class="btn-about-book">Подробнее</button>');
             arr.push('</div>');
             arr.push('</div>');

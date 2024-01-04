@@ -12,7 +12,7 @@ namespace LibraryWeb.Integrations.Controllers
         static List<UsersLogins> loginsAll = new List<UsersLogins>()
         {
             new UsersLogins("admin", "123456789")
-        };
+        }; //<--- временное решение, обновить бд и добавить таблицу дл€ входа и регистрации пользователей
 
         [HttpGet]
         public IEnumerable< ниги> GetBooks()
@@ -20,6 +20,8 @@ namespace LibraryWeb.Integrations.Controllers
             db = DatabaseContext.GetContext();
             return db. нигиs.Take(db. нигиs.Count());
         }
+
+
 
         [HttpGet("book/{name?}")]
         public async Task< ниги> GetBookById([FromQuery] string name)
