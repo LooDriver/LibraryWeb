@@ -7,10 +7,11 @@ $(function () {
             url: baseUrl,
             method: 'get',
             contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
             async: true
         }).done(function (data) {
             var htmlLines = [];
-            tilesFiller(htmlLines, data);
+            tilesFiller(htmlLines, data.Books, data.Genres, data.Authors);
 
         }).fail(function (handleError) {
             console.log(handleError);
@@ -42,18 +43,24 @@ $(function () {
             Login: $('#input-form-email-register').val(),
             Password: $('#input-form-password-register').val()
         }
-        $.ajax({
-            url: `${baseUrl}/register`,
-            method: 'post',
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify(registerUser),
-            async: true
+        if (registerUser.Password == $('#input-form-password-repeat').val()) {
+            $.ajax({
+                url: `${baseUrl}/register`,
+                method: 'post',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify(registerUser),
+                async: true
 
-        }).done(function () {
-            alert("Успешно");
-        }).fail(function () {
-            alert("Ошибка");
-        });
+            }).done(function () {
+                alert("Успешно");
+            }).fail(function () {
+                alert("Ошибка");
+            });
+        }
+        else {
+            alert("Пароли должны быть одинаковыми");
+        }
+
     });
 
     $('#btn-form-search').on('click', function (event) {
@@ -62,7 +69,7 @@ $(function () {
         var searchText = $('#input-text-search').val();
 
         $('.col-md-4').each(function () {
-            var tileDescriptionText = $(this).find('.tile-description').text().toLowerCase();
+            var tileDescriptionText = $(this).find('.tile-book').text().toLowerCase();
 
             if (tileDescriptionText.includes(searchText.toLowerCase())) {
                 $(this).show();
@@ -75,7 +82,7 @@ $(function () {
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
 
-        var bookTitle = $(this).closest('.tile').find('.tile-description').text();
+        var bookTitle = $(this).closest('.tile').find('.tile-book').text();
 
         $.ajax({
             url: `${baseUrl}/book`,
@@ -85,7 +92,7 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            location.href = `book/name=${data.название}`;
+            location.href = `book/name=${data.Название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
@@ -151,15 +158,17 @@ $(function () {
 
     });
 
-    function tilesFiller(arr, data) {
+    function tilesFiller(arr, books, genres, authors) {
         var arr = []; // Создаем один массив для всех элементов
 
-        for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < books.length; i++) {
             arr.push('<div class="col-md-4">');
             arr.push('<div class="tile">');
-            arr.push(`<img src="data:image/png;base64,${data[i].обложкаКниги}" width="50" height="50" alt="Обложка книги ${data[i].название}">`);
+            arr.push(`<img src="data:image/png;base64,${books[i].ОбложкаКниги}" width="50" height="50" alt="Обложка книги ${books[i].Название}">`);
             arr.push('<div class="tile-content">');
-            arr.push(`<div class="tile-description" id="tilesData">${data[i].название}</div>`);
+            arr.push(`<div class="tile-book">${books[i].Название}</div>`);
+            arr.push(`<div class="tile-author">${authors[i].Фио}</div>`);
+            arr.push(`<div class="tile-genre">${genres[i].НазваниеЖанра}</div>`)
             arr.push('<button class="btn-about-book">Подробнее</button>');
             arr.push('</div>');
             arr.push('</div>');

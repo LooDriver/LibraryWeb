@@ -1,10 +1,10 @@
-﻿/*.container {
+﻿.container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
 }
-*/
+
 .tile {
     width: 100%;
     background-color: #fff;
@@ -37,4 +37,8 @@ button {
 }
 footer{
     background-color: black;
+}
+.tile-genre, .tile-book, .tile-author {
+    text-align: center;
+    padding: 5px;
 }

@@ -1,12 +1,15 @@
 using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace LibraryWeb.Integrations.Controllers
 {
     [Route("api/[controller]")]
-    public class DataController : ControllerBase
+    public class DataController : Controller
     {
         DatabaseContext db;
         static List<UsersLogins> loginsAll = new List<UsersLogins>()
@@ -15,18 +18,43 @@ namespace LibraryWeb.Integrations.Controllers
         }; //<--- временное решение, обновить бд и добавить таблицу дл€ входа и регистрации пользователей
 
         [HttpGet]
-        public IEnumerable< ниги> GetBooks()
+        public JsonResult GetBooks()
         {
+
             db = DatabaseContext.GetContext();
-            return db. нигиs.Take(db. нигиs.Count());
+            db.∆анрs.Load();
+            db. нигиs.Load();
+            db.јвторs.Load();
+            var book = db. нигиs.ToList();
+            var genre = db.∆анрs.ToList();
+            var author = db.јвторs.ToList();
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+                // ƒругие необходимые настройки JsonSerializerOptions...
+            };
+            var books = new
+            {
+                Books = book,
+                Genres = genre,
+                Authors = author
+            };
+
+            return Json(books, options);
+
         }
 
 
 
         [HttpGet("book/{name?}")]
-        public async Task< ниги> GetBookById([FromQuery] string name)
+        public async Task<JsonResult> GetBookById([FromQuery] string name)
         {
             db = DatabaseContext.GetContext();
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
             int id = -1;
             foreach(var item in db. нигиs)
             {
@@ -34,7 +62,7 @@ namespace LibraryWeb.Integrations.Controllers
             }
 
             var book = await db. нигиs.FindAsync(id);
-            return book;
+            return Json(book, options);
         }
 
         [HttpPost("auth")]
