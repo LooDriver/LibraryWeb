@@ -1,6 +1,7 @@
 ﻿const baseUrl = 'api/data';
 
 $(function () {
+
     $(document).ready(function () {
         $.ajax({
             url: baseUrl,
@@ -68,7 +69,7 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            console.log(data);
+            location.href = `book/name=${data.название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
