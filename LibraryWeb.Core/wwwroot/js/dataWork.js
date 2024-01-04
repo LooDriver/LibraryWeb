@@ -11,7 +11,7 @@ $(function () {
             async: true
         }).done(function (data) {
             var htmlLines = [];
-            tilesFiller(htmlLines, data.Books, data.Genres, data.Authors);
+            tilesFiller(htmlLines, data.books, data.genres, data.authors);
 
         }).fail(function (handleError) {
             console.log(handleError);
@@ -92,7 +92,7 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            location.href = `book/name=${data.Название}`;
+            location.href = `book/name=${data.название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
@@ -164,11 +164,11 @@ $(function () {
         for (var i = 0; i < books.length; i++) {
             arr.push('<div class="col-md-4">');
             arr.push('<div class="tile">');
-            arr.push(`<img src="data:image/png;base64,${books[i].ОбложкаКниги}" width="50" height="50" alt="Обложка книги ${books[i].Название}">`);
+            arr.push(`<img src="data:image/png;base64,${books[i].обложкакниги}" width="50" height="50" alt="Обложка книги ${books[i].название}">`);
             arr.push('<div class="tile-content">');
-            arr.push(`<div class="tile-book">${books[i].Название}</div>`);
-            arr.push(`<div class="tile-author">${authors[i].Фио}</div>`);
-            arr.push(`<div class="tile-genre">${genres[i].НазваниеЖанра}</div>`)
+            arr.push(`<div class="tile-book">${books[i].название}</div>`);
+            arr.push(`<div class="tile-author">${authors[i].фио}</div>`);
+            arr.push(`<div class="tile-genre">${genres[i].названиеЖанра}</div>`)
             arr.push('<button class="btn-about-book">Подробнее</button>');
             arr.push('</div>');
             arr.push('</div>');

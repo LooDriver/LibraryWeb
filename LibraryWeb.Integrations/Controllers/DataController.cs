@@ -20,7 +20,6 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpGet]
         public JsonResult GetBooks()
         {
-
             db = DatabaseContext.GetContext();
             db.Жанрs.Load();
             db.Книгиs.Load();
@@ -29,11 +28,6 @@ namespace LibraryWeb.Integrations.Controllers
             var genre = db.Жанрs.ToList();
             var author = db.Авторs.ToList();
 
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-                // Другие необходимые настройки JsonSerializerOptions...
-            };
             var books = new
             {
                 Books = book,
@@ -41,20 +35,14 @@ namespace LibraryWeb.Integrations.Controllers
                 Authors = author
             };
 
-            return Json(books, options);
+            return Json(books);
 
         }
-
-
 
         [HttpGet("book/{name?}")]
         public async Task<JsonResult> GetBookById([FromQuery] string name)
         {
             db = DatabaseContext.GetContext();
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
             int id = -1;
             foreach(var item in db.Книгиs)
             {
@@ -62,7 +50,7 @@ namespace LibraryWeb.Integrations.Controllers
             }
 
             var book = await db.Книгиs.FindAsync(id);
-            return Json(book, options);
+            return Json(book);
         }
 
         [HttpPost("auth")]
