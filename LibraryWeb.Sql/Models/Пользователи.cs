@@ -7,7 +7,9 @@
 
         public int? КодРоли { get; set; }
 
-        public int? КодЧитательскогоБилета { get; set; }
+        public string? Логин { get; set; }
+
+        public string? Пароль { get; set; }
 
         public virtual Роли? КодРолиNavigation { get; set; }
     }

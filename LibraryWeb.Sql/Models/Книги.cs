@@ -17,8 +17,6 @@
 
         public string? Описание { get; set; }
 
-        public virtual ICollection<ВыдачаКниг> ВыдачаКнигs { get; set; } = new List<ВыдачаКниг>();
-
         public virtual Автор? КодАвтораNavigation { get; set; }
 
         public virtual Жанр? КодЖанраNavigation { get; set; }

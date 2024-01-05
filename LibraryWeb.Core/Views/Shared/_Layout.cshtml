@@ -7,7 +7,7 @@
     <title>@ViewBag.Title</title>
     <script src="~/lib/jquery-3.7.0.min.js"></script>
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="~/js/dataWork.js" asp-append-version="true"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" asp-append-version="true"/>
 </head>
@@ -43,76 +43,67 @@
                         </li>
                     </ul>
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" id="input-text-search" placeholder="Поиск" aria-label="Поиск">
+                        <input class="form-control me-2" type="search" id="input-text-search" placeholder="Поиск книги" aria-label="Поиск">
                         <button class="btn btn-outline-success" id="btn-form-search" type="submit">Поиск</button>
                     </form>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            Профиль
+                    <div>
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            Избранное
                         </button>
-                        <ul class="dropdown-menu">
-                            <div class="container">
-                                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
-                                    Вход
-                                </button>
-                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    Избранное
-                                </button>
-                            </div>
-                        </ul>
-                        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-centred">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title" id="exampleModalLabel">Авторизация</h1>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
-                                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="input-form-password" class="form-label">Пароль</label>
-                                                <input type="password" class="form-control" id="input-form-password">
-                                                <label><a data-bs-toggle="modal" href="#registerModal" role="button">Впервые? Регистрация</a></label>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                        </form>
-                                    </div>
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Вход
+                        </button>
+                    </div>
+                    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-centred">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title" id="exampleModalLabel">Авторизация</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="input-form-email" class="form-label">Адрес электронной почты</label>
+                                            <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp">
+                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="input-form-password" class="form-label">Пароль</label>
+                                            <input type="password" class="form-control" id="input-form-password">
+                                            <label><a data-bs-toggle="modal" href="#registerModal" role="button">Впервые? Регистрация</a></label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-centred">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
-                                                <input type="email" class="form-control" id="input-form-email-register" aria-describedby="emailHelp">
-                                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="input-form-password-register" class="form-label">Пароль</label>
-                                                <input type="password" class="form-control" id="input-form-password-register">
-                                                <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
-                                                <input type="password" class="form-control" id="input-form-password-repeat">
-                                                <label><a data-bs-toggle="modal" href="#loginModal" role="button">Уже зарегистрированы? Авторизация</a></label>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                        </form>
-                                    </div>
+                    </div>
+                    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-centred">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
+                                            <input type="email" class="form-control" id="input-form-email-register" aria-describedby="emailHelp">
+                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="input-form-password-register" class="form-label">Пароль</label>
+                                            <input type="password" class="form-control" id="input-form-password-register">
+                                            <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
+                                            <input type="password" class="form-control" id="input-form-password-repeat">
+                                            <label><a data-bs-toggle="modal" href="#loginModal" role="button">Уже зарегистрированы? Авторизация</a></label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="btn-form-register" >Регистрация</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
             </div>
         </nav>
     </header>

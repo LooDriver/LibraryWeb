@@ -3,26 +3,29 @@
 $(function () {
 
     $(document).ready(function () {
-        $.ajax({
-            url: baseUrl,
-            method: 'get',
-            contentType: 'application/json;charset=utf-8',
-            dataType: 'json',
-            async: true
-        }).done(function (data) {
-            var htmlLines = [];
-            tilesFiller(htmlLines, data.books, data.genres, data.authors);
+        if (window.location.href.indexOf('/') !== -1) {
+            $.ajax({
+                url: baseUrl,
+                method: 'get',
+                contentType: 'application/json;charset=utf-8',
+                dataType: 'json',
+                async: true
+            }).done(function (data) {
+                var htmlLines = [];
+                tilesFiller(htmlLines, data.books, data.genres, data.authors);
 
-        }).fail(function (handleError) {
-            console.log(handleError);
-        });
+            }).fail(function (handleError) {
+                console.log(handleError);
+            });
+        }
     });
 
     $('#btn-form-login').on('click', function (event) {
-        event.preventDefault();
+
+        
         let login = {
-            Login: $('#input-form-email').val(),
-            Password: $('#input-form-password').val()
+            Логин: $('#input-form-email').val(),
+            Пароль: $('#input-form-password').val()
         };
         $.ajax({
             url: `${baseUrl}/auth`,
@@ -31,19 +34,20 @@ $(function () {
             data: JSON.stringify(login),
             async: true
         }).done(function () {
-            alert("Успешно");
-        }).catch(function (handleError) {
-            alert("Неверный логин или пароль");
+
+        }).fail(function () {
+
         })
     });
 
     $('#btn-form-register').on('click', function (event) {
-        event.preventDefault();
+
         let registerUser = {
-            Login: $('#input-form-email-register').val(),
-            Password: $('#input-form-password-register').val()
+            Логин: $('#input-form-email-register').val(),
+            Пароль: $('#input-form-password-register').val(),
+            КодРоли: 2
         }
-        if (registerUser.Password == $('#input-form-password-repeat').val()) {
+        if (registerUser.Пароль == $('#input-form-password-repeat').val()) {
             $.ajax({
                 url: `${baseUrl}/register`,
                 method: 'post',
@@ -52,12 +56,13 @@ $(function () {
                 async: true
 
             }).done(function () {
-                alert("Успешно");
+
             }).fail(function () {
-                alert("Ошибка");
+
             });
         }
         else {
+            event.preventDefault();
             alert("Пароли должны быть одинаковыми");
         }
 

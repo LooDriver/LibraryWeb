@@ -44,8 +44,6 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Автор> Авторs { get; set; }
 
-        public virtual DbSet<ВыдачаКниг> ВыдачаКнигs { get; set; }
-
         public virtual DbSet<Жанр> Жанрs { get; set; }
 
         public virtual DbSet<Книги> Книгиs { get; set; }
@@ -70,34 +68,6 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.Фио)
                     .HasMaxLength(50)
                     .HasColumnName("ФИО");
-            });
-
-            modelBuilder.Entity<ВыдачаКниг>(entity =>
-            {
-                entity.HasKey(e => e.КодВыданнойКниги);
-
-                entity.ToTable("Выдача_книг");
-
-                entity.Property(e => e.КодВыданнойКниги).HasColumnName("Код_выданной_книги");
-                entity.Property(e => e.ДатаВозврата)
-                    .HasColumnType("date")
-                    .HasColumnName("Дата_возврата");
-                entity.Property(e => e.ДатаВыдачи)
-                    .HasColumnType("date")
-                    .HasColumnName("Дата_выдачи");
-                entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
-                entity.Property(e => e.КодЧитателя).HasColumnName("Код_читателя");
-                entity.Property(e => e.КоличествоВРеестре).HasColumnName("Количество_в_реестре");
-
-                entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.ВыдачаКнигs)
-                    .HasForeignKey(d => d.КодКниги)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Выдача_книг_Книги");
-
-                entity.HasOne(d => d.КодЧитателяNavigation).WithMany(p => p.ВыдачаКнигs)
-                    .HasForeignKey(d => d.КодЧитателя)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Выдача_книг_Читатели");
             });
 
             modelBuilder.Entity<Жанр>(entity =>
@@ -136,7 +106,6 @@ namespace LibraryWeb.Sql.Context
                     .HasConstraintName("FK_Книги_Жанр");
             });
 
-
             modelBuilder.Entity<Пользователи>(entity =>
             {
                 entity.HasKey(e => e.КодПользователя);
@@ -145,7 +114,8 @@ namespace LibraryWeb.Sql.Context
 
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
                 entity.Property(e => e.КодРоли).HasColumnName("Код_роли");
-                entity.Property(e => e.КодЧитательскогоБилета).HasColumnName("Код_читательского_билета");
+                entity.Property(e => e.Логин).HasMaxLength(50);
+                entity.Property(e => e.Пароль).HasMaxLength(100);
 
                 entity.HasOne(d => d.КодРолиNavigation).WithMany(p => p.Пользователиs)
                     .HasForeignKey(d => d.КодРоли)

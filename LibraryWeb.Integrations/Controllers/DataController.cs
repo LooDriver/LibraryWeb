@@ -12,21 +12,18 @@ namespace LibraryWeb.Integrations.Controllers
     public class DataController : Controller
     {
         DatabaseContext db;
-        static List<UsersLogins> loginsAll = new List<UsersLogins>()
-        {
-            new UsersLogins("admin", "123456789")
-        }; //<--- временное решение, обновить бд и добавить таблицу для входа и регистрации пользователей
 
         [HttpGet]
-        public JsonResult GetBooks()
+        public async Task<JsonResult> GetBooks()
         {
             db = DatabaseContext.GetContext();
-            db.Жанрs.Load();
-            db.Книгиs.Load();
-            db.Авторs.Load();
-            var book = db.Книгиs.ToList();
-            var genre = db.Жанрs.ToList();
-            var author = db.Авторs.ToList();
+            await db.Жанрs.LoadAsync();
+            await db.Книгиs.LoadAsync();
+            await db.Авторs.LoadAsync();
+
+            var book = await db.Книгиs.ToListAsync();
+            var genre = await db.Жанрs.ToListAsync();
+            var author = await db.Авторs.ToListAsync();
 
             var books = new
             {
@@ -54,9 +51,10 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [HttpPost("auth")]
-        public IActionResult CheckLogin([FromBody] UsersLogins logins)
+        public IActionResult CheckLogin([FromBody] Пользователи logins)
         {
-            var item = loginsAll.Where(x => x.Login == logins.Login && x.Password == logins.Password);
+            db = DatabaseContext.GetContext();
+            var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if(item.Any())
             {
                 return Ok();
@@ -65,20 +63,20 @@ namespace LibraryWeb.Integrations.Controllers
             {
                 return BadRequest();
             }
-
-
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterUser([FromBody] UsersLogins logins)
+        public async Task<IActionResult> RegisterUser([FromBody] Пользователи registers)
         {
-            if(logins.Login == null || logins.Password == null)
+            db = DatabaseContext.GetContext();
+            if (registers.Логин == null || registers.Пароль == null)
             {
                 return BadRequest();
             }
             else
             {
-                loginsAll.Add(new UsersLogins(logins.Login, logins.Password));
+                db.Пользователиs.Add(registers);
+                await db.SaveChangesAsync();
                 return Ok();
             }
         }
