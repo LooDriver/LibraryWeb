@@ -36,7 +36,7 @@ $(function () {
         }).done(function () {
 
         }).fail(function () {
-
+            event.preventDefault();
         })
     });
 
@@ -58,7 +58,7 @@ $(function () {
             }).done(function () {
 
             }).fail(function () {
-
+                event.preventDefault();
             });
         }
         else {

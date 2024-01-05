@@ -13,6 +13,7 @@ namespace LibraryWeb.Integrations.Controllers
     {
         DatabaseContext db;
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet]
         public async Task<JsonResult> GetBooks()
         {
@@ -36,6 +37,7 @@ namespace LibraryWeb.Integrations.Controllers
 
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("book/{name?}")]
         public async Task<JsonResult> GetBookById([FromQuery] string name)
         {
@@ -50,14 +52,22 @@ namespace LibraryWeb.Integrations.Controllers
             return Json(book);
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("auth")]
         public IActionResult CheckLogin([FromBody] Пользователи logins)
         {
             db = DatabaseContext.GetContext();
-            var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
-            if(item.Any())
+            if (logins.Логин.Length > 0 && logins.Пароль.Length > 0)
             {
-                return Ok();
+                var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
+                if (item.Any())
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             else
             {
@@ -65,19 +75,21 @@ namespace LibraryWeb.Integrations.Controllers
             }
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] Пользователи registers)
         {
             db = DatabaseContext.GetContext();
-            if (registers.Логин == null || registers.Пароль == null)
+            if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
             {
-                return BadRequest();
+                await db.Пользователиs.AddAsync(registers);
+                await db.SaveChangesAsync();
+                return Ok();
+               
             }
             else
             {
-                db.Пользователиs.Add(registers);
-                await db.SaveChangesAsync();
-                return Ok();
+                return BadRequest();
             }
         }
 
