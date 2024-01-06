@@ -89,7 +89,7 @@ namespace LibraryWeb.Integrations.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("addAuthor")]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
             db = DatabaseContext.GetContext();

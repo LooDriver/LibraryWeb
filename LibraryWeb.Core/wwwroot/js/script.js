@@ -3,6 +3,43 @@ var role = 'user';
 
 $(function () {
 
+    $('#btn-author-table').on('click', function (event) {
+        event.preventDefault();
+        $('#author-table').toggleClass('d-none');
+    });
+    $('#btn-form-add').on('click', function () {
+        // Показываем форму добавления
+        $('#form-add-author').collapse('show');
+        // Скрываем форму редактирования
+        $('#form-edit-author').collapse('hide');
+    });
+
+    // При нажатии на кнопку "Редактирование"
+    $('#btn-form-edit').on('click', function () {
+        // Показываем форму редактирования
+        $('#form-edit-author').collapse('show');
+        // Скрываем форму добавления
+        $('#form-add-author').collapse('hide');
+    });
+    $('#btn-add-author').on('click', function (event) {
+        event.preventDefault();
+        let author = {
+            Фио: $('#input-author-add-name').val()
+        };
+
+        $.ajax({
+            url: `${baseUrl}/addAuthor`,
+            method: 'post',
+            data: JSON.stringify(author),
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function () {
+
+        }).fail(function () {
+
+        });
+    });
+
     $(document).ready(function () {
 /*        $('#li-admin-list').css('display', 'none');*/
         if (window.location.href.indexOf('/') !== -1) {

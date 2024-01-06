@@ -2,14 +2,14 @@
     ViewData["title"] = "Панель управления";
 }
 <div class="collapse" id="navbarToggleExternalContent">
-    <div class="bg-dark p-4" >
+    <div class="bg-dark p-4 d-flex justify-content-center">
         <h5 class="text-white"></h5>
-        <button class="btn btn-primary"><a href="">Таблица Авторы</a></button>
-        <button class="btn btn-primary"><a href="">Таблица Жанр</a></button>
-        <button class="btn btn-primary"><a href="">Таблица Книги</a></button>
-        <button class="btn btn-primary"><a href="">Таблица Читатели</a></button>
-        <button class="btn btn-primary"><a href="">Таблица Роли</a></button>
-        <button class="btn btn-primary"><a href="">Таблица Пользователи</a></button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" id="btn-author-table">Таблица Авторы</button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">Таблица Жанр</button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">Таблица Книги</button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">Таблица Читатели</button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">Таблица Роли</button>
+        <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">Таблица Пользователи</button>
     </div>
 
 </div>
@@ -21,7 +21,38 @@
     </div>
 </nav>
 
-
-<div class="container-author-table">
-
+<div class="text-center" id="author-table">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-add-author" id="btn-form-add">Добавление</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-edit-author" id="btn-form-edit">Редактирование</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link">Удаление</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link">Просмотр данных</button>
+        </li>
+    </ul>
+    <div class="collapse" id="form-add-author">
+        <form class="d-inline-block">
+            <div class="form-group mb-3">
+                <label for="input-author-name-add">ФИО Автора</label>
+                <input type="text" class="form-control" id="input-author-name-add" required />
+            </div>
+            <button class="btn btn-outline-info" id="btn-add-author">Добавить</button>
+        </form>
+    </div>
+    <div class="collapse" id="form-edit-author">
+        <form class="d-inline-block">
+            <div class="form-group mb-3">
+                <label for="input-author-name-edit">ФИО Автора</label>
+                <input type="text" class="form-control" id="input-author-name-edit" required />
+            </div>
+            <button class="btn btn-outline-info" id="btn-edit-author">Редактировать</button>
+        </form>
+    </div>
 </div>
+
