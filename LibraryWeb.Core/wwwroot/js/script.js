@@ -1,47 +1,12 @@
 ﻿const baseUrl = 'api/data';
-var role = 'user';
+
+var focusedOne = false;
+var authorId = -1;
 
 $(function () {
 
-    $('#btn-author-table').on('click', function (event) {
-        event.preventDefault();
-        $('#author-table').toggleClass('d-none');
-    });
-    $('#btn-form-add').on('click', function () {
-        // Показываем форму добавления
-        $('#form-add-author').collapse('show');
-        // Скрываем форму редактирования
-        $('#form-edit-author').collapse('hide');
-    });
-
-    // При нажатии на кнопку "Редактирование"
-    $('#btn-form-edit').on('click', function () {
-        // Показываем форму редактирования
-        $('#form-edit-author').collapse('show');
-        // Скрываем форму добавления
-        $('#form-add-author').collapse('hide');
-    });
-    $('#btn-add-author').on('click', function (event) {
-        event.preventDefault();
-        let author = {
-            Фио: $('#input-author-add-name').val()
-        };
-
-        $.ajax({
-            url: `${baseUrl}/addAuthor`,
-            method: 'post',
-            data: JSON.stringify(author),
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function () {
-
-        }).fail(function () {
-
-        });
-    });
-
     $(document).ready(function () {
-/*        $('#li-admin-list').css('display', 'none');*/
+        /*        $('#li-admin-list').css('display', 'none');*/
         if (window.location.href.indexOf('/') !== -1) {
             $.ajax({
                 url: baseUrl,
@@ -57,6 +22,66 @@ $(function () {
             }).fail(function (handleError) {
                 console.log(handleError);
             });
+        }
+    });
+
+    $('#btn-add-author').on('click', function (event) {
+        event.preventDefault();
+        let author = {
+            Фио: $('#input-author-name-add').val()
+        };
+
+        $.ajax({
+            url: `${baseUrl}/addAuthor`,
+            method: 'post',
+            data: JSON.stringify(author),
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function () {
+            $('#span-add-done').text('Успешно добавлено');
+        });
+    });
+
+    $('#select-author-list').on('change', function () {
+        authorId = $('#select-author-list option:selected').val();
+        $('#input-author-name-edit').val($('#select-author-list option:selected').text());
+    });
+
+    $('#select-author-list').on('focus', function () {
+        if (focusedOne) {
+
+        }
+        else {
+            $.ajax({
+                url: `${baseUrl}/GetAuthors`,
+                method: 'get',
+                dataType: 'json',
+                async: true
+            }).done(function (data) {
+                focusedOne = true;
+                selectFiller(data);
+            })
+        }
+    });
+
+    $('#btn-edit-author').on('click', function (event) {
+        event.preventDefault();
+        if ($('#input-author-name-edit').val().length > 0) {
+            let author = {
+                Фио: $('#input-author-name-edit').val(),
+                кодАвтора: authorId
+            };
+            $.ajax({
+                url: `${baseUrl}/editAuthor`,
+                method: 'put',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify(author),
+                async: true
+            }).done(function () {
+                $('#span-edit-done').text("Успешно отредактировано");
+            });
+        } else {
+            $('#span-edit-done').text("Поле для редактирование не может быть пустым").css('color', 'red');
         }
     });
 
@@ -141,26 +166,6 @@ $(function () {
         });
     });
 
-    $('#btPos').on('click', function (event) {
-            event.preventDefault(); // нужно если чтобы браузер не перезагружал страницу после нажатия на эту кнопку
-            let author = {
-                Фио: $('#authorText').val()
-            };
-            $.ajax({
-                url: baseUrl,
-                method: 'post',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                async: true,
-                data: JSON.stringify(author)
-            }).done(function () {
-                alert("Успешно");
-            }).fail(function (handleError) {
-                console.log(handleError);
-            });
-
-        });
-
     $('#btDel').on('click', function (event) {
             event.preventDefault();
             $.ajax({
@@ -176,30 +181,6 @@ $(function () {
             });
 
         });
-
-    $('#btPut').on('click', function (event) {
-            event.preventDefault();
-            let authors = {
-                КодАвтора: -1,
-                Фио: ""
-            };
-            authors.КодАвтора = (Number)($('#authorId').val());
-            authors.Фио = $('#authorFio').val();
-
-            $.ajax({
-                url: baseUrl,
-                method: 'put',
-                contentType: 'application/json;charset=utf-8',
-                dataType: 'json',
-                async: true,
-                data: JSON.stringify(authors)
-            }).done(function () {
-                alert("Успешно");
-            }).fail(function (errorHandle) {
-                console.log(errorHandle);
-            });
-
-    });
 
     function tilesFiller(arr, books, genres, authors) {
         var arr = []; // Создаем один массив для всех элементов
@@ -220,5 +201,13 @@ $(function () {
 
         // Обернем массив в .row и добавим его в #tileContainer
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+    }
+
+    function selectFiller(data) {
+        var optionsConfig = [];
+        for (var i = 0; i < data.length; i++) {
+            optionsConfig.push(`<option value="${data[i].кодАвтора}">${data[i].фио}</option>`);
+        }
+        $('#select-author-list').append(optionsConfig.join('\n'));
     }
 });

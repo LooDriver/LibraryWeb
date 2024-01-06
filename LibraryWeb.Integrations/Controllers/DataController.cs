@@ -12,6 +12,7 @@ namespace LibraryWeb.Integrations.Controllers
         DatabaseContext db;
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+
         [HttpGet]
         public async Task<JsonResult> GetBooks()
         {
@@ -33,6 +34,15 @@ namespace LibraryWeb.Integrations.Controllers
 
             return Json(books);
 
+        }
+
+        [HttpGet("GetAuthors")]
+        public async Task<JsonResult> GetAuthors()
+        {
+            db = DatabaseContext.GetContext();
+            await db.Авторs.LoadAsync();
+            var author = await db.Авторs.ToListAsync();
+            return Json(author);
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
@@ -136,12 +146,11 @@ namespace LibraryWeb.Integrations.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("editAuthor")]
         public async Task<IActionResult> UpdateAuthors([FromBody] Автор автор)
         {
             db = DatabaseContext.GetContext();
-            var id = автор.КодАвтора;
-            var item = await db.Авторs.FindAsync(id);
+            var item = await db.Авторs.FindAsync(автор.КодАвтора);
             if (item == null) return BadRequest();
             else
             {

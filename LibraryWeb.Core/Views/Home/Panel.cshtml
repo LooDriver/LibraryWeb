@@ -39,8 +39,9 @@
     <div class="collapse" id="form-add-author">
         <form class="d-inline-block">
             <div class="form-group mb-3">
-                <label for="input-author-name-add">ФИО Автора</label>
+                <label>ФИО Автора</label>
                 <input type="text" class="form-control" id="input-author-name-add" required />
+                <span id="span-add-done"></span>
             </div>
             <button class="btn btn-outline-info" id="btn-add-author">Добавить</button>
         </form>
@@ -48,8 +49,13 @@
     <div class="collapse" id="form-edit-author">
         <form class="d-inline-block">
             <div class="form-group mb-3">
-                <label for="input-author-name-edit">ФИО Автора</label>
+                <label>ФИО Автора для редактирования</label>
+                <select id="select-author-list">
+
+                </select><br/>
+                <label>ФИО Автора</label>
                 <input type="text" class="form-control" id="input-author-name-edit" required />
+                <span id="span-edit-done"></span>
             </div>
             <button class="btn btn-outline-info" id="btn-edit-author">Редактировать</button>
         </form>
