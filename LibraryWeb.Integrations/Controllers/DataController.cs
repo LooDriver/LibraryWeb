@@ -2,13 +2,11 @@ using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 
 namespace LibraryWeb.Integrations.Controllers
 {
     [Route("api/[controller]")]
+
     public class DataController : Controller
     {
         DatabaseContext db;
@@ -43,7 +41,7 @@ namespace LibraryWeb.Integrations.Controllers
         {
             db = DatabaseContext.GetContext();
             int id = -1;
-            foreach(var item in db.Книгиs)
+            foreach (var item in db.Книгиs)
             {
                 if (item.Название == name) id = item.КодКниги;
             }
@@ -57,21 +55,19 @@ namespace LibraryWeb.Integrations.Controllers
         public IActionResult CheckLogin([FromBody] Пользователи logins)
         {
             db = DatabaseContext.GetContext();
-            if (logins.Логин.Length > 0 && logins.Пароль.Length > 0)
+            bool dataEmptyCheck = logins.Логин.Length > 0 && logins.Пароль.Length > 0 ? true : false;
+            switch (dataEmptyCheck)
             {
-                var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
-                if (item.Any())
-                {
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
-                return BadRequest();
+                case true:
+                    {
+                        var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
+                        if (item.Any()) return Ok();
+                        else return BadRequest();
+                    }
+                case false:
+                    {
+                        return BadRequest();
+                    }
             }
         }
 
@@ -85,7 +81,7 @@ namespace LibraryWeb.Integrations.Controllers
                 await db.Пользователиs.AddAsync(registers);
                 await db.SaveChangesAsync();
                 return Ok();
-               
+
             }
             else
             {
@@ -155,7 +151,7 @@ namespace LibraryWeb.Integrations.Controllers
                     await db.SaveChangesAsync();
                     return Ok();
                 }
-                catch(Exception exp)
+                catch (Exception exp)
                 {
                     return BadRequest(exp.Message);
                 }

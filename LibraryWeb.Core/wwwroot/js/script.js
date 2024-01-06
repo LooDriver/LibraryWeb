@@ -1,8 +1,10 @@
 ﻿const baseUrl = 'api/data';
+var role = 'user';
 
 $(function () {
 
     $(document).ready(function () {
+/*        $('#li-admin-list').css('display', 'none');*/
         if (window.location.href.indexOf('/') !== -1) {
             $.ajax({
                 url: baseUrl,
@@ -11,6 +13,7 @@ $(function () {
                 dataType: 'json',
                 async: true
             }).done(function (data) {
+
                 var htmlLines = [];
                 tilesFiller(htmlLines, data.books, data.genres, data.authors);
 
@@ -21,8 +24,6 @@ $(function () {
     });
 
     $('#btn-form-login').on('click', function (event) {
-
-        
         let login = {
             Логин: $('#input-form-email').val(),
             Пароль: $('#input-form-password').val()
