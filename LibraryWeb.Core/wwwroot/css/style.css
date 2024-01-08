@@ -6,8 +6,8 @@
 
 }
 
-a {
-    text-decoration: none;
+tr, th, td {
+    border: 1px solid #ddd;
 }
 
 .tile {

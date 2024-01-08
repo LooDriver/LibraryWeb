@@ -1,4 +1,4 @@
-﻿const baseUrl = 'api/data';
+﻿const baseUrl = 'api';
 
 var focusedOne = false;
 var authorId = -1;
@@ -9,7 +9,7 @@ $(function () {
         /*        $('#li-admin-list').css('display', 'none');*/
         if (window.location.href.indexOf('/') !== -1) {
             $.ajax({
-                url: baseUrl,
+                url: `${baseUrl}/books/allBooks`,
                 method: 'get',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
@@ -25,6 +25,32 @@ $(function () {
         }
     });
 
+    $('#test-btn').on('click', function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: `${baseUrl}/author/getAuthors`,
+            method: 'get',
+            dataType: 'json',
+            async: true
+        }).done(function (data) {
+            tableFiller(data);
+        });
+    });
+    $('#tableAuthor').on('click', '#btn-table-add', function () {
+        var newRow = '<tr>' +
+            '<td><input type="text" size="1"/></td>' +
+            '<td><input type="text"/></td>' +
+            '<td><button class="btn-table-save">Сохранить</button></td>' +
+            '<td><button class="btn-table-cancel">Отмена</button></td>' +
+            '</tr>';
+        $('#tableAuthor tbody').append(newRow.join('\n'));
+    });
+
+    // Обработчик отмены добавления
+    $('#tableAuthor').on('click', '.btn-table-cancel', function () {
+        $(this).closest('tr').remove();
+    });
+
     $('#btn-add-author').on('click', function (event) {
         event.preventDefault();
         let author = {
@@ -32,7 +58,7 @@ $(function () {
         };
 
         $.ajax({
-            url: `${baseUrl}/addAuthor`,
+            url: `${baseUrl}/author/addAuthor`,
             method: 'post',
             data: JSON.stringify(author),
             contentType: 'application/json;charset=utf-8',
@@ -53,7 +79,7 @@ $(function () {
         }
         else {
             $.ajax({
-                url: `${baseUrl}/GetAuthors`,
+                url: `${baseUrl}/author/getAuthors`,
                 method: 'get',
                 dataType: 'json',
                 async: true
@@ -72,7 +98,7 @@ $(function () {
                 кодАвтора: authorId
             };
             $.ajax({
-                url: `${baseUrl}/editAuthor`,
+                url: `${baseUrl}/author/editAuthor`,
                 method: 'put',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(author),
@@ -91,7 +117,7 @@ $(function () {
             Пароль: $('#input-form-password').val()
         };
         $.ajax({
-            url: `${baseUrl}/auth`,
+            url: `${baseUrl}/auth/enter`,
             method: 'post',
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify(login),
@@ -112,7 +138,7 @@ $(function () {
         }
         if (registerUser.Пароль == $('#input-form-password-repeat').val()) {
             $.ajax({
-                url: `${baseUrl}/register`,
+                url: `${baseUrl}/auth/register`,
                 method: 'post',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(registerUser),
@@ -180,7 +206,30 @@ $(function () {
                 console.log(handleError);
             });
 
-        });
+    });
+
+    function tableFiller(data) {
+        var arr = [];
+        arr.push('<tr>');
+        arr.push('<th>Код автора</th>');
+        arr.push('<th>ФИО автора</th>');
+        arr.push('<th colspan="2">Функции БД</th>');
+        arr.push('</tr>');
+        for (var i = 0; i < data.length; i++) {
+            arr.push('<tr>');
+            arr.push(`<td><p>${data[i].кодАвтора}</p></td>`);
+            arr.push(`<td><p>${data[i].фио}</p></td>`);
+            arr.push(`<td><button id="btn-table-delete">Удаление</button></td>`);
+            arr.push(`<td><button id="btn-table-edit">Редактирование</button></td>`);
+            arr.push('</tr>');
+        }
+        arr.push('<tr>');
+        arr.push('<td><input type="text" size="1"/></td>');
+        arr.push('<td><input type="text"/></td>');
+        arr.push('<td><button id="btn-table-add">Добавить</button>');
+        arr.push('</tr>');
+        $('#tableAuthor').append(arr.join('\n'));
+    }
 
     function tilesFiller(arr, books, genres, authors) {
         var arr = []; // Создаем один массив для всех элементов
