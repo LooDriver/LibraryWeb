@@ -6,23 +6,21 @@ using Microsoft.EntityFrameworkCore;
 namespace LibraryWeb.Integrations.Controllers.TablesController
 {
     [Route("api/[controller]")]
-
     public class AuthorController : Controller
     {
         DatabaseContext db;
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-
-
         [HttpGet("getAuthors")]
         public async Task<JsonResult> GetAuthors()
         {
             db = DatabaseContext.GetContext();
             await db.Авторs.LoadAsync();
-            var author = await db.Авторs.ToListAsync();
+            var author = db.Авторs.ToList();
             return Json(author);
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addAuthor")]
         public async Task<IActionResult> PostAuthors([FromBody] Автор автор)
         {
@@ -46,7 +44,8 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
             }
         }
 
-        [HttpDelete("{id?}")]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpDelete("deleteAuthor/{id}")]
         public async Task<IActionResult> DeleteAuthors([FromForm] int id)
         {
             db = DatabaseContext.GetContext();
@@ -70,6 +69,7 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
             }
         }
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPut("editAuthor")]
         public async Task<IActionResult> UpdateAuthors([FromBody] Автор автор)
         {

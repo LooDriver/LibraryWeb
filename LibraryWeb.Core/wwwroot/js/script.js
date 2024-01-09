@@ -1,7 +1,6 @@
 ﻿const baseUrl = 'api';
 
-var focusedOne = false;
-var authorId = -1;
+
 
 $(function () {
 
@@ -22,92 +21,6 @@ $(function () {
             }).fail(function (handleError) {
                 console.log(handleError);
             });
-        }
-    });
-
-    $('#test-btn').on('click', function (event) {
-        event.preventDefault();
-        $.ajax({
-            url: `${baseUrl}/author/getAuthors`,
-            method: 'get',
-            dataType: 'json',
-            async: true
-        }).done(function (data) {
-            tableFiller(data);
-        });
-    });
-    $('#tableAuthor').on('click', '#btn-table-add', function () {
-        var newRow = '<tr>' +
-            '<td><input type="text" size="1"/></td>' +
-            '<td><input type="text"/></td>' +
-            '<td><button class="btn-table-save">Сохранить</button></td>' +
-            '<td><button class="btn-table-cancel">Отмена</button></td>' +
-            '</tr>';
-        $('#tableAuthor tbody').append(newRow.join('\n'));
-    });
-
-    // Обработчик отмены добавления
-    $('#tableAuthor').on('click', '.btn-table-cancel', function () {
-        $(this).closest('tr').remove();
-    });
-
-    $('#btn-add-author').on('click', function (event) {
-        event.preventDefault();
-        let author = {
-            Фио: $('#input-author-name-add').val()
-        };
-
-        $.ajax({
-            url: `${baseUrl}/author/addAuthor`,
-            method: 'post',
-            data: JSON.stringify(author),
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function () {
-            $('#span-add-done').text('Успешно добавлено');
-        });
-    });
-
-    $('#select-author-list').on('change', function () {
-        authorId = $('#select-author-list option:selected').val();
-        $('#input-author-name-edit').val($('#select-author-list option:selected').text());
-    });
-
-    $('#select-author-list').on('focus', function () {
-        if (focusedOne) {
-
-        }
-        else {
-            $.ajax({
-                url: `${baseUrl}/author/getAuthors`,
-                method: 'get',
-                dataType: 'json',
-                async: true
-            }).done(function (data) {
-                focusedOne = true;
-                selectFiller(data);
-            })
-        }
-    });
-
-    $('#btn-edit-author').on('click', function (event) {
-        event.preventDefault();
-        if ($('#input-author-name-edit').val().length > 0) {
-            let author = {
-                Фио: $('#input-author-name-edit').val(),
-                кодАвтора: authorId
-            };
-            $.ajax({
-                url: `${baseUrl}/author/editAuthor`,
-                method: 'put',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(author),
-                async: true
-            }).done(function () {
-                $('#span-edit-done').text("Успешно отредактировано");
-            });
-        } else {
-            $('#span-edit-done').text("Поле для редактирование не может быть пустым").css('color', 'red');
         }
     });
 
@@ -208,31 +121,8 @@ $(function () {
 
     });
 
-    function tableFiller(data) {
-        var arr = [];
-        arr.push('<tr>');
-        arr.push('<th>Код автора</th>');
-        arr.push('<th>ФИО автора</th>');
-        arr.push('<th colspan="2">Функции БД</th>');
-        arr.push('</tr>');
-        for (var i = 0; i < data.length; i++) {
-            arr.push('<tr>');
-            arr.push(`<td><p>${data[i].кодАвтора}</p></td>`);
-            arr.push(`<td><p>${data[i].фио}</p></td>`);
-            arr.push(`<td><button id="btn-table-delete">Удаление</button></td>`);
-            arr.push(`<td><button id="btn-table-edit">Редактирование</button></td>`);
-            arr.push('</tr>');
-        }
-        arr.push('<tr>');
-        arr.push('<td><input type="text" size="1"/></td>');
-        arr.push('<td><input type="text"/></td>');
-        arr.push('<td><button id="btn-table-add">Добавить</button>');
-        arr.push('</tr>');
-        $('#tableAuthor').append(arr.join('\n'));
-    }
-
     function tilesFiller(arr, books, genres, authors) {
-        var arr = []; // Создаем один массив для всех элементов
+        var arr = [];
 
         for (var i = 0; i < books.length; i++) {
             arr.push('<div class="col-md-4">');
@@ -248,15 +138,6 @@ $(function () {
             arr.push('</div>');
         }
 
-        // Обернем массив в .row и добавим его в #tileContainer
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
-    }
-
-    function selectFiller(data) {
-        var optionsConfig = [];
-        for (var i = 0; i < data.length; i++) {
-            optionsConfig.push(`<option value="${data[i].кодАвтора}">${data[i].фио}</option>`);
-        }
-        $('#select-author-list').append(optionsConfig.join('\n'));
     }
 });

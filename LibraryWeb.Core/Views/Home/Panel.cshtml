@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["title"] = "Панель управления";
 }
-@* <div class="collapse" id="navbarToggleExternalContent">
+<div class="collapse" id="navbarToggleExternalContent">
     <div class="bg-dark p-4 d-flex justify-content-center">
         <h5 class="text-white"></h5>
         <button class="btn btn-outline-info" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" id="btn-author-table">Таблица Авторы</button>
@@ -19,41 +19,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
-</nav> *@
-<button id="test-btn">Тест</button>
-<table id="tableAuthor">
-    @* <tr>
-        <th>Код автора</th>
-        <th>ФИО автора</th>
-        <th colspan="2">Функции БД</th>
-    </tr>
-    <tr>
-        <td>
-            <p>1</p>
-        </td>
-        <td>
-            <p>Пример ФИО</p>
-        </td>
-        <td>
-            <button id="btn-delete">Удаление</button>
-        </td>
-        <td>
-            <button id="btn-delete">Редактирование</button>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input type="text" size="1"/>
-        </td>
-        <td>
-            <input type="text"/>
-        </td>
-        <td>
-            <button id="btn-delete">Добавить</button>
-        </td>
-    </tr> *@
-</table>
-@* <div class="text-center" id="author-table">
+</nav>
+<div class="text-center" id="author-table">
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-add-author" id="btn-form-add">Добавление</button>
@@ -62,10 +29,10 @@
             <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-edit-author" id="btn-form-edit">Редактирование</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link">Удаление</button>
+            <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-delete-author" id="btn-form-delete">Удаление</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link">Просмотр данных</button>
+            <button class="nav-link" data-bs-toggle="collapse" data-bs-target="#form-show-author" id="btn-form-show">Просмотр данных</button>
         </li>
     </ul>
     <div class="collapse" id="form-add-author">
@@ -92,5 +59,22 @@
             <button class="btn btn-outline-info" id="btn-edit-author">Редактировать</button>
         </form>
     </div>
-</div> *@
-
+    <div class="collapse" id="form-delete-author">
+        <form class="d-inline-block">
+            <div class="form-group mb-3">
+                <label>Укажите код автора для удаления</label>
+                <input type="number" id="input-id-author" required /><br/>
+                <span id="span-delete-info"></span>
+                <button class="btn btn-outline-info" id="btn-delete-author">Удалить</button>
+            </div>
+        </form>
+    </div>
+    <div class="collapse" id="form-show-author">
+        <form class="d-inline-block">
+            <button class="btn btn-outline-info" id="btn-show-author">Получить данные</button>
+            <div class="form-group mb-3">
+                <table id="tableAuthor"></table>
+            </div>
+        </form>
+    </div>
+</div>

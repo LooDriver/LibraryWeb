@@ -10,6 +10,7 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
     {
         DatabaseContext db;
 
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
         public async Task<JsonResult> GetBooks()
         {
@@ -34,8 +35,8 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("book/{name?}")]
-        public async Task<JsonResult> GetBookById([FromQuery] string name)
+        [HttpGet("{name?}")]
+        public async Task<JsonResult> GetBookByName([FromQuery] string name)
         {
             db = DatabaseContext.GetContext();
             int id = -1;
