@@ -16,18 +16,12 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
         {
             db = DatabaseContext.GetContext();
             await db.Жанрs.LoadAsync();
-            await db.Книгиs.LoadAsync();
-            await db.Авторs.LoadAsync();
 
             var book = await db.Книгиs.ToListAsync();
-            var genre = await db.Жанрs.ToListAsync();
-            var author = await db.Авторs.ToListAsync();
 
             var books = new
             {
-                Books = book,
-                Genres = genre,
-                Authors = author
+                Books = book
             };
 
             return Json(books);

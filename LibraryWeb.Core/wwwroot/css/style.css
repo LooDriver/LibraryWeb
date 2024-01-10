@@ -3,51 +3,34 @@
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
+}
+th, td, tr {
+    
+    border: 1px solid black;
 
 }
 
-tr, th, td {
-    border: 1px solid #ddd;
-}
-
-.tile {
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    overflow: hidden;
-}
-
-.tile img 
-{
-   padding: 20px;
-   width: 100%;
-   height: auto;
-   display: table-cell;
-}
 button {
     margin: 0 auto;
     display: block;
 }
-.tile-content {
-    padding: 20px;
+.tile {
+    background-color: transparent;
+    
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.btn-about-book {
+    background-color: transparent;
+    border-radius: 8px;
+}
+.tile-book {
+    display: none;
+}
+.tile img {
+    display: table-cell;
 }
 
-.tile-description {
-
-    text-align: center;
-    color: #555;
-    padding: 20px;
-}
 footer{
     background-color: black;
-}
-.tile-genre, .tile-book, .tile-author {
-    text-align: center;
-    padding: 5px;
-}
-.tile-about-books {
-
-
 }

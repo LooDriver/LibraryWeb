@@ -58,6 +58,8 @@ $(function () {
     });
 
     $('#select-author-list').on('focus', function () {
+        $('#select-author-list').empty();
+        focusedOne = false;
         if (focusedOne) {
 
         }
@@ -82,6 +84,8 @@ $(function () {
             dataType: 'json',
             data: { 'id': (Number)($('#input-id-author').val()) },
             async: true
+        }).done(function () {
+            $('#span-delete-info').text("Успешно удалено");
         });
     });
     function selectFiller(data) {

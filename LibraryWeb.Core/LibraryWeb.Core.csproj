@@ -25,4 +25,8 @@
     <ProjectReference Include="..\LibraryWeb.Sql\LibraryWeb.Sql.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\TablesJS\Books\" />
+  </ItemGroup>
+
 </Project>
