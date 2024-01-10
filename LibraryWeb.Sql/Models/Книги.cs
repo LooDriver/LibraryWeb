@@ -15,8 +15,6 @@
 
         public int? КоличествоВНаличии { get; set; }
 
-        public string? Описание { get; set; }
-
         public virtual Автор? КодАвтораNavigation { get; set; }
 
         public virtual Жанр? КодЖанраNavigation { get; set; }

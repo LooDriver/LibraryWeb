@@ -45,7 +45,7 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpDelete("deleteAuthor/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthors([FromForm] int id)
         {
             db = DatabaseContext.GetContext();

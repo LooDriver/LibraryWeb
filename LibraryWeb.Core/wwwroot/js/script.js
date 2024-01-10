@@ -6,7 +6,7 @@ $(function () {
 
     $(document).ready(function () {
         /*        $('#li-admin-list').css('display', 'none');*/
-        if (window.location.href.indexOf('/') !== -1) {
+        if (window.location.href.indexOf('/') != -1) {
             $.ajax({
                 url: `${baseUrl}/books/allBooks`,
                 method: 'get',

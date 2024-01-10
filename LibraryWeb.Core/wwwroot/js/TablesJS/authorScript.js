@@ -79,9 +79,8 @@ $(function () {
         $.ajax({
             url: `${baseUrl}/author/deleteAuthor`,
             method: 'delete',
-            dataType: 'text',
-            data: { 'id': ($('#input-id-author').val()) },
-            contentType: 'application/json;charset=utf-8',
+            dataType: 'json',
+            data: { 'id': (Number)($('#input-id-author').val()) },
             async: true
         });
     });
