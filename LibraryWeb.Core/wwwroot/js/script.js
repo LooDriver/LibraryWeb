@@ -56,22 +56,6 @@ $(function () {
         });
     });
 
-    $('#btDel').on('click', function (event) {
-            event.preventDefault();
-            $.ajax({
-                url: baseUrl,
-                method: 'delete',
-                dataType: 'text',
-                async: true,
-                data: { 'id': (Number)($('#authorDelete').val()) },
-            }).done(function () {
-                alert("Успешно");
-            }).fail(function (handleError) {
-                console.log(handleError);
-            });
-
-    });
-
     function tilesFiller(books) {
         var arr = [];
 

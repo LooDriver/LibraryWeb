@@ -1,48 +1,48 @@
 ﻿$(function () {
-    $('#btn-author-table').on('click', function (event) {
+    $('#btn-genre-table').on('click', function (event) {
         event.preventDefault();
 
-        $('#author-table').toggleClass('d-none');
+        $('#genre-table').toggleClass('d-none');
     });
-    $('#btn-form-add').on('click', function () {
+    $('#btn-form-genre-add').on('click', function () {
 
-        $('#form-add-author').collapse('show');
+        $('#form-add-genre').collapse('show');
 
-        $('#form-edit-author').collapse('hide');
+        $('#form-edit-genre').collapse('hide');
 
-        $('#form-delete-author').collapse('hide');
+        $('#form-delete-genre').collapse('hide');
 
-        $('#form-show-author').collapse('hide');
+        $('#form-show-genre').collapse('hide');
     });
 
-    $('#btn-form-edit').on('click', function () {
+    $('#btn-form-genre-edit').on('click', function () {
 
-        $('#form-edit-author').collapse('show');
+        $('#form-edit-genre').collapse('show');
 
-        $('#form-add-author').collapse('hide');
+        $('#form-add-genre').collapse('hide');
 
-        $('#form-delete-author').collapse('hide');
+        $('#form-delete-genre').collapse('hide');
 
-        $('#form-show-author').collapse('hide');
+        $('#form-show-genre').collapse('hide');
     });
-    $('#btn-form-delete').on('click', function () {
+    $('#btn-form-genre-delete').on('click', function () {
 
-        $('#form-edit-author').collapse('hide');
+        $('#form-edit-genre').collapse('hide');
 
-        $('#form-add-author').collapse('hide');
+        $('#form-add-genre').collapse('hide');
 
-        $('#form-delete-author').collapse('show');
+        $('#form-delete-genre').collapse('show');
 
-        $('#form-show-author').collapse('hide');
+        $('#form-show-genre').collapse('hide');
     });
-    $('#btn-form-show').on('click', function () {
+    $('#btn-form-genre-show').on('click', function () {
 
-        $('#form-edit-author').collapse('hide');
+        $('#form-edit-genre').collapse('hide');
 
-        $('#form-add-author').collapse('hide');
+        $('#form-add-genre').collapse('hide');
 
-        $('#form-delete-author').collapse('hide');
+        $('#form-delete-genre').collapse('hide');
 
-        $('#form-show-author').collapse('show');
+        $('#form-show-genre').collapse('show');
     });
 });

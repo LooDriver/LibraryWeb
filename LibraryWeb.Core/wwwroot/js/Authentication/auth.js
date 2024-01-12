@@ -2,9 +2,6 @@
 
 $(function () {
 
-    $(document).ready(function () {
-        if (right != 'Администратор' && ) window.location.href = '/';
-    });
     $('#btn-form-login').on('click', function (event) {
         let login = {
             Логин: $('#input-form-email').val(),
