@@ -3,7 +3,6 @@
 $(function () {
 
     $(document).ready(function () {
-        $('#li-admin-list').css('display', 'none');
         if (window.location.pathname.length == 1) {
             $.ajax({
                 url: `${baseUrl}/books/allBooks`,

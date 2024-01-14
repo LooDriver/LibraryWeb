@@ -9,7 +9,7 @@ namespace LibraryWeb.Sql.Context
     public partial class DatabaseEntities : DbContext
     {
         private static bool Connected = false;
-        private readonly string connectionString = "Server=localhost\\sqlexpress;Database=Библиотека2;Trusted_Connection=true;TrustServerCertificate=true";
+        private readonly string connectionString = "Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true";
         public DatabaseEntities()
         {
             IsConnect(connectionString);
