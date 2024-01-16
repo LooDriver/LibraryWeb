@@ -11,7 +11,7 @@ $(function () {
                 dataType: 'json',
                 async: true
             }).done(function (data) {
-                tilesFiller(data.books);
+                tilesFiller(data);
 
             }).fail(function (handleError) {
                 console.log(handleError);
@@ -42,7 +42,7 @@ $(function () {
         var bookTitle = $(this).closest('.tile').find('.tile-book').text();
 
         $.ajax({
-            url: `${baseUrl}/book`,
+            url: `${baseUrl}/books`,
             method: 'get',
             dataType: 'json',
             data: { 'name': bookTitle },
@@ -59,7 +59,7 @@ $(function () {
         var arr = [];
 
         for (var i = 0; i < books.length; i++) {
-            arr.push('<div class="col-md-4">');
+            arr.push('<div class="col-md-2 mb-4">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
             arr.push(`<div class="tile-book">${books[i].название}</div>`);
