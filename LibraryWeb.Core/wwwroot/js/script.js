@@ -49,17 +49,29 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            location.href = `book/name=${data.название}`;
+            createAboutBook(data.author, data.genre, data.book);
         }).fail(function (handleError) {
             console.log(handleError);
         });
     });
-
+    function createAboutBook(author, genre, book) {
+        var arr = [];
+        arr.push('<div>');
+        arr.push(`<img src="data:image/png;base64,${book.обложкаКниги}">`);
+        arr.push('</div>');
+        arr.push('<div class="col-md-8 text-left">');
+        arr.push(`<h1>${book.название}</h1>`);
+        arr.push(`<p>Автор - ${author.фио}</p>`);
+        arr.push(`<p>Жанр - ${genre.названиеЖанра}</p>`);
+        arr.push('</div>');
+        $('#divAboutBook').append('<div class="row">' + arr.join('') + '</div>');
+        location.href = `book/name=${book.название}`;
+    }
     function tilesFiller(books) {
         var arr = [];
 
         for (var i = 0; i < books.length; i++) {
-            arr.push('<div class="col-md-2 mb-4">');
+            arr.push('<div class="col-md-2">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
             arr.push(`<div class="tile-book">${books[i].название}</div>`);
@@ -70,5 +82,6 @@ $(function () {
         }
 
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+
     }
 });
