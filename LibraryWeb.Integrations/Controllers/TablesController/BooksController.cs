@@ -14,19 +14,23 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
         public JsonResult GetBooks() => Json(db.Книгиs.Take(db.Книгиs.Count()));
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("{name?}")]
+        [HttpGet]
         public async Task<JsonResult> GetBookByName([FromQuery] string name)
         {
-            int bookName = db.Книгиs.First(x => x.Название == name).КодКниги;
-            Книги книги = await db.Книгиs.FindAsync(bookName);
-            var books = new
+            var bookName = db.Книгиs.FirstOrDefault(x => x.Название == name);
+            int bookId = bookName != null ? bookName.КодКниги : 0;
+            Книги книги = await db.Книгиs.FindAsync(bookId);
+            if (книги == null) { return Json(null); }
+            else
             {
-                Book = книги,
-                Author = await db.Авторs.FindAsync(книги.КодАвтора),
-                Genre = await db.Жанрs.FindAsync(книги.КодЖанра)
-            };
-            return Json(books);
+                var books = new
+                {
+                    Book = книги,
+                    Author = await db.Авторs.FindAsync(книги.КодАвтора),
+                    Genre = await db.Жанрs.FindAsync(книги.КодЖанра)
+                };
+                return Json(books);
+            }
         }
-
     }
 }
