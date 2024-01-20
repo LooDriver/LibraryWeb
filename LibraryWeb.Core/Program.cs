@@ -25,11 +25,13 @@ namespace LibraryWeb.Core
             app.UseDefaultFiles();
 
             app.UseRouting();
-            app.MapEasyData((options) => {
+            app.MapEasyData(options =>
+            {
                 options.UseDbContext<DatabaseEntities>();
             });
             app.MapControllers();
-            //app.EnsureDbInitialized(builder.Configuration, app.Environment);
+          
+                     
             app.Run();
         }
     }
