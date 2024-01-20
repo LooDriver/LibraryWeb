@@ -11,14 +11,18 @@ $(function () {
                 dataType: 'json',
                 async: true
             }).done(function (data) {
-                tilesFiller(data.books);
+                tilesFiller(data);
 
             }).fail(function (handleError) {
                 console.log(handleError);
             });
         }
-    });
+        else if (window.location.href.includes('book/name') & sessionStorage.getItem('bookData') !== undefined) {
+            var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
+/*            createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);*/
+        }
 
+    });
 
     $('#btn-form-search').on('click', function (event) {
         event.preventDefault();
@@ -40,26 +44,42 @@ $(function () {
         event.preventDefault();
 
         var bookTitle = $(this).closest('.tile').find('.tile-book').text();
-
         $.ajax({
-            url: `${baseUrl}/book`,
+            url: `${baseUrl}/books`,
             method: 'get',
             dataType: 'json',
             data: { 'name': bookTitle },
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            location.href = `book/name=${data.название}`;
+            sessionStorage.setItem('bookData', JSON.stringify(data));
+            window.location.href = `book/name?${data.book.название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
     });
 
+    function createAboutBook(author, genre, book) {
+        var arr = [];
+        arr.push('<div>');
+        arr.push(`<img src="data:image/png;base64,${book.обложкаКниги}" alt="фото">`);
+        arr.push('</div>');
+        arr.push('<div class="col-md-8 text-left">');
+        arr.push(`<h1>${book.название}</h1>`);
+        arr.push(`<p>Автор - ${author.фио}</p>`);
+        arr.push(`<p>Жанр - ${genre.названиеЖанра}</p>`);
+        arr.push('</div>');
+
+        $('#div-about-book').append(arr.join(''));
+
+    }
+
+
     function tilesFiller(books) {
         var arr = [];
 
         for (var i = 0; i < books.length; i++) {
-            arr.push('<div class="col-md-4">');
+            arr.push('<div class="col-md-2">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
             arr.push(`<div class="tile-book">${books[i].название}</div>`);
@@ -70,5 +90,6 @@ $(function () {
         }
 
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+
     }
 });

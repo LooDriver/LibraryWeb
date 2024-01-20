@@ -1,12 +1,34 @@
 ﻿@{
     ViewData["title"] = "О книге";
 }
+<div class="row" id="div-about-book">
 
-<div class="container-fluid">
-    <div class="col-md-4">
-        <div class="tile">
-            <div class="tile-image"><img src="" alt="фото"/></div>
-            <div class="tile-about-books">Название книги</div>
+</div>
+
+
+
+<div class="container book-container">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="book-cover.jpg" alt="Обложка книги" class="book-cover">
+        </div>
+        <div class="col-md-8">
+            <div class="book-details">
+                <h2>Название книги</h2>
+                <p class="text-muted">Автор: Имя Автора</p>
+                <p><strong>Жанр:</strong> Жанр книги</p>
+                <p><strong>Год издания:</strong> 20XX</p>
+                <p><strong>ISBN:</strong> XXX-XXXX-XXXX</p>
+            </div>
+            <div class="book-description">
+                <hr>
+                <h4>Описание</h4>
+                <p>Краткое описание книги. Здесь вы можете описать сюжет, основные персонажи и другие интересные детали.</p>
+                <hr>
+            </div>
+            <p class="text-left">
+                <a class="btn btn-primary">Купить</a>
+            </p>
         </div>
     </div>
 </div>

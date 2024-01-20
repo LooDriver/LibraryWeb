@@ -5,9 +5,7 @@
     box-sizing: border-box;
 }
 th, td, tr {
-    
     border: 1px solid black;
-
 }
 
 button {
@@ -16,7 +14,6 @@ button {
 }
 .tile {
     background-color: transparent;
-    
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -29,4 +26,26 @@ button {
 }
 .tile img {
     display: table-cell;
+}
+.book-container {
+    max-width: 800px;
+    margin: 0px 0px;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.book-cover {
+    max-width: 50%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.book-details {
+    margin-bottom: 20px;
+    margin-right: 20px; /* Добавлен правый отступ для разделения от book-description */
+}
+
+.book-description {
+    margin-top: 20px;
 }

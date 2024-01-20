@@ -2,18 +2,17 @@
 using LibraryWeb.Sql.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace LibraryWeb.Sql.Context
 {
 
     public partial class DatabaseEntities : DbContext
     {
-        private static bool Connected = false;
         private readonly string connectionString = "Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true";
         public DatabaseEntities()
         {
-            IsConnect(connectionString);
-            if (Connected)
+            if (IsConnect(connectionString))
             {
                 return;
             }
@@ -22,23 +21,29 @@ namespace LibraryWeb.Sql.Context
                 Database.EnsureCreated();
             }
         }
+        public DatabaseEntities(DbContextOptions<DatabaseEntities> options): base(options)
+        {
 
-        private void IsConnect(string connectionString)
+        }
+
+        private bool IsConnect(string connectionString)
         {
             try
             {
                 SqlConnection connection = new SqlConnection(connectionString);
                 connection.Open();
                 connection.Dispose();
-                Connected = true;
+                return true;
             }
             catch (SqlException ex)
             {
                 Console.WriteLine(ex.Message);
+                return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return false;
             }
         }
 
