@@ -1,3 +1,7 @@
+using EasyData.Services;
+using LibraryWeb.Sql.Context;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Text.Json.Serialization;
 
 namespace LibraryWeb.Core
@@ -10,7 +14,10 @@ namespace LibraryWeb.Core
 
             // Add services to the container.
             builder.Services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
+            builder.Services.AddDbContext<DatabaseEntities>(options =>
+            {
+                options.UseSqlServer("Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true");
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline
@@ -18,7 +25,11 @@ namespace LibraryWeb.Core
             app.UseDefaultFiles();
 
             app.UseRouting();
+            app.MapEasyData((options) => {
+                options.UseDbContext<DatabaseEntities>();
+            });
             app.MapControllers();
+            //app.EnsureDbInitialized(builder.Configuration, app.Environment);
             app.Run();
         }
     }

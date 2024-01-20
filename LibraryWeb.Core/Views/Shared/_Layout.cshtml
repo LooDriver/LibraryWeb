@@ -10,6 +10,7 @@
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="~/js/script.js" asp-append-version="true"></script>
 
+
     <script src="~/js/TablesJS/Author/authorScript.js" asp-append-version="true"></script>
     <script src="~/js/TablesJS/Author/authorElements.js" asp-append-version="true"></script>
     <script src="~/js/TablesJS/Genre/genreScript.js" asp-append-version="true"></script>
@@ -19,6 +20,7 @@
 
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" asp-append-version="true"/>
+
 </head>
 <body>
     <header>
@@ -118,6 +120,6 @@
         </nav>
     </header>
     @RenderBody()
-
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
