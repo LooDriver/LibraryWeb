@@ -8,7 +8,7 @@ namespace LibraryWeb.Core.Controllers
         [Route("/")]
         public IActionResult Index() => View();
 
-        [Route("{name?}")]
+        [Route("book/{name?}")]
         public IActionResult AboutBook() => View();
 
         [Route("panel")]

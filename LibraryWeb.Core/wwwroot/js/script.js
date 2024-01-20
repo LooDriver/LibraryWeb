@@ -17,12 +17,11 @@ $(function () {
                 console.log(handleError);
             });
         }
-        else if (window.location.href.includes('book/name')) {
-            var bookName = getParameterByName('1984');
-            if (bookName) {
-                test(bookName);
-            }
+        else if (window.location.href.includes('book/name') & sessionStorage.getItem('bookData') !== undefined) {
+            var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
+/*            createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);*/
         }
+
     });
 
     $('#btn-form-search').on('click', function (event) {
@@ -41,7 +40,10 @@ $(function () {
         });
     });
 
-    function test(bookTitle) {
+    $('#tileContainer').on('click', '.btn-about-book', function (event) {
+        event.preventDefault();
+
+        var bookTitle = $(this).closest('.tile').find('.tile-book').text();
         $.ajax({
             url: `${baseUrl}/books`,
             method: 'get',
@@ -50,44 +52,28 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            console.log(data);
-            createAboutBook(data.author, data.genre, data.book);
+            sessionStorage.setItem('bookData', JSON.stringify(data));
+            window.location.href = `book/name?${data.book.название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
-    }
-
-    function getParameterByName(name) {
-        var url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-
-
-
-    $('#tileContainer').on('click', '.btn-about-book', function (event) {
-        event.preventDefault();
-
-        var bookTitle = $(this).closest('.tile').find('.tile-book').text();
-        test(bookTitle);
     });
 
     function createAboutBook(author, genre, book) {
         var arr = [];
+        arr.push('<div>');
+        arr.push(`<img src="data:image/png;base64,${book.обложкаКниги}" alt="фото">`);
+        arr.push('</div>');
         arr.push('<div class="col-md-8 text-left">');
         arr.push(`<h1>${book.название}</h1>`);
         arr.push(`<p>Автор - ${author.фио}</p>`);
         arr.push(`<p>Жанр - ${genre.названиеЖанра}</p>`);
         arr.push('</div>');
 
-        var aboutBookHtml = '<div class="row">' + arr.join('') + '</div>';
-        console.log('Добавляются элементы в #divAboutBook:', aboutBookHtml);
-        $('#divAboutBook').replaceWith(aboutBookHtml);
+        $('#div-about-book').append(arr.join(''));
+
     }
+
 
     function tilesFiller(books) {
         var arr = [];
