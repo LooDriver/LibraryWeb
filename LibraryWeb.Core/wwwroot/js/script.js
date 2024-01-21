@@ -19,7 +19,7 @@ $(function () {
         }
         else if (window.location.href.includes('book/name') & sessionStorage.getItem('bookData') !== undefined) {
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
-/*            createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);*/
+            createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
 
     });
@@ -61,16 +61,26 @@ $(function () {
 
     function createAboutBook(author, genre, book) {
         var arr = [];
-        arr.push('<div>');
+        arr.push('<div class="col-md-4 text-center">');
         arr.push(`<img src="data:image/png;base64,${book.обложкаКниги}" alt="фото">`);
         arr.push('</div>');
-        arr.push('<div class="col-md-8 text-left">');
-        arr.push(`<h1>${book.название}</h1>`);
-        arr.push(`<p>Автор - ${author.фио}</p>`);
-        arr.push(`<p>Жанр - ${genre.названиеЖанра}</p>`);
-        arr.push('</div>');
-
-        $('#div-about-book').append(arr.join(''));
+        arr.push('<div class="col-md-8">');
+        arr.push('<div class="book-details">');
+        arr.push(`<h2>${book.название}</h2>`)
+        arr.push(`<p class="text-muted">Автор: ${author.фио}</p>`);
+        arr.push(`<p><strong>Жанр: </strong>${genre.названиеЖанра}</p>`);
+        arr.push(`</div>`);
+        arr.push(`<div class="book-description">`);
+        arr.push(`<hr>`);
+        arr.push(`<h4>Описание</h4>`);
+        arr.push(`<p>Краткое описание книги. Здесь вы можете описать сюжет, основные персонажи и другие интересные детали.</p>`);
+        arr.push(`<hr>`);
+        arr.push(`</div>`);
+        arr.push(`<p class="text-left">`);
+        arr.push(`<a class="btn btn-primary">Купить</a>`);
+        arr.push(`</p>`);
+        arr.push(`</div>`);
+        $('#div-about-book').append('<div class="row">' + arr.join('') + '</div>');
 
     }
 
