@@ -39,7 +39,10 @@ $(function () {
             }
         });
     });
-
+    $('#a-admin-panel').on('click', function (event) {
+        event.preventDefault();
+        alert('kajsdjklahskdhkasdh');
+    });
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
 
@@ -84,7 +87,7 @@ $(function () {
 
     }
 
-
+    
     function tilesFiller(books) {
         var arr = [];
 
