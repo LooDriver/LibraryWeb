@@ -21,6 +21,21 @@ $(function () {
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
             createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
+        else if (window.location.href.includes('easydata') & sessionStorage.getItem('auth_key') !== undefined) {
+            fetch('/easydata',
+                {
+                    method: 'GET',
+                    header: {
+                        `Authorization: Bearer ${}`
+                    }
+                }).then(response => {
+                if (response.redirected) {
+                    window.location.href = '/easydata';
+                }
+            }).catch(function (err) {
+
+            });
+        }
 
     });
 
@@ -39,10 +54,7 @@ $(function () {
             }
         });
     });
-    $('#a-admin-panel').on('click', function (event) {
-        event.preventDefault();
-        alert('kajsdjklahskdhkasdh');
-    });
+
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
 
@@ -61,7 +73,51 @@ $(function () {
             console.log(handleError);
         });
     });
+    $('#btn-form-login').on('click', function (event) {
+        let login = {
+            Логин: $('#input-form-email').val(),
+            Пароль: $('#input-form-password').val()
+        };
+        $.ajax({
+            url: `${baseUrl}/auth/enter`,
+            method: 'post',
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify(login),
+            async: true
+        }).done(function (data) {
+            sessionStorage.setItem('auth_key', `${data}`);
+        }).fail(function () {
+            event.preventDefault();
+        })
+    });
 
+    $('#btn-form-register').on('click', function (event) {
+
+        let registerUser = {
+            Логин: $('#input-form-email-register').val(),
+            Пароль: $('#input-form-password-register').val(),
+            КодРоли: 2
+        }
+        if (registerUser.Пароль == $('#input-form-password-repeat').val()) {
+            $.ajax({
+                url: `${baseUrl}/auth/register`,
+                method: 'post',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify(registerUser),
+                async: true
+
+            }).done(function () {
+
+            }).fail(function () {
+                event.preventDefault();
+            });
+        }
+        else {
+            event.preventDefault();
+            alert("Пароли должны быть одинаковыми");
+        }
+
+    });
     function createAboutBook(author, genre, book) {
         var arr = [];
         arr.push('<div class="col-md-4 text-center">');
