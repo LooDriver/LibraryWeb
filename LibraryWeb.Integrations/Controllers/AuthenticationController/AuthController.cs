@@ -18,13 +18,14 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE,
+                    audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(60)), // время действия 2 минуты
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(60)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
+
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]

@@ -22,21 +22,44 @@ $(function () {
             createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
         else if (window.location.href.includes('easydata') & sessionStorage.getItem('auth_key') !== undefined) {
-            fetch('/easydata',
-                {
-                    method: 'GET',
-                    header: {
-                        `Authorization: Bearer ${}`
-                    }
-                }).then(response => {
-                if (response.redirected) {
+        const token = sessionStorage.getItem('auth_key');
+        fetch('/easydata',
+            {
+                method: 'GET',
+                headers: {
+                    "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsImV4cCI6MTcwNjI3NTEyMCwiaXNzIjoiU2VydmVyIiwiYXVkIjoiQ2xpZW50In0.qrftgT9qbrtcmogEtSffQ6xwyZlf83ryPcZtGh0DBPM`,
+                    "Accept": "application/json"
+                }
+            }).then(response => {
+                if (response.ok) {
                     window.location.href = '/easydata';
                 }
+            }).then(data => {
             }).catch(function (err) {
-
+                console.log(err);
             });
         }
 
+    });
+
+    $('#btn-test-auth').on('click', function (event) {
+        event.preventDefault();
+        let login = {
+            Логин: 'admin@mail.ru',
+            Пароль: '123'
+        };
+        $.ajax({
+            url: `${baseUrl}/auth/login`,
+            method: 'post',
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify(login),
+            async: true
+        }).done(function (data) {
+            sessionStorage.setItem('auth_key', `${data}`);
+            
+        }).fail(function () {
+            event.preventDefault();
+        })
     });
 
     $('#btn-form-search').on('click', function (event) {
@@ -128,15 +151,17 @@ $(function () {
         arr.push(`<h2>${book.название}</h2>`)
         arr.push(`<p class="text-muted">Автор: ${author.фио}</p>`);
         arr.push(`<p><strong>Жанр: </strong>${genre.названиеЖанра}</p>`);
+        arr.push(`<p><strong>В наличии: </strong>${book.количествоВНаличии}</p>`);
         arr.push(`</div>`);
         arr.push(`<div class="book-description">`);
         arr.push(`<hr>`);
         arr.push(`<h4>Описание</h4>`);
-        arr.push(`<p>Краткое описание книги. Здесь вы можете описать сюжет, основные персонажи и другие интересные детали.</p>`);
+        arr.push(`<p></p>`);
         arr.push(`<hr>`);
         arr.push(`</div>`);
         arr.push(`<p class="text-left">`);
-        arr.push(`<a class="btn btn-primary">Купить</a>`);
+        arr.push(`<a class="btn btn-primary" id="btn-about-buy">Купить</a>`);
+        arr.push(`<a class="btn btn-primary" id="btn-about-read-passage">Читать отрывок</a>`);
         arr.push(`</p>`);
         arr.push(`</div>`);
         $('#div-about-book').append('<div class="row">' + arr.join('') + '</div>');
