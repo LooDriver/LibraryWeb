@@ -35,7 +35,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if (item.Any())
             {
-                return Ok(JWTCreate(logins));
+                return Ok();/*Ok(JWTCreate(logins));*/
             }
             else
             {
