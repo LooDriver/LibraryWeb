@@ -72,7 +72,26 @@ var Authentication = /** @class */ (function () {
     };
     return Authentication;
 }());
+var Favorite = /** @class */ (function () {
+    function Favorite(bookName) {
+        this.bookName = bookName;
+    }
+    Favorite.prototype.AddToFavorite = function () {
+        $.ajax({});
+    };
+    Favorite.prototype.ShowListFavorite = function () {
+        $.ajax({
+            url: "".concat(baseUrl, "/books/addFavorite")
+        }).done(function () {
+        }).fail(function () {
+        });
+    };
+    return Favorite;
+}());
 $(function () {
+    $('#btn-favorite-show').on('click', function (event) {
+        event.preventDefault();
+    });
     $(document).ready(function () {
         var elements = new elementCreate();
         if (window.location.pathname.length == 1) {
@@ -173,7 +192,9 @@ $(function () {
         event.preventDefault();
         var register = new Authentication($('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
         var res = register.Register();
-        alert(res);
+        if (res != "undefined") {
+            alert(res);
+        }
     });
 });
 //# sourceMappingURL=app.js.map

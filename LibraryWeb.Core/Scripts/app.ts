@@ -89,8 +89,35 @@ class Authentication {
 
 }
 
+class Favorite {
+    private bookName: string;
 
+    constructor(bookName: string) {
+        this.bookName = bookName;
+    }
+
+    AddToFavorite() {
+        $.ajax({
+
+        });
+    }
+
+    ShowListFavorite() {
+        $.ajax({
+            url: `${baseUrl}/books/addFavorite`
+        }).done(function () {
+
+        }).fail(function () {
+
+        });
+    }
+}
 $(function () {
+
+    $('#btn-favorite-show').on('click', function (event) {
+        event.preventDefault();
+        
+    })
 
     $(document).ready(function () {
 
@@ -203,7 +230,9 @@ $(function () {
         event.preventDefault();
         var register = new Authentication($('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
         var res = register.Register();
-        alert(res);
+        if (res != "undefined") {
+            alert(res);
+        }
 
     }); 
 });

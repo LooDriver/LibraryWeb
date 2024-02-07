@@ -1,4 +1,7 @@
-﻿namespace LibraryWeb.Sql.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace LibraryWeb.Sql.Models
 {
 
     public partial class Книги
@@ -19,5 +22,6 @@
 
         public virtual Жанр? КодЖанраNavigation { get; set; }
 
+        public virtual ICollection<Корзина> КодИзбранногоs { get; set; } = new List<Корзина>();
     }
 }

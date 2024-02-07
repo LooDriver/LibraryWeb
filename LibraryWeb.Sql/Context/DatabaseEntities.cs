@@ -53,6 +53,8 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Книги> Книгиs { get; set; }
 
+        public virtual DbSet<Корзина> Корзинаs { get; set; }
+
         public virtual DbSet<Пользователи> Пользователиs { get; set; }
 
         public virtual DbSet<Роли> Ролиs { get; set; }
@@ -93,6 +95,10 @@ namespace LibraryWeb.Sql.Context
 
                 entity.ToTable("Книги");
 
+                entity.HasIndex(e => e.КодАвтора, "IX_Книги_Код_автора");
+
+                entity.HasIndex(e => e.КодЖанра, "IX_Книги_Код_жанра");
+
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодАвтора).HasColumnName("Код_автора");
                 entity.Property(e => e.КодЖанра).HasColumnName("Код_жанра");
@@ -111,11 +117,44 @@ namespace LibraryWeb.Sql.Context
                     .HasConstraintName("FK_Книги_Жанр");
             });
 
+            modelBuilder.Entity<Корзина>(entity =>
+            {
+                entity.HasKey(e => e.КодКорзины);
+
+                entity.ToTable("Корзина");
+
+                entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
+                entity.Property(e => e.КодИзбранного).HasColumnName("Код_избранного");
+
+                entity.HasMany(d => d.КодКнигиs).WithMany(p => p.КодИзбранногоs)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "Избранное",
+                        r => r.HasOne<Книги>().WithMany()
+                            .HasForeignKey("КодКниги")
+                            .OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("FK_Избранное_Книги"),
+                        l => l.HasOne<Корзина>().WithMany()
+                            .HasForeignKey("КодИзбранного")
+                            .OnDelete(DeleteBehavior.ClientSetNull)
+                            .HasConstraintName("FK_Избранное_Корзина"),
+                        j =>
+                        {
+                            j.HasKey("КодИзбранного", "КодКниги");
+                            j.ToTable("Избранное");
+                            j.IndexerProperty<int>("КодИзбранного")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnName("Код_избранного");
+                            j.IndexerProperty<int>("КодКниги").HasColumnName("Код_книги");
+                        });
+            });
+
             modelBuilder.Entity<Пользователи>(entity =>
             {
                 entity.HasKey(e => e.КодПользователя);
 
                 entity.ToTable("Пользователи");
+
+                entity.HasIndex(e => e.КодРоли, "IX_Пользователи_Код_роли");
 
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
                 entity.Property(e => e.КодРоли).HasColumnName("Код_роли");
