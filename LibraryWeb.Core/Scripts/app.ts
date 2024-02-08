@@ -8,8 +8,6 @@ class elementCreate {
         $('#p-author-about-book').text(`${author.фио}`);
         $('#p-genre-about-book').text(`Жанр - ${genre.названиеЖанра}`);
         $('#p-available-about-book').text(`Наличии - ${book.количествоВНаличии} шт.`);
-
-
     }
 
 
@@ -116,7 +114,6 @@ $(function () {
 
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
-        
     })
 
     $(document).ready(function () {
