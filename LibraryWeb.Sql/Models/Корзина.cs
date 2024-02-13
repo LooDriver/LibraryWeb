@@ -8,8 +8,8 @@ namespace LibraryWeb.Sql.Models
     {
         public int КодКорзины { get; set; }
 
-        public int? КодИзбранного { get; set; }
+        public int КодИзбранного { get; set; }
 
-        public virtual ICollection<Книги> КодКнигиs { get; set; } = new List<Книги>();
+        public virtual Избранное КодИзбранногоNavigation { get; set; } = null!;
     }
 }

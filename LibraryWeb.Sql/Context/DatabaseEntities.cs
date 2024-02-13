@@ -51,6 +51,8 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Жанр> Жанрs { get; set; }
 
+        public virtual DbSet<Избранное> Избранноеs { get; set; }
+
         public virtual DbSet<Книги> Книгиs { get; set; }
 
         public virtual DbSet<Корзина> Корзинаs { get; set; }
@@ -60,6 +62,7 @@ namespace LibraryWeb.Sql.Context
         public virtual DbSet<Роли> Ролиs { get; set; }
 
         public virtual DbSet<Читатели> Читателиs { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(connectionString);
 
@@ -87,6 +90,21 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.НазваниеЖанра)
                     .HasMaxLength(50)
                     .HasColumnName("Название_жанра");
+            });
+
+            modelBuilder.Entity<Избранное>(entity =>
+            {
+                entity.HasKey(e => e.КодИзбранного).HasName("PK_Избранное_1");
+
+                entity.ToTable("Избранное");
+
+                entity.Property(e => e.КодИзбранного).HasColumnName("Код_избранного");
+                entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
+
+                entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Избранноеs)
+                    .HasForeignKey(d => d.КодКниги)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Избранное_Книги");
             });
 
             modelBuilder.Entity<Книги>(entity =>
@@ -119,33 +137,21 @@ namespace LibraryWeb.Sql.Context
 
             modelBuilder.Entity<Корзина>(entity =>
             {
-                entity.HasKey(e => e.КодКорзины);
+                entity.HasKey(e => e.КодИзбранного);
 
                 entity.ToTable("Корзина");
 
-                entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
-                entity.Property(e => e.КодИзбранного).HasColumnName("Код_избранного");
+                entity.Property(e => e.КодИзбранного)
+                    .ValueGeneratedNever()
+                    .HasColumnName("Код_избранного");
+                entity.Property(e => e.КодКорзины)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("Код_корзины");
 
-                entity.HasMany(d => d.КодКнигиs).WithMany(p => p.КодИзбранногоs)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "Избранное",
-                        r => r.HasOne<Книги>().WithMany()
-                            .HasForeignKey("КодКниги")
-                            .OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("FK_Избранное_Книги"),
-                        l => l.HasOne<Корзина>().WithMany()
-                            .HasForeignKey("КодИзбранного")
-                            .OnDelete(DeleteBehavior.ClientSetNull)
-                            .HasConstraintName("FK_Избранное_Корзина"),
-                        j =>
-                        {
-                            j.HasKey("КодИзбранного", "КодКниги");
-                            j.ToTable("Избранное");
-                            j.IndexerProperty<int>("КодИзбранного")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnName("Код_избранного");
-                            j.IndexerProperty<int>("КодКниги").HasColumnName("Код_книги");
-                        });
+                entity.HasOne(d => d.КодИзбранногоNavigation).WithOne(p => p.Корзина)
+                    .HasForeignKey<Корзина>(d => d.КодИзбранного)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Корзина_Избранное");
             });
 
             modelBuilder.Entity<Пользователи>(entity =>
