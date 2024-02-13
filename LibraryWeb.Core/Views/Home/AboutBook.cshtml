@@ -1,34 +1,27 @@
 ﻿@{
     ViewData["title"] = "О книге";
 }
+
 <div class="row" id="div-about-book">
-
-</div>
-
-
-
-<div class="container book-container">
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <img src="book-cover.jpg" alt="Обложка книги" class="book-cover">
+    <div class="col-md-4 text-center">
+        <img alt="фото" id="img-cover-about-book" />
+    </div>
+    <div class="col-md-8">
+        <div class="book-details">
+            <h2 id="h2-tittle-about-book"></h2>
+            <p id="p-author-about-book" class="text-muted"></p>
+            <p id="p-genre-about-book"></p>
+            <p id="p-available-about-book"></p>
         </div>
-        <div class="col-md-8">
-            <div class="book-details">
-                <h2>Название книги</h2>
-                <p class="text-muted">Автор: Имя Автора</p>
-                <p><strong>Жанр:</strong> Жанр книги</p>
-                <p><strong>Год издания:</strong> 20XX</p>
-                <p><strong>ISBN:</strong> XXX-XXXX-XXXX</p>
-            </div>
-            <div class="book-description">
-                <hr>
-                <h4>Описание</h4>
-                <p>Краткое описание книги. Здесь вы можете описать сюжет, основные персонажи и другие интересные детали.</p>
-                <hr>
-            </div>
-            <p class="text-left">
-                <a class="btn btn-primary">Купить</a>
-            </p>
+        <div class="book-description">
+            <hr />
+            <h4>Описание</h4>
+            <p id="description-about-book"></p>
+            <hr />
         </div>
+        <p class="text-left">
+        <a class="btn btn-primary" id="btn-about-buy">Купить</a>
+        <a class="btn btn-primary" id="btn-about-read-passage">Читать отрывок</a>
+        <a class="btn btn-primary" id="btn-favorite-book">Добавить в избранное</a>
     </div>
 </div>

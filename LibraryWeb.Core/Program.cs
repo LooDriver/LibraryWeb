@@ -1,7 +1,9 @@
 using EasyData.Services;
+using LibraryWeb.Integrations.Controllers.AuthenticationController;
 using LibraryWeb.Sql.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 namespace LibraryWeb.Core
@@ -18,20 +20,43 @@ namespace LibraryWeb.Core
             {
                 options.UseSqlServer("Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true");
             });
+            //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuerSigningKey = true,
+            //            ValidIssuer = AuthOptions.ISSUER,
+            //            ValidAudience = AuthOptions.AUDIENCE,
+
+            //            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+            //            ValidateIssuer = true,  // изменено
+            //            ValidateAudience = true,
+            //            ValidateLifetime = true,
+            //            ClockSkew = TimeSpan.Zero
+            //        };
+            //    });
+
+            //builder.Services.AddAuthorization();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline
+
+
             app.UseStaticFiles();
             app.UseDefaultFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapEasyData(options =>
             {
                 options.UseDbContext<DatabaseEntities>();
             });
             app.MapControllers();
-          
-                     
+
+
             app.Run();
         }
     }

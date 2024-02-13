@@ -1,4 +1,7 @@
-﻿namespace LibraryWeb.Sql.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace LibraryWeb.Sql.Models
 {
 
     public partial class Роли

@@ -2,6 +2,9 @@
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace LibraryWeb.Integrations.Controllers.AuthenticationController
 {
@@ -10,26 +13,33 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
     {
         DatabaseContext db;
 
+        private string JWTCreate(Пользователи user)
+        {
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
+            var jwt = new JwtSecurityToken(
+                    issuer: AuthOptions.ISSUER,
+                    audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
+                    claims: claims,
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(60)),
+                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("enter")]
-        public JsonResult CheckLogin([FromBody] Пользователи logins)
+        [HttpPost("login")]
+        public IActionResult CheckLogin([FromBody] Пользователи logins)
         {
             db = DatabaseContext.GetContext();
-            int exist = -1;
-            var result = new
-            {
-                Exist = exist
-            };
             var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if (item.Any())
             {
-                exist = 1;
-                return Json(result);
+                return Ok();/*Ok(JWTCreate(logins));*/
             }
             else
             {
-                exist = -1;
-                return Json(result);
+                return Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа или зарегистрируетесь");
             }
         }
 

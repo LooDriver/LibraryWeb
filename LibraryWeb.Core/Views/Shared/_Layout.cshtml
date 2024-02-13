@@ -6,10 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
 
-    <script src="~/lib/jquery-3.7.0.min.js"></script>
+    <script src="~/lib/jquery-3.7.1.min.js"></script>
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="~/js/script.js" asp-append-version="true"></script>
-
+    <script src="~/js/app.js" asp-append-version="true"></script>
     <script src="~/js/Authentication/auth.js" asp-append-version="true"></script>
 
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
@@ -52,12 +51,39 @@
                         <button class="btn btn-outline-success" id="btn-form-search" type="submit">Поиск</button>
                     </form>
                     <div>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" id="btn-favorite-show" data-bs-target="#favoriteModal">
                             Избранное
                         </button>
                         <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
                             Вход
                         </button>
+                    </div>
+                    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-centred">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title" id="exampleModalLabel">Избранное</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <div class="list-group">
+
+@*                                                 <button type="button" class="list-group-item list-group-item-action" aria-current="true">
+                                                    Текущая кнопка
+                                                </button>
+                                                <button type="button" class="list-group-item list-group-item-action">Второй элемент кнопка</button>
+                                                <button type="button" class="list-group-item list-group-item-action">Третий элемент кнопка</button>
+                                                <button type="button" class="list-group-item list-group-item-action">Четвертый элемент кнопка</button>
+                                                <button type="button" class="list-group-item list-group-item-action" disabled>Отключенный элемент кнопка</button> *@
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="btn-form-login">К покупкам</button>
+                                        <button type="submit" class="btn btn-primary" id="btn-form-cancel-favorite">Закрыть</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-centred">

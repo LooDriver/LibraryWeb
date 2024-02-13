@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryWeb.Core.Controllers
 {
@@ -11,7 +13,9 @@ namespace LibraryWeb.Core.Controllers
         [Route("book/{name?}")]
         public IActionResult AboutBook() => View();
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("easydata/{**entity}")]
         public IActionResult EasyData() => View();
+
     }
 }
