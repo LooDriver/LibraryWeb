@@ -102,9 +102,18 @@ class Favorite {
 
     ShowListFavorite() {
         $.ajax({
-            url: `${baseUrl}/books/addFavorite`
-        }).done(function () {
-
+            url: `${baseUrl}/Favorite/getFavorite`,
+            method: 'get',
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function (data) {
+            
+            var arr = [];
+            for (var i = 0; i < data.length; i++) {
+                arr.push(`<ul>${data[i].кодКнигиNavigation.название}</ul>`);
+            }
+            $('#div-favorite-list').append(arr.join(""));
         }).fail(function () {
 
         });
@@ -114,6 +123,9 @@ $(function () {
 
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
+        $('#div-favorite-list').empty();
+        var favorite = new Favorite("");
+        favorite.ShowListFavorite();
     })
 
     $(document).ready(function () {
