@@ -13,18 +13,18 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
     {
         DatabaseContext db;
 
-        private string JWTCreate(Пользователи user)
-        {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
-            var jwt = new JwtSecurityToken(
-                    issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
-                    claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(60)),
-                    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+        //private string JWTCreate(Пользователи user)
+        //{
+        //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
+        //    var jwt = new JwtSecurityToken(
+        //            issuer: AuthOptions.ISSUER,
+        //            audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
+        //            claims: claims,
+        //            expires: DateTime.UtcNow.Add(TimeSpan.FromSeconds(60)),
+        //            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
-        }
+        //    return new JwtSecurityTokenHandler().WriteToken(jwt);
+        //}
 
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

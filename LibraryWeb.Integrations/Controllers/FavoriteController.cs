@@ -10,6 +10,6 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]
-        public IActionResult GetAllFavorite() => Ok();
+        public IActionResult GetAllFavorite() => Json(db.Избранноеs.Take(db.Избранноеs.Count()));
     }
 }
