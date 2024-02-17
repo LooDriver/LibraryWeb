@@ -55,7 +55,6 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Книги> Книгиs { get; set; }
 
-        public virtual DbSet<Корзина> Корзинаs { get; set; }
 
         public virtual DbSet<Пользователи> Пользователиs { get; set; }
 

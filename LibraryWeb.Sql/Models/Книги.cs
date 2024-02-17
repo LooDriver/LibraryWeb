@@ -23,5 +23,7 @@ namespace LibraryWeb.Sql.Models
         public virtual Автор? КодАвтораNavigation { get; set; }
 
         public virtual Жанр? КодЖанраNavigation { get; set; }
+
+        public virtual ICollection<Корзина> КодИзбранногоs { get; set; } = new List<Корзина>();
     }
 }

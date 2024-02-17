@@ -47,8 +47,8 @@ namespace LibraryWeb.Core
             app.UseDefaultFiles();
 
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
             app.MapEasyData(options =>
             {
