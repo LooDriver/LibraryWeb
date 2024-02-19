@@ -6,7 +6,13 @@ namespace LibraryWeb.Integrations.Controllers
     [Route("api/[controller]")]
     public class FavoriteController : Controller
     {
-        DatabaseContext db = DatabaseContext.GetContext();
+        DatabaseEntities db;
+
+        public FavoriteController()
+        {
+            db = new DatabaseEntities();
+        }
+
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]

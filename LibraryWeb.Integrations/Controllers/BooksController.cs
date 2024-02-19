@@ -7,7 +7,12 @@ namespace LibraryWeb.Integrations.Controllers.TablesController
     [Route("api/[controller]")]
     public class BooksController : Controller
     {
-        DatabaseContext db = DatabaseContext.GetContext();
+        DatabaseEntities db;
+
+        public BooksController()
+        {
+            db = new DatabaseEntities();
+        }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]

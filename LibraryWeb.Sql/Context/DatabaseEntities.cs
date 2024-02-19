@@ -1,5 +1,4 @@
-﻿
-using LibraryWeb.Sql.Models;
+﻿using LibraryWeb.Sql.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;

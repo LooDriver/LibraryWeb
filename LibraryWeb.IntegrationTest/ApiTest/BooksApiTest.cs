@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.TestHost;
 using System.Net;
 using Xunit;
 
-namespace LibraryWeb.IntegrationTest
+namespace LibraryWeb.IntegrationTest.ApiTest
 {
     public class BooksApiTest
     {
