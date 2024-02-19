@@ -38,5 +38,23 @@ namespace LibraryWeb.IntegrationTest.ApiTest
             response.EnsureSuccessStatusCode();
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+
+        [Fact]
+        public async Task AuthPostLoginAsync()
+        {
+            var users = new
+            {
+                Логин = "test",
+                Пароль = "test123",
+                КодРоли = 2
+            };
+            string json = JsonConvert.SerializeObject(users);
+            StringContent httpContent = new StringContent(json);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            HttpResponseMessage response = await _client.PostAsync("/api/auth/login", httpContent);
+
+            response.EnsureSuccessStatusCode();
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
     }
 }
