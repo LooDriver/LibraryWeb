@@ -1,17 +1,18 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace LibraryWeb.Integrations.Controllers.AuthenticationController
 {
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        DatabaseContext db;
+        DatabaseEntities db;
+
+        public AuthController()
+        {
+            db = new DatabaseEntities();
+        }
 
         //private string JWTCreate(Пользователи user)
         //{
@@ -31,7 +32,6 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
         [HttpPost("login")]
         public IActionResult CheckLogin([FromBody] Пользователи logins)
         {
-            db = DatabaseContext.GetContext();
             var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if (item.Any())
             {
@@ -47,7 +47,6 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] Пользователи registers)
         {
-            db = DatabaseContext.GetContext();
             if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
             {
                 await db.Пользователиs.AddAsync(registers);
