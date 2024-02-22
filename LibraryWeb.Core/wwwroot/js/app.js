@@ -1,63 +1,59 @@
-var baseUrl = 'api';
-var elementCreate = /** @class */ (function () {
-    function elementCreate() {
+const baseUrl = 'api';
+class elementCreate {
+    createAboutBook(author, genre, book) {
+        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложкаКниги}`);
+        $('#h2-tittle-about-book').text(`${book.название}`);
+        $('#p-author-about-book').text(`${author.фио}`);
+        $('#p-genre-about-book').text(`Жанр - ${genre.названиеЖанра}`);
+        $('#p-available-about-book').text(`Наличии - ${book.количествоВНаличии} шт.`);
     }
-    elementCreate.prototype.createAboutBook = function (author, genre, book) {
-        $('#img-cover-about-book').attr('src', "data:image/png;base64,".concat(book.обложкаКниги));
-        $('#h2-tittle-about-book').text("".concat(book.название));
-        $('#p-author-about-book').text("".concat(author.фио));
-        $('#p-genre-about-book').text("\u0416\u0430\u043D\u0440 - ".concat(genre.названиеЖанра));
-        $('#p-available-about-book').text("\u041D\u0430\u043B\u0438\u0447\u0438\u0438 - ".concat(book.количествоВНаличии, " \u0448\u0442."));
-    };
-    elementCreate.prototype.tilesFiller = function (books) {
+    tilesFiller(books) {
         var arr = [];
         for (var i = 0; i < books.length; i++) {
             arr.push('<div class="col-md-2">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
-            arr.push("<div class=\"tile-book\">".concat(books[i].название, "</div>"));
-            arr.push("<button class=\"btn-about-book\"><img src=\"data:image/png;base64,".concat(books[i].обложкаКниги, "\" width=\"100\" height=\"150\" alt=\"\u041E\u0431\u043B\u043E\u0436\u043A\u0430 \u043A\u043D\u0438\u0433\u0438 ").concat(books[i].название, "\"></button>"));
+            arr.push(`<div class="tile-book">${books[i].название}</div>`);
+            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books[i].обложкаКниги}" width="100" height="150" alt="Обложка книги ${books[i].название}"></button>`);
             arr.push('</div>');
             arr.push('</div>');
             arr.push('</div>');
         }
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
-    };
-    return elementCreate;
-}());
-var Authentication = /** @class */ (function () {
-    function Authentication(username, password) {
+    }
+}
+class Authentication {
+    constructor(username, password, role = 2) {
         this.defaultRole = 2;
         this.user = {
             Логин: "",
             Пароль: "",
             КодРоли: this.defaultRole
         };
-        this.user.Логин = username;
-        this.user.Пароль = password;
+        this.user = {
+            Логин: username,
+            Пароль: password,
+            КодРоли: role
+        };
     }
-    Authentication.prototype.Login = function () {
-        if (this.user.Логин != "" && this.user.Пароль != "") {
-            var result = false;
+    Login() {
+        if (this.user.Логин !== "" && this.user.Пароль !== "") {
             $.ajax({
-                url: "".concat(baseUrl, "/auth/login"),
+                url: `${baseUrl}/auth/login`,
                 method: 'post',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user),
-                async: true
-            }).done(function (data) {
-                /*sessionStorage.setItem('auth_key', `${data}`);*/
-                result = true;
-            }).fail(function () {
-                result = false;
+                async: true,
+                success: function (data) {
+                    document.cookie = "auth_key=" + data;
+                }
             });
-            return result;
         }
-    };
-    Authentication.prototype.Register = function () {
+    }
+    Register() {
         if (this.user.Пароль == $('#input-form-password-repeat').val()) {
             $.ajax({
-                url: "".concat(baseUrl, "/auth/register"),
+                url: `${baseUrl}/auth/register`,
                 method: 'post',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user),
@@ -69,19 +65,18 @@ var Authentication = /** @class */ (function () {
         else {
             return 'Пароли должны быть одинаковыми';
         }
-    };
-    return Authentication;
-}());
-var Favorite = /** @class */ (function () {
-    function Favorite(bookName) {
+    }
+}
+class Favorite {
+    constructor(bookName) {
         this.bookName = bookName;
     }
-    Favorite.prototype.AddToFavorite = function () {
+    AddToFavorite() {
         $.ajax({});
-    };
-    Favorite.prototype.ShowListFavorite = function () {
+    }
+    ShowListFavorite() {
         $.ajax({
-            url: "".concat(baseUrl, "/Favorite/getFavorite"),
+            url: `${baseUrl}/Favorite/getFavorite`,
             method: 'get',
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
@@ -89,14 +84,13 @@ var Favorite = /** @class */ (function () {
         }).done(function (data) {
             var arr = [];
             for (var i = 0; i < data.length; i++) {
-                arr.push("<ul>".concat(data[i].кодКнигиNavigation.название, "</ul>"));
+                arr.push(`<ul>${data[i].кодКнигиNavigation.название}</ul>`);
             }
             $('#div-favorite-list').append(arr.join(""));
         }).fail(function () {
         });
-    };
-    return Favorite;
-}());
+    }
+}
 $(function () {
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
@@ -108,7 +102,7 @@ $(function () {
         var elements = new elementCreate();
         if (window.location.pathname.length == 1) {
             $.ajax({
-                url: "".concat(baseUrl, "/books/allBooks"),
+                url: `${baseUrl}/books/allBooks`,
                 method: 'get',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
@@ -123,42 +117,6 @@ $(function () {
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
             elements.createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
-        //else if (window.location.href.search('easydata') && sessionStorage.getItem('auth_key') !== undefined) {
-        //const token = sessionStorage.getItem('auth_key');
-        //fetch('/easydata',
-        //    {
-        //        method: 'GET',
-        //        headers: {
-        //            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsImV4cCI6MTcwNjI3NTEyMCwiaXNzIjoiU2VydmVyIiwiYXVkIjoiQ2xpZW50In0.qrftgT9qbrtcmogEtSffQ6xwyZlf83ryPcZtGh0DBPM`,
-        //            "Accept": "application/json"
-        //        }
-        //    }).then(response => {
-        //        if (response.ok) {
-        //            window.location.href = '/easydata';
-        //        }
-        //    }).then(data => {
-        //    }).catch(function (err) {
-        //        console.log(err);
-        //    });
-        //}
-    });
-    $('#btn-test-auth').on('click', function (event) {
-        event.preventDefault();
-        var login = {
-            Логин: 'admin@mail.ru',
-            Пароль: '123'
-        };
-        $.ajax({
-            url: "".concat(baseUrl, "/auth/login"),
-            method: 'post',
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify(login),
-            async: true
-        }).done(function (data) {
-            sessionStorage.setItem('auth_key', "".concat(data));
-        }).fail(function () {
-            event.preventDefault();
-        });
     });
     $('#btn-form-search').on('click', function (event) {
         event.preventDefault();
@@ -177,7 +135,7 @@ $(function () {
         event.preventDefault();
         var bookTitle = $(this).closest('.tile').find('.tile-book').text();
         $.ajax({
-            url: "".concat(baseUrl, "/books"),
+            url: `${baseUrl}/books`,
             method: 'get',
             dataType: 'json',
             data: { 'name': bookTitle },
@@ -185,20 +143,15 @@ $(function () {
             async: true
         }).done(function (data) {
             sessionStorage.setItem('bookData', JSON.stringify(data));
-            window.location.href = "book/name?".concat(data.book.название);
+            window.location.href = `book/name?${data.book.название}`;
         }).fail(function (handleError) {
             console.log(handleError);
         });
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString());
-        if (enter.Login()) {
-            alert("Успешно");
-        }
-        else {
-            alert("Неуспешно");
-        }
+        var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
+        enter.Login();
     });
     $('#btn-form-register').on('click', function (event) {
         event.preventDefault();
