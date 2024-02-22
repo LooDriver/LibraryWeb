@@ -41,28 +41,27 @@ class Authentication {
     };
 
 
-    constructor(username: string, password: string) {
+    constructor(username: string, password: string, role: number = 2) {
 
-        this.user.Логин = username;
-        this.user.Пароль = password;
+        this.user = {
+            Логин: username,
+            Пароль: password,
+            КодРоли: role
+        };
     }
 
     Login() {
-        if (this.user.Логин != "" && this.user.Пароль != "") {
-            var result = false;
+        if (this.user.Логин !== "" && this.user.Пароль !== "") {
             $.ajax({
                 url: `${baseUrl}/auth/login`,
                 method: 'post',
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user),
-                async: true
-            }).done(function (data) {
-                /*sessionStorage.setItem('auth_key', `${data}`);*/
-                result = true;
-            }).fail(function () {
-                result = false;
-            })
-            return result;
+                async: true,
+                success: function (data) {
+                    document.cookie = "auth_key=" + data;
+                }
+            });
         }
     }
 
@@ -149,45 +148,8 @@ $(function () {
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
             elements.createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
-        //else if (window.location.href.search('easydata') && sessionStorage.getItem('auth_key') !== undefined) {
-        //const token = sessionStorage.getItem('auth_key');
-        //fetch('/easydata',
-        //    {
-        //        method: 'GET',
-        //        headers: {
-        //            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsImV4cCI6MTcwNjI3NTEyMCwiaXNzIjoiU2VydmVyIiwiYXVkIjoiQ2xpZW50In0.qrftgT9qbrtcmogEtSffQ6xwyZlf83ryPcZtGh0DBPM`,
-        //            "Accept": "application/json"
-        //        }
-        //    }).then(response => {
-        //        if (response.ok) {
-        //            window.location.href = '/easydata';
-        //        }
-        //    }).then(data => {
-        //    }).catch(function (err) {
-        //        console.log(err);
-        //    });
-        //}
+        
 
-    });
-
-    $('#btn-test-auth').on('click', function (event) {
-        event.preventDefault();
-        let login = {
-            Логин: 'admin@mail.ru',
-            Пароль: '123'
-        };
-        $.ajax({
-            url: `${baseUrl}/auth/login`,
-            method: 'post',
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify(login),
-            async: true
-        }).done(function (data) {
-            sessionStorage.setItem('auth_key', `${data}`);
-            
-        }).fail(function () {
-            event.preventDefault();
-        })
     });
 
     $('#btn-form-search').on('click', function (event) {
@@ -226,13 +188,8 @@ $(function () {
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString());
-
-        if (enter.Login()) {
-            alert("Успешно");
-        } else {
-            alert("Неуспешно");
-        }
+        var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
+        enter.Login();
     });
 
     $('#btn-form-register').on('click', function (event) {
@@ -242,6 +199,5 @@ $(function () {
         if (res != "undefined") {
             alert(res);
         }
-
     }); 
 });

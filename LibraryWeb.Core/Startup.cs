@@ -1,6 +1,9 @@
 ﻿using EasyData.Services;
+using LibraryWeb.Integrations.Controllers.AuthenticationController;
 using LibraryWeb.Sql.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 namespace LibraryWeb.Core
@@ -21,23 +24,34 @@ namespace LibraryWeb.Core
             {
                 options.UseSqlServer("Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true");
             });
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.TokenValidationParameters = new TokenValidationParameters
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll",
+            //        builder =>
             //        {
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = AuthOptions.ISSUER,
-            //            ValidAudience = AuthOptions.AUDIENCE,
+            //            builder.AllowAnyOrigin()
+            //                   .AllowAnyMethod()
+            //                   .AllowAnyHeader();
+            //        });
+            //});
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = AuthOptions.ISSUER,
+                        ValidAudience = AuthOptions.AUDIENCE,
 
-            //            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-            //            ValidateIssuer = true,  // изменено
-            //            ValidateAudience = true,
-            //            ValidateLifetime = true,
-            //            ClockSkew = TimeSpan.Zero
-            //        };
-            //    });
-            //services.AddAuthorization();
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        ValidateIssuer = true,  // изменено
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+            services.AddAuthorization();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -56,9 +70,12 @@ namespace LibraryWeb.Core
             app.UseStaticFiles();
             app.UseDefaultFiles();
 
+            app.UseAuthentication();
             app.UseRouting();
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthorization();
+
+            //app.UseCors("AllowAll");
+
 
             app.UseEndpoints(endpoints =>
             {
