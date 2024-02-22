@@ -11,7 +11,7 @@
 - **Версия TypeScript не ниже ES6**
 - **Наличие базы данных SQL Server (В будующем планируется переход на SQLite)**
 ## Лицензия
-Проект распространяется под лицензией GPL - 3.0. Подробности смотрите в файле [LICENSE](https://github.com/LooDriver/LibraryWeb/blob/temporaryBranch/LICENSE.txt). 
+Проект распространяется под лицензией GPL - 3.0. Подробности смотрите в файле [LICENSE](https://github.com/LooDriver/LibraryWeb/blob/main/LICENSE.txt). 
 ## Обратная связь
 - **[Telegram](t.me/loodriver)**
 - **[Github](github.com/LooDriver)**
