@@ -1,16 +1,13 @@
 ﻿using LibraryWeb.Integrations.Controllers.AuthenticationController;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace LibraryWeb.Core.Controllers
 {
-    
+
     public class HomeController : Controller
     {
-        private static bool _accessPanel = false;
 
         [Route("/")]
         public IActionResult Index() => View();
@@ -22,10 +19,7 @@ namespace LibraryWeb.Core.Controllers
         public IActionResult EasyData()
         {
             string authKey = HttpContext.Request.Cookies["auth_key"];
-
-            var token = authKey.Replace("Bearer ", "");
-
-            if (!IsTokenValid(token))
+            if (!IsTokenValid(authKey))
             {
                 return Unauthorized();
             }

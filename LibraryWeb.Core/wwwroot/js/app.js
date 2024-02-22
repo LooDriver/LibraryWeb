@@ -1,7 +1,5 @@
-﻿const baseUrl = 'api';
-
+const baseUrl = 'api';
 class elementCreate {
-
     createAboutBook(author, genre, book) {
         $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложкаКниги}`);
         $('#h2-tittle-about-book').text(`${book.название}`);
@@ -9,11 +7,8 @@ class elementCreate {
         $('#p-genre-about-book').text(`Жанр - ${genre.названиеЖанра}`);
         $('#p-available-about-book').text(`Наличии - ${book.количествоВНаличии} шт.`);
     }
-
-
     tilesFiller(books) {
         var arr = [];
-
         for (var i = 0; i < books.length; i++) {
             arr.push('<div class="col-md-2">');
             arr.push('<div class="tile">');
@@ -24,32 +19,23 @@ class elementCreate {
             arr.push('</div>');
             arr.push('</div>');
         }
-
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
-
     }
 }
-
 class Authentication {
-
-    private readonly defaultRole: number = 2; 
-
-    private user = {
-        Логин: "",
-        Пароль: "",
-        КодРоли: this.defaultRole
-    };
-
-
-    constructor(username: string, password: string, role: number = 2) {
-
+    constructor(username, password, role = 2) {
+        this.defaultRole = 2;
+        this.user = {
+            Логин: "",
+            Пароль: "",
+            КодРоли: this.defaultRole
+        };
         this.user = {
             Логин: username,
             Пароль: password,
             КодРоли: role
         };
     }
-
     Login() {
         if (this.user.Логин !== "" && this.user.Пароль !== "") {
             $.ajax({
@@ -64,7 +50,6 @@ class Authentication {
             });
         }
     }
-
     Register() {
         if (this.user.Пароль == $('#input-form-password-repeat').val()) {
             $.ajax({
@@ -74,25 +59,18 @@ class Authentication {
                 data: JSON.stringify(this.user),
                 async: true
             }).done(function () {
-
             }).fail(function () {
-
             });
         }
         else {
             return 'Пароли должны быть одинаковыми';
         }
     }
-
 }
-
 class Favorite {
-    private bookName: string;
-
-    constructor(bookName: string = "") {
+    constructor(bookName = "") {
         this.bookName = bookName;
     }
-
     AddToFavorite() {
         $.ajax({
             url: `/${baseUrl}/Favorite/addFavorite`,
@@ -103,7 +81,6 @@ class Favorite {
             async: true
         });
     }
-
     ShowListFavorite() {
         $.ajax({
             url: `/${baseUrl}/Favorite/getFavorite`,
@@ -123,22 +100,18 @@ class Favorite {
     }
 }
 $(function () {
-
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
         $('#div-favorite-list').empty();
         var favorite = new Favorite();
         favorite.ShowListFavorite();
-    })
-
+    });
     $('#btn-favorite-book').on('click', function (event) {
         event.preventDefault();
         var favorClass = new Favorite($('#h2-tittle-about-book').text());
         favorClass.AddToFavorite();
     });
-
     $(document).ready(function () {
-
         var elements = new elementCreate();
         if (window.location.pathname.length == 1) {
             $.ajax({
@@ -149,7 +122,6 @@ $(function () {
                 async: true
             }).done(function (data) {
                 elements.tilesFiller(data);
-
             }).fail(function (handleError) {
                 console.log(handleError);
             });
@@ -158,29 +130,22 @@ $(function () {
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
             elements.createAboutBook(dataStorage.author, dataStorage.genre, dataStorage.book);
         }
-        
-
     });
-
     $('#btn-form-search').on('click', function (event) {
         event.preventDefault();
-
         var searchText = $('#input-text-search').val();
-
         $('.col-md-4').each(function () {
             var tileDescriptionText = $(this).find('.tile-book').text().toLowerCase();
-
             if (tileDescriptionText.search(searchText.toString().toLowerCase())) {
                 $(this).show();
-            } else {
+            }
+            else {
                 $(this).hide();
             }
         });
     });
-
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
-
         var bookTitle = $(this).closest('.tile').find('.tile-book').text();
         $.ajax({
             url: `${baseUrl}/books`,
@@ -196,16 +161,15 @@ $(function () {
             console.log(handleError);
         });
     });
-
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
         var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
         enter.Login();
     });
-
     $('#btn-form-register').on('click', function (event) {
         event.preventDefault();
         var register = new Authentication($('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
         var res = register.Register();
-    }); 
+    });
 });
+//# sourceMappingURL=app.js.map
