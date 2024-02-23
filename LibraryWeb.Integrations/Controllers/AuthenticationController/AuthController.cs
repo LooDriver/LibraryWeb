@@ -24,7 +24,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
                     claims: claims,
-                    expires: DateTime.UtcNow.Add(TimeSpan.FromDays(60)),
+                    expires: DateTime.UtcNow.Add(TimeSpan.FromHours(10)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

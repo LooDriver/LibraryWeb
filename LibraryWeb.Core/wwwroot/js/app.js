@@ -10,11 +10,11 @@ class elementCreate {
     tilesFiller(books) {
         var arr = [];
         for (var i = 0; i < books.length; i++) {
-            arr.push('<div class="col-md-2">');
+            arr.push('<div class="col-md-2 mt-3">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
             arr.push(`<div class="tile-book">${books[i].название}</div>`);
-            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books[i].обложкаКниги}" width="100" height="150" alt="Обложка книги ${books[i].название}"></button>`);
+            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books[i].обложкаКниги}" width="150" height="200" alt="Обложка книги ${books[i].название}"></button>`);
             arr.push('</div>');
             arr.push('</div>');
             arr.push('</div>');
@@ -89,13 +89,31 @@ class Favorite {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            console.log(data);
             var arr = [];
             for (var i = 0; i < data.length; i++) {
                 var bookName = `${data[i].кодКнигиNavigation.название}`;
-                arr.push(`<a href="book/name?${bookName}" id="a-redirect-about-book">${bookName}</a>`);
+                arr.push('<li>');
+                arr.push(`<a class="btn text-align-center" href="/book/name?${encodeURIComponent(bookName)}" id="a-redirect-about-book">${bookName}</a>`);
+                arr.push('</li>');
             }
             $('#div-favorite-list').append(arr.join(""));
+        });
+    }
+}
+class Book {
+    BookByName(bookTitle) {
+        $.ajax({
+            url: `/${baseUrl}/books`,
+            method: 'get',
+            dataType: 'json',
+            data: { 'name': bookTitle },
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done(function (data) {
+            sessionStorage.setItem('bookData', JSON.stringify(data));
+            window.location.href = `/book/name?${data.book.название}`;
+        }).fail(function (handleError) {
+            console.log(handleError);
         });
     }
 }
@@ -144,22 +162,18 @@ $(function () {
             }
         });
     });
+    $(document).on('click', '#a-redirect-about-book', function (event) {
+        event.preventDefault();
+        var decodUrl = decodeURI(this.getAttribute('href'));
+        var bookTitle = decodUrl.substr((decodUrl.indexOf('?') + 1));
+        var book = new Book();
+        book.BookByName(bookTitle);
+    });
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
         var bookTitle = $(this).closest('.tile').find('.tile-book').text();
-        $.ajax({
-            url: `${baseUrl}/books`,
-            method: 'get',
-            dataType: 'json',
-            data: { 'name': bookTitle },
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function (data) {
-            sessionStorage.setItem('bookData', JSON.stringify(data));
-            window.location.href = `book/name?${data.book.название}`;
-        }).fail(function (handleError) {
-            console.log(handleError);
-        });
+        var book = new Book();
+        book.BookByName(bookTitle);
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();

@@ -18,13 +18,18 @@ namespace LibraryWeb.Core.Controllers
         [Route("easydata/{**entity}")]
         public IActionResult EasyData()
         {
-            string authKey = HttpContext.Request.Cookies["auth_key"];
-            if (!IsTokenValid(authKey))
+            if (!IsTokenValid(HttpContext.Request.Cookies["auth_key"]))
             {
-                return Unauthorized();
+                return Redirect("accessdenied");
             }
             return View();
         }
+
+        [Route("accessdenied")]
+        public IActionResult AccessDenied() => View();
+
+        [Route("profile")]
+        public IActionResult Profile() => View();
 
         public bool IsTokenValid(string token)
         {

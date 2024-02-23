@@ -28,7 +28,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPost("addFavorite")]
         public async Task<IActionResult> AddFavorite([FromBody] string nameBook)
         {
-            Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.First(x=>x.Название == nameBook).КодКниги);
+            Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.First(x => x.Название == nameBook).КодКниги);
             if (favorBook is null) return BadRequest();
             else
             {
