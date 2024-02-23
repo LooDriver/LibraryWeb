@@ -12,6 +12,10 @@
 - **Наличие базы данных SQL Server (В будующем планируется переход на SQLite)**
 ## Лицензия
 Проект распространяется под лицензией GPL - 3.0. Подробности смотрите в файле [LICENSE](https://github.com/LooDriver/LibraryWeb/blob/main/LICENSE.txt). 
+## Дополнительная информация
+В данном проекте использовались следующие пакеты:
+- **[EasyData](https://github.com/KorzhCom/EasyData)** (Предоставляет уже готовые операции CRUID для базы данных)
+- **В дальнейшем этот список будет пополняться**
 ## Обратная связь
 - **[Telegram](t.me/loodriver)**
 - **[Github](github.com/LooDriver)**
