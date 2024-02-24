@@ -15,7 +15,6 @@ namespace LibraryWeb.Integrations.Controllers
             db = new DatabaseEntities();
         }
 
-
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]
         public IActionResult GetAllFavorite()
