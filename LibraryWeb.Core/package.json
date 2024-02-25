@@ -3,6 +3,7 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "@types/jquery": "3.5.29"
+    "@types/jquery": "3.5.29",
+    "bootstrap-icons": "1.11.3"
   }
 }

@@ -1,13 +1,11 @@
 ﻿.container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 20px;
     box-sizing: border-box;
 }
 th, td, tr {
     border: 1px solid black;
 }
-
 button {
     margin: 0 auto;
     display: block;
@@ -43,7 +41,7 @@ button {
 
 .book-details {
     margin-bottom: 20px;
-    margin-right: 20px; /* Добавлен правый отступ для разделения от book-description */
+    margin-right: 20px; 
 }
 
 .book-description {

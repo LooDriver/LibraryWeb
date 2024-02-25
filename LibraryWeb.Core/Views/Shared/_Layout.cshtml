@@ -16,9 +16,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-md bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand" icon="~/favicon.ico">Онлайн-библиотека</a>
+                <a class="navbar-brand" icon="~/favicon.ico">Книжный магазин</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -27,116 +27,112 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/">Главная</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Ссылка</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Выпадающий список
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Действие</a></li>
-                                <li><a class="dropdown-item" href="#">Другое действие</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Что-то еще здесь</a></li>
-                            </ul>
-                        </li>
                         <li class="nav-item" id="li-admin-list">
                             <a class="nav-link" href="/easydata">Панель управления</a>
                         </li>
+                        @* <li class="nav-item">
+                            <div class="input-group input-group-sm mb-3">
+                                <input type="text" class="form-control" aria-label="Поле для ввода названия книги для поиска" aria-describedby="inputGroup-sizing-sm" placeholder="Название книги">
+                                <a class="btn input-group-text" id="inputGroup-sizing-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </li> *@
                     </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" id="input-text-search" placeholder="Поиск книги" aria-label="Поиск">
-                        <button class="btn btn-outline-success" id="btn-form-search" type="submit">Поиск</button>
-                    </form>
+                    <div class="mx-2">
+                        <a class="btn" data-bs-toggle="modal" id="btn-favorite-show" data-bs-target="#favoriteModal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                            </svg>
+                            <p>Избранное</p>
+                        </a>
+                    </div>
                     <div>
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" id="btn-favorite-show" data-bs-target="#favoriteModal">
-                            Избранное
-                        </button>
-                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#loginModal">
-                            Вход
-                        </button>
-                    </div>
-                    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-centred">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title" id="exampleModalLabel">Избранное</h1>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <div class="list-group" id="div-favorite-list">
-
-@*                                                 <button type="button" class="list-group-item list-group-item-action" aria-current="true">
-                                                    Текущая кнопка
-                                                </button>
-                                                <button type="button" class="list-group-item list-group-item-action">Второй элемент кнопка</button>
-                                                <button type="button" class="list-group-item list-group-item-action">Третий элемент кнопка</button>
-                                                <button type="button" class="list-group-item list-group-item-action">Четвертый элемент кнопка</button>
-                                                <button type="button" class="list-group-item list-group-item-action" disabled>Отключенный элемент кнопка</button> *@
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" id="btn-form-login">К покупкам</button>
-                                        <button type="submit" class="btn btn-primary" id="btn-form-cancel-favorite">Закрыть</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-centred">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title" id="exampleModalLabel">Авторизация</h1>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                                            <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp" required>
-                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="input-form-password" class="form-label">Пароль</label>
-                                            <input type="password" class="form-control" id="input-form-password" required>
-                                            <span id="span-form-info"></span><br/>
-                                            <label><a data-bs-toggle="modal" href="#registerModal" role="button">Впервые? Регистрация</a></label>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-centred">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
-                                            <input type="email" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
-                                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="input-form-password-register" class="form-label">Пароль</label>
-                                            <input type="password" class="form-control" id="input-form-password-register" required>
-                                            <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
-                                            <input type="password" class="form-control" id="input-form-password-repeat" required>
-                                            <label><a data-bs-toggle="modal" href="#loginModal" role="button">Уже зарегистрированы? Авторизация</a></label>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary" id="btn-form-register" >Регистрация</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <a id="btn-login" class="btn" data-bs-toggle="modal" data-bs-target="#div-login-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                            </svg>
+                            <p id="p-user-login">Войти</p>
+                        </a>
                     </div>
             </div>
         </nav>
+        <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-centred">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title" id="exampleModalLabel">Избранное</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <div class="list-group" id="div-favorite-list">
+                                </div>
+                            </div>
+                        </form>
+                        <button type="submit" class="btn btn-primary" id="btn-form-d">К покупкам</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-centred">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title">Авторизация</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="input-form-email" class="form-label">Адрес электронной почты</label>
+                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp" required>
+                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="input-form-password" class="form-label">Пароль</label>
+                                <input type="password" class="form-control" id="input-form-password" required>
+                                <span id="span-login-error"></span><br/>
+                                <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-centred">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
+                                <input type="email" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
+                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="input-form-password-register" class="form-label">Пароль</label>
+                                <input type="password" class="form-control" id="input-form-password-register" required>
+                                <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
+                                <input type="password" class="form-control" id="input-form-password-repeat" required>
+                                <span id="span-register-error"></span><br/>
+                                <label><a data-bs-toggle="modal" href="#div-login-modal" role="button">Уже зарегистрированы? Авторизация</a></label>
+                            </div>
+                        </form>
+                        <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
     @RenderBody()
     @await RenderSectionAsync("Scripts", required: false)

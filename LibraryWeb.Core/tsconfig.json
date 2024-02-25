@@ -8,6 +8,9 @@
     "target": "es6",
     "outDir": "wwwroot/js"
   },
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
     "scripts/**/*"
   ]

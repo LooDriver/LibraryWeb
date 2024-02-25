@@ -24,16 +24,6 @@ namespace LibraryWeb.Core
             {
                 options.UseSqlServer("Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true");
             });
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("AllowAll",
-            //        builder =>
-            //        {
-            //            builder.AllowAnyOrigin()
-            //                   .AllowAnyMethod()
-            //                   .AllowAnyHeader();
-            //        });
-            //});
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -44,7 +34,7 @@ namespace LibraryWeb.Core
                         ValidAudience = AuthOptions.AUDIENCE,
 
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuer = true,  // изменено
+                        ValidateIssuer = true, 
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
@@ -56,16 +46,6 @@ namespace LibraryWeb.Core
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
-            }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseDefaultFiles();
@@ -73,8 +53,6 @@ namespace LibraryWeb.Core
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
-
-            //app.UseCors("AllowAll");
 
 
             app.UseEndpoints(endpoints =>
