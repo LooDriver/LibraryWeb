@@ -1,12 +1,9 @@
-﻿using Azure.Core;
-using LibraryWeb.Core;
+﻿using LibraryWeb.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Numerics;
 using Xunit;
 
 namespace LibraryWeb.IntegrationTest.ApiTest

@@ -33,6 +33,7 @@ class Authentication {
                 sessionStorage.setItem('userlogin', this.user.Логин);
                 sessionStorage.setItem('userid', data.userID);
                 $('#span-login-error').text("");
+                window.location.reload();
             }).fail((error) => {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
             });
@@ -151,6 +152,66 @@ class Book {
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
     }
 }
+
+class Cart {
+
+    AddCartItem(orderName:string) {
+        $.ajax({
+            url: `/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`,
+            method: 'post',
+            async: true
+        });
+    }
+
+    ShowCartList() {
+        $.ajax({
+            url: `/${baseUrl}/cart/allCartItems`,
+            method: 'get',
+            data: { 'userID': sessionStorage.getItem('userid') },
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            async: true
+
+        }).done((data) => {
+            this.CartElement(data);
+        });
+    }
+
+    DeleteCartItem(orderDelete:string) {
+        $.ajax({
+            url: `/${baseUrl}/cart/deleteCartItem?orderDel=${orderDelete}`,
+            method: 'delete',
+            async: true
+        }).done(() => {
+            window.location.reload();
+        });
+
+    }
+
+    CartElement(cart) {
+        var arr = [];
+
+        for (var i = 0; i < cart.length; i++) {
+            arr.push('<tr>');
+            arr.push(`<th scope="row">${i + 1}</th>`);
+            arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart[i].кодКнигиNavigation.название}"</a>${cart[i].кодКнигиNavigation.название}</td>`);
+            arr.push(`<td>${cart[i].цена} руб.</td>`);
+            arr.push(`<td>${cart[i].кодКнигиNavigation.наличие}</td>`);
+            arr.push(`<td>Многа</td>`);
+            arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
+            arr.push('</tr>'); 
+        }
+        
+        $('#tbody-cart-items').append(arr.join(""));
+    }
+}
+
+class Profile {
+    ShowProfileInfo() {
+        $('#p-user-email').text(`Email - ${sessionStorage.getItem('userlogin')}`);
+    }
+}
+
 $(function () {
 
     $('#btn-favorite-show').on('click', function (event) {
@@ -171,10 +232,19 @@ $(function () {
         } else { alert("Войдите в профиль для сохранение книги в избранное."); }
      
     });
+    $('#btn-cart-book').on('click', function (event) {
+        event.preventDefault();
+        if (document.cookie.includes("auth_key=")) {
+            var cart = new Cart();
+            cart.AddCartItem($('#h2-tittle-about-book').text());
+        } else { alert("Войдите в профиль для сохранение книги в корзину."); }
+    });
+    
 
     $(document).ready(function () {
 
         var books = new Book();
+        var cart = new Cart();
         $('#p-user-login').text("Войти");
         if (window.location.pathname.length == 1) {
             books.AllBook();
@@ -185,6 +255,16 @@ $(function () {
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
+            $('#btn-login').removeAttr('data-bs-toggle');
+            $('#btn-login').removeAttr('data-bs-target');
+            $('#btn-login').attr('href', '/profile');
+        }
+        if (window.location.href.includes('/cart')) {
+            cart.ShowCartList();
+        }
+        if (window.location.href.includes('/profile')) {
+            var profile = new Profile();
+            profile.ShowProfileInfo();
         }
     });
 
@@ -212,6 +292,21 @@ $(function () {
         book.BookByName(bookTitle);
     });
 
+    $(document).on('click', '#a-redirect-cart-about-book', function (event) {
+        event.preventDefault();
+        var decodUrl = decodeURI(this.getAttribute('href'));
+        var bookTitle = decodUrl.substr((decodUrl.indexOf('?') + 1));
+        var book = new Book();
+        book.BookByName(bookTitle);
+    });
+
+    $('#tbody-cart-items').on('click', '#btn-delete-cart-item', function (event) {
+        event.preventDefault();
+        var cart = new Cart();
+        cart.DeleteCartItem($(this).closest('tr').find('.td-book-name').text());
+        
+    });
+
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
         var book = new Book();
@@ -223,7 +318,9 @@ $(function () {
         event.preventDefault();
         var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
         enter.Login();
-        if ($('#span-login-error').text().toString() == "") ($('#div-login-modal') as any).modal('hide');
+        if ($('#span-login-error').text().toString() == "") {
+            ($('#div-login-modal') as any).modal('hide');
+        }
     });
 
     $('#btn-form-register').on('click', function (event) {
