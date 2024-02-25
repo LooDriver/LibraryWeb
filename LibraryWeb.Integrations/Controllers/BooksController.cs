@@ -31,8 +31,8 @@ namespace LibraryWeb.Integrations.Controllers
                 var books = new
                 {
                     Book = книги,
-                    Author = await db.Авторs.FindAsync(книги.КодАвтора),
-                    Genre = await db.Жанрs.FindAsync(книги.КодЖанра)
+                    Author = книги.Автор,
+                    Genre = книги.Жанр
                 };
                 return Json(books);
             }

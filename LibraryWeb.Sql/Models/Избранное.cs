@@ -9,11 +9,11 @@ public partial class Избранное
 
     public int КодКниги { get; set; }
 
-    public int КодПокупателя { get; set; }
+    public int КодПользователя { get; set; }
 
     public int? Количество { get; set; }
 
     public virtual Книги КодКнигиNavigation { get; set; } = null!;
 
-    public virtual Покупатели КодПокупателяNavigation { get; set; } = null!;
+    public virtual Пользователи КодПользователяNavigation { get; set; } = null!;
 }

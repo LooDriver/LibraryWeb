@@ -50,12 +50,12 @@
                         </a>
                     </div>
                     <div>
-                        <a id="btn-login" class="btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <a id="btn-login" class="btn" data-bs-toggle="modal" data-bs-target="#div-login-modal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                             </svg>
-                            <p>Войти</p>
+                            <p id="p-user-login">Войти</p>
                         </a>
                     </div>
             </div>
@@ -72,18 +72,18 @@
                                 <div class="list-group" id="div-favorite-list">
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btn-form-d">К покупкам</button>
-                            <button type="submit" class="btn btn-primary" id="btn-form-cancel-favorite">Закрыть</button>
                         </form>
+                        <button type="submit" class="btn btn-primary" id="btn-form-d">К покупкам</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-centred">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title" id="exampleModalLabel">Авторизация</h1>
+                        <h1 class="modal-title">Авторизация</h1>
                     </div>
                     <div class="modal-body">
                         <form>
@@ -95,16 +95,17 @@
                             <div class="mb-3">
                                 <label for="input-form-password" class="form-label">Пароль</label>
                                 <input type="password" class="form-control" id="input-form-password" required>
-                                <span id="span-form-info"></span><br />
-                                <label><a data-bs-toggle="modal" href="#registerModal" role="button">Впервые? Регистрация</a></label>
+                                <span id="span-login-error"></span><br/>
+                                <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
                             </div>
                             <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-centred">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -122,10 +123,12 @@
                                 <input type="password" class="form-control" id="input-form-password-register" required>
                                 <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
                                 <input type="password" class="form-control" id="input-form-password-repeat" required>
-                                <label><a data-bs-toggle="modal" href="#loginModal" role="button">Уже зарегистрированы? Авторизация</a></label>
+                                <span id="span-register-error"></span><br/>
+                                <label><a data-bs-toggle="modal" href="#div-login-modal" role="button">Уже зарегистрированы? Авторизация</a></label>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
                         </form>
+                        <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
             </div>

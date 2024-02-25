@@ -22,7 +22,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
-                    audience: AuthOptions.AUDIENCE, // Обязательно укажите ожидаемую аудиторию
+                    audience: AuthOptions.AUDIENCE,
                     claims: claims,
                     expires: DateTime.UtcNow.Add(TimeSpan.FromHours(10)),
                     signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
@@ -38,7 +38,12 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if (item.Any())
             {
-                return Ok(JWTCreate(logins));
+                var authKey = new
+                {
+                    auth_key = JWTCreate(logins),
+                    userID = item.Select(x => x.КодПользователя).Single()
+                };
+                return Ok(authKey);
             }
             else
             {
@@ -55,7 +60,6 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
                 await db.Пользователиs.AddAsync(registers);
                 await db.SaveChangesAsync();
                 return Ok();
-
             }
             else
             {

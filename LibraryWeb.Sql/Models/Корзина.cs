@@ -7,7 +7,7 @@ public partial class Корзина
 {
     public int КодКорзины { get; set; }
 
-    public int КодПокупателя { get; set; }
+    public int КодПользователя { get; set; }
 
     public int КодКниги { get; set; }
 
@@ -15,5 +15,5 @@ public partial class Корзина
 
     public virtual Книги КодКнигиNavigation { get; set; } = null!;
 
-    public virtual Покупатели КодПокупателяNavigation { get; set; } = null!;
+    public virtual Пользователи КодПользователяNavigation { get; set; } = null!;
 }

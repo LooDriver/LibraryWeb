@@ -13,7 +13,9 @@ public partial class Пользователи
 
     public int? КодРоли { get; set; }
 
+    public virtual ICollection<Избранное> Избранноеs { get; set; } = new List<Избранное>();
+
     public virtual Роли? КодРолиNavigation { get; set; }
 
-    public virtual ICollection<Покупатели> Покупателиs { get; set; } = new List<Покупатели>();
+    public virtual ICollection<Корзина> Корзинаs { get; set; } = new List<Корзина>();
 }
