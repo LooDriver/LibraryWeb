@@ -17,5 +17,5 @@
 - **[EasyData](https://github.com/KorzhCom/EasyData)** (Предоставляет уже готовые операции CRUID для базы данных)
 - **В дальнейшем этот список будет пополняться**
 ## Обратная связь
-- **[Telegram](t.me/loodriver)**
-- **[Github](github.com/LooDriver)**
+- **[Telegram](https://t.me/loodriver)**
+- **[Github](https://github.com/LooDriver)**
