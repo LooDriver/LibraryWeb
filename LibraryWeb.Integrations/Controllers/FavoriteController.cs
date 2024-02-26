@@ -26,7 +26,7 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("addFavorite")]
+        [HttpPost("addFavorite")]
         public async Task<IActionResult> AddNewFavorite([FromQuery] string nameBook, int userID)
         {
             Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.First(x => x.Название == nameBook).КодКниги);

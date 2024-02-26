@@ -1,13 +1,17 @@
 const baseUrl = 'api';
 class Authentication {
-    constructor(username = "", password = "", role = 2) {
+    constructor(surname = "", name = "", username = "", password = "", role = 2) {
         this.defaultRole = 2;
         this.user = {
+            Фамилия: "",
+            Имя: "",
             Логин: "",
             Пароль: "",
             КодРоли: this.defaultRole
         };
         this.user = {
+            Фамилия: surname,
+            Имя: name,
             Логин: username,
             Пароль: password,
             КодРоли: role
@@ -19,8 +23,7 @@ class Authentication {
                 url: `/${baseUrl}/auth/login`,
                 method: 'post',
                 contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(this.user),
-                async: true
+                data: JSON.stringify(this.user)
             }).done((data) => {
                 document.cookie = "auth_key=" + data.auth_key;
                 sessionStorage.setItem('userlogin', this.user.Логин);
@@ -31,17 +34,28 @@ class Authentication {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
             });
         }
+        else {
+            $('#span-login-error').text('Логин или пароль не могут быть пустыми.').css('color', 'red');
+        }
     }
     Register() {
-        $.ajax({
-            url: `/${baseUrl}/auth/register`,
-            method: 'post',
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify(this.user),
-            async: true
-        }).done(() => {
-            $('#span-register-error').text("");
-        });
+        if (this.user.Фамилия != "" && this.user.Имя != "") {
+            $.ajax({
+                url: `/${baseUrl}/auth/register`,
+                method: 'post',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify(this.user)
+            }).done(() => {
+                $('#span-register-error').text("");
+            }).fail((error) => {
+                $('#span-register-error').text(error.responseText).css('color', 'red');
+                ;
+            });
+        }
+        else {
+            $('#span-register-error').text("Фамилия и имя должны быть заполнены.").css('color', 'red');
+            ;
+        }
     }
 }
 class Favorite {
@@ -50,13 +64,8 @@ class Favorite {
     }
     AddToFavorite() {
         $.ajax({
-            url: `/${baseUrl}/Favorite/addFavorite`,
-            method: 'get',
-            data: {
-                'nameBook': this.bookName,
-                'userID': sessionStorage.getItem('userid')
-            },
-            contentType: 'application/json;charset=utf-8',
+            url: `/${baseUrl}/Favorite/addFavorite?nameBook=${this.bookName}&userID=${sessionStorage.getItem('userid')}`,
+            method: 'post',
             async: true
         });
     }
@@ -69,7 +78,6 @@ class Favorite {
             contentType: 'application/json;charset=utf-8',
             async: true
         }).done(function (data) {
-            console.log(data);
             var arr = [];
             for (var i = 0; i < data.length; i++) {
                 var bookName = `${data[i].кодКнигиNavigation.название}`;
@@ -93,8 +101,6 @@ class Book {
         }).done(function (data) {
             sessionStorage.setItem('bookData', JSON.stringify(data));
             window.location.href = `/book/name?${data.book.название}`;
-        }).fail(function (handleError) {
-            console.log(handleError);
         });
     }
     AllBook() {
@@ -106,8 +112,6 @@ class Book {
             async: true
         }).done((data) => {
             this.tileBook(data);
-        }).fail((handleError) => {
-            console.log(handleError);
         });
     }
     createAboutBook(book) {
@@ -115,7 +119,7 @@ class Book {
         $('#h2-tittle-about-book').text(`${book.название}`);
         $('#p-author-about-book').text(`${book.автор}`);
         $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-        $('#p-available-about-book').text(`Наличии - ${book.наличие} шт.`);
+        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
     }
     tileBook(books) {
         var arr = [];
@@ -130,6 +134,9 @@ class Book {
             arr.push('</div>');
         }
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+    }
+    clearUrlBook(bookUrl) {
+        return bookUrl.substr((bookUrl.indexOf('?') + 1));
     }
 }
 class Cart {
@@ -163,22 +170,66 @@ class Cart {
     }
     CartElement(cart) {
         var arr = [];
+        var sumCostBook = 0;
         for (var i = 0; i < cart.length; i++) {
+            sumCostBook += cart[i].кодКнигиNavigation.цена;
             arr.push('<tr>');
             arr.push(`<th scope="row">${i + 1}</th>`);
             arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart[i].кодКнигиNavigation.название}"</a>${cart[i].кодКнигиNavigation.название}</td>`);
-            arr.push(`<td>${cart[i].цена} руб.</td>`);
+            arr.push(`<td>${cart[i].кодКнигиNavigation.цена} руб.</td>`);
             arr.push(`<td>${cart[i].кодКнигиNavigation.наличие}</td>`);
-            arr.push(`<td>Многа</td>`);
             arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
             arr.push('</tr>');
         }
+        $('#h4-final-sum').text(`Общая сумма - ${sumCostBook} руб.`);
         $('#tbody-cart-items').append(arr.join(""));
     }
 }
 class Profile {
     ShowProfileInfo() {
-        $('#p-user-email').text(`Email - ${sessionStorage.getItem('userlogin')}`);
+        $.ajax({
+            url: `/${baseUrl}/profile/profileInformation`,
+            method: 'get',
+            data: { 'userID': sessionStorage.getItem('userid') },
+            async: true
+        }).done((data) => {
+            $('#p-user-email').text(`Email - ${data.login}`);
+            $('#p-user-surname').text(`Фамилия - ${data.surname}`);
+            $('#p-user-name').text(`Имя - ${data.name}`);
+        });
+    }
+}
+class Order {
+    AddNewOrder(elementHref, userID) {
+        var books = new Book();
+        document.querySelectorAll(`${elementHref}`).forEach(links => {
+            $.post(`/${baseUrl}/order/addOrder?bookName=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}&userID=${userID}`);
+        });
+    }
+    ShowOrders() {
+        $.ajax({
+            url: `/${baseUrl}/order/getOrder`,
+            method: 'get',
+            data: { 'userID': sessionStorage.getItem('userid') },
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            async: true
+        }).done((data) => {
+            this.tableOrderFill(data);
+        });
+    }
+    tableOrderFill(orders) {
+        var arr = [];
+        orders.forEach(orders => {
+            var bookName = orders.кодКнигиNavigation.название;
+            arr.push('<tr>');
+            arr.push(`<th scope="row">1</th>`);
+            arr.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
+            arr.push(`<td>${orders.датаЗаказа}</td>`);
+            arr.push(`<td>${orders.статус}</td>`);
+            arr.push('</tr>');
+        });
+        $('#tbody-profile-table').append(arr.join(""));
     }
 }
 $(function () {
@@ -235,7 +286,9 @@ $(function () {
         }
         if (window.location.href.includes('/profile')) {
             var profile = new Profile();
+            var order = new Order();
             profile.ShowProfileInfo();
+            order.ShowOrders();
         }
     });
     $('#btn-form-search').on('click', function (event) {
@@ -253,17 +306,18 @@ $(function () {
     });
     $(document).on('click', '#a-redirect-about-book', function (event) {
         event.preventDefault();
-        var decodUrl = decodeURI(this.getAttribute('href'));
-        var bookTitle = decodUrl.substr((decodUrl.indexOf('?') + 1));
         var book = new Book();
-        book.BookByName(bookTitle);
+        book.BookByName(book.clearUrlBook(decodeURI(this.getAttribute('href'))));
+    });
+    $(document).on('click', '#a-redirect-profile-book', function (event) {
+        event.preventDefault();
+        var book = new Book();
+        book.BookByName(book.clearUrlBook(decodeURI(this.getAttribute('href'))));
     });
     $(document).on('click', '#a-redirect-cart-about-book', function (event) {
         event.preventDefault();
-        var decodUrl = decodeURI(this.getAttribute('href'));
-        var bookTitle = decodUrl.substr((decodUrl.indexOf('?') + 1));
         var book = new Book();
-        book.BookByName(bookTitle);
+        book.BookByName(book.clearUrlBook(decodeURI(this.getAttribute('href'))));
     });
     $('#tbody-cart-items').on('click', '#btn-delete-cart-item', function (event) {
         event.preventDefault();
@@ -275,9 +329,14 @@ $(function () {
         var book = new Book();
         book.BookByName($(this).closest('.tile').find('.tile-book').text());
     });
+    $('#btn-order-success').on('click', function (event) {
+        event.preventDefault();
+        var order = new Order();
+        order.AddNewOrder('#a-redirect-cart-about-book', Number.parseInt(sessionStorage.getItem('userid')));
+    });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication($('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
+        var enter = new Authentication('', '', $('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
         enter.Login();
         if ($('#span-login-error').text().toString() == "") {
             $('#div-login-modal').modal('hide');
@@ -286,10 +345,8 @@ $(function () {
     $('#btn-form-register').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-register').val() == $('#input-form-password-repeat').val()) {
-            var register = new Authentication($('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
+            var register = new Authentication($('#input-form-surname').val().toString(), $('#input-form-name').val().toString(), $('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
             register.Register();
-            if ($('#span-register-error').text().toString() == "")
-                $('#div-register-modal').modal('hide');
         }
         else {
             $('#span-register-error').text("Пароли должны быть одинаковые").css('color', 'red');

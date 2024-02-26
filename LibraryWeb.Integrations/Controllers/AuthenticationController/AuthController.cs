@@ -63,7 +63,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Все поля должны быть заполнены.");
             }
         }
     }

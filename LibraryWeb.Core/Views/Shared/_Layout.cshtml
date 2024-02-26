@@ -97,18 +97,20 @@
                         <form>
                             <div class="mb-3">
                                 <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp" required>
+                                <input type="email" class="form-control" required placeholder="Почта" id="input-form-email" aria-describedby="emailHelp"/>
                                 <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="input-form-password" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="input-form-password" required>
+                                <input type="password" class="form-control" id="input-form-password" required />
                                 <span id="span-login-error"></span><br/>
                                 <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
             </div>

@@ -8,7 +8,9 @@
           <div class="card-body">
             <h5 class="card-title">Информация о пользователе</h5>
             <p class="card-text" id="p-user-email"></p>
-            <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#editProfileModal">Редактировать профиль</button>
+            <p class="card-text" id="p-user-surname"></p>
+            <p class="card-text" id="p-user-name"></p>
+             <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal">Редактировать профиль</button>
           </div>
         </div>
       </div>
@@ -23,25 +25,9 @@
                   <th>Название книги</th>
                   <th>Дата заказа</th>
                   <th>Статус</th>
-                  <th></th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Война и мир</td>
-                  <td>22.02.2024</td>
-                  <td>Доставлено</td>
-                  <td><button class="btn btn-link btn-sm" data-toggle="modal" data-target="#orderDetailModal">Подробнее</button></td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Преступление и наказание</td>
-                  <td>20.02.2024</td>
-                  <td>В пути</td>
-                  <td><button class="btn btn-link btn-sm" data-toggle="modal" data-target="#orderDetailModal">Подробнее</button></td>
-                </tr>
-                <!-- Здесь могут быть другие заказы -->
+              <tbody id="tbody-profile-table">
               </tbody>
             </table>
           </div>
@@ -50,63 +36,32 @@
     </div>
   </div>
 
-  <!-- Модальное окно для редактирования профиля -->
-  <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editProfileModalLabel">Редактировать профиль</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal fade" id="div-profile-edit-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-centred">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Редактирование профиля</h3>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="input-form-edit-surname" class="form-label">Фамилия</label>
+                        <input type="text" class="form-control" id="input-form-edit-surname" required>
+                        <label for="input-form-edit-name" class="form-label">Имя</label>
+                        <input type="text" class="form-control" id="input-form-edit-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-form-password-register" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="input-form-password-register" required>
+                        <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
+                        <input type="password" class="form-control" id="input-form-password-repeat" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-warning" id="btn-form-profile-edit">Редактировать</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <!-- Форма редактирования профиля -->
-          <form>
-            <div class="form-group">
-              <label for="inputName">Имя</label>
-              <input type="text" class="form-control" id="inputName" placeholder="Введите ваше имя">
-            </div>
-            <div class="form-group">
-              <label for="inputEmail">Email адрес</label>
-              <input type="email" class="form-control" id="inputEmail" placeholder="Введите ваш email">
-            </div>
-            <div class="form-group">
-              <label for="inputPhone">Телефон</label>
-              <input type="tel" class="form-control" id="inputPhone" placeholder="Введите ваш номер телефона">
-            </div>
-            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Модальное окно для подробной информации о заказе -->
-  <div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="orderDetailModalLabel">Подробная информация о заказе</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- Здесь может быть подробная информация о заказе, например, статус, адрес доставки, и т. д. -->
-          <p><strong>Название книги:</strong> Война и мир</p>
-          <p><strong>Дата заказа:</strong> 22.02.2024</p>
-          <p><strong>Статус:</strong> Доставлено</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Дополнительные скрипты для работы модальных окон -->
-  <script>
-    $(document).ready(function(){
-      $('#editProfileModal').on('shown.bs.modal', function () {
-        $('#inputName').focus(); // установка фокуса на поле имени при открытии модального окна
-      });
-    });
-  </script>
+</div>
