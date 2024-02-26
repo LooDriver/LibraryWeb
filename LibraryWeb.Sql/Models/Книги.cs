@@ -19,7 +19,11 @@ public partial class Книги
 
     public string? Описание { get; set; }
 
+    public decimal Цена { get; set; }
+
     public int Наличие { get; set; }
+
+    public virtual ICollection<Заказы> Заказыs { get; set; } = new List<Заказы>();
 
     public virtual ICollection<Избранное> Избранноеs { get; set; } = new List<Избранное>();
 

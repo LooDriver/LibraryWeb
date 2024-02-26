@@ -22,8 +22,9 @@ namespace LibraryWeb.Core
             services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddDbContext<DatabaseEntities>(options =>
             {
-                options.UseSqlServer("Server=localhost\\sqlexpress;Database=Библиотека;Trusted_Connection=true;TrustServerCertificate=true");
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            DatabaseEntities.connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

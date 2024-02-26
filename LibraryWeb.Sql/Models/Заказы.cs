@@ -3,13 +3,17 @@ using System.Collections.Generic;
 
 namespace LibraryWeb.Sql.Models;
 
-public partial class Корзина
+public partial class Заказы
 {
-    public int КодКорзины { get; set; }
+    public int КодЗаказа { get; set; }
 
     public int КодПользователя { get; set; }
 
     public int КодКниги { get; set; }
+
+    public DateOnly ДатаЗаказа { get; set; }
+
+    public string Статус { get; set; }
 
     public virtual Книги КодКнигиNavigation { get; set; } = null!;
 

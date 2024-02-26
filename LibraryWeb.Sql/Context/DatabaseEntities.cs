@@ -7,7 +7,7 @@ namespace LibraryWeb.Sql.Context
 
     public partial class DatabaseEntities : DbContext
     {
-        private readonly string connectionString = "Server=localhost\\sqlexpress;Database=Книжный_магазин;Trusted_Connection=true;TrustServerCertificate=true";
+        public static string connectionString { get; set; }
         public DatabaseEntities()
         {
             if (IsConnect(connectionString))
@@ -24,7 +24,7 @@ namespace LibraryWeb.Sql.Context
 
         }
 
-        private bool IsConnect(string connectionString)
+        private static bool IsConnect(string connectionString)
         {
             try
             {
@@ -45,6 +45,8 @@ namespace LibraryWeb.Sql.Context
             }
         }
 
+        public virtual DbSet<Заказы> Заказыs { get; set; }
+
         public virtual DbSet<Избранное> Избранноеs { get; set; }
 
         public virtual DbSet<Издательство> Издательствоs { get; set; }
@@ -62,6 +64,28 @@ namespace LibraryWeb.Sql.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Заказы>(entity =>
+            {
+                entity.HasKey(e => e.КодЗаказа);
+
+                entity.ToTable("Заказы");
+
+                entity.Property(e => e.КодЗаказа).HasColumnName("Код_заказа");
+                entity.Property(e => e.ДатаЗаказа).HasColumnName("Дата_заказа");
+                entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
+                entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+
+                entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Заказыs)
+                    .HasForeignKey(d => d.КодКниги)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Заказы_Книги");
+
+                entity.HasOne(d => d.КодПользователяNavigation).WithMany(p => p.Заказыs)
+                    .HasForeignKey(d => d.КодПользователя)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Заказы_Пользователи");
+            });
+
             modelBuilder.Entity<Избранное>(entity =>
             {
                 entity.HasKey(e => e.КодИзбранного);
@@ -107,6 +131,7 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.КодИздательства).HasColumnName("Код_издательства");
                 entity.Property(e => e.Название).HasMaxLength(50);
                 entity.Property(e => e.Описание).HasMaxLength(150);
+                entity.Property(e => e.Цена).HasColumnType("money");
 
                 entity.HasOne(d => d.КодИздательстваNavigation).WithMany(p => p.Книгиs)
                     .HasForeignKey(d => d.КодИздательства)
@@ -123,7 +148,6 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
-                entity.Property(e => e.Цена).HasColumnType("money");
 
                 entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Корзинаs)
                     .HasForeignKey(d => d.КодКниги)
@@ -143,12 +167,15 @@ namespace LibraryWeb.Sql.Context
                 entity.ToTable("Пользователи");
 
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+                entity.Property(e => e.Имя).HasMaxLength(50);
                 entity.Property(e => e.КодРоли).HasColumnName("Код_роли");
                 entity.Property(e => e.Логин).HasMaxLength(50);
                 entity.Property(e => e.Пароль).HasMaxLength(50);
+                entity.Property(e => e.Фамилия).HasMaxLength(50);
 
                 entity.HasOne(d => d.КодРолиNavigation).WithMany(p => p.Пользователиs)
                     .HasForeignKey(d => d.КодРоли)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Пользователи_Роли");
             });
 

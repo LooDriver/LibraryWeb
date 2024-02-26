@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["title"] = "Корзина";
+}
+<div class="container mt-5">
+    <h1 class="mb-4">Корзина</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <form>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Поиск">
+                    </div>
+                    <div class="col">
+                        <select class="form-control">
+                            <option>Фильтр 1</option>
+                            <option>Фильтр 2</option>
+                            <option>Фильтр 3</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Применить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Количество</th>
+                        <th scope="col">Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-cart-items">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h4 id="h4-final-sum"></h4>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary mr-2" id="btn-order-success">Оформить заказ</button>
+            <button type="button" class="btn btn-secondary">Очистить корзину</button>
+        </div>
+    </div>
+</div>

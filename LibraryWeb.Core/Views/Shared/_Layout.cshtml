@@ -49,6 +49,14 @@
                             <p>Избранное</p>
                         </a>
                     </div>
+                    <div class="mx-2">
+                        <a id="btn-cart-open" class="btn" href="/cart">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket-fill" viewBox="0 0 16 16">
+                                <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717L5.07 1.243zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3z" />
+                            </svg>
+                            <p>Корзина</p>
+                        </a>
+                    </div>
                     <div>
                         <a id="btn-login" class="btn" data-bs-toggle="modal" data-bs-target="#div-login-modal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -89,18 +97,20 @@
                         <form>
                             <div class="mb-3">
                                 <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                                <input type="email" class="form-control" id="input-form-email" aria-describedby="emailHelp" required>
+                                <input type="email" class="form-control" required placeholder="Почта" id="input-form-email" aria-describedby="emailHelp"/>
                                 <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
                             </div>
                             <div class="mb-3">
                                 <label for="input-form-password" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="input-form-password" required>
+                                <input type="password" class="form-control" id="input-form-password" required />
                                 <span id="span-login-error"></span><br/>
                                 <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
                             </div>
-                            <button type="submit" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                         </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +125,11 @@
                         <form>
                             <div class="mb-3">
                                 <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
-                                <input type="email" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
+                                <input type="text" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
+                                <label for="input-form-email-register" class="form-label">Фамилия</label>
+                                <input type="text" class="form-control" id="input-form-surname" required/>
+                                <label for="input-form-email-register" class="form-label">Имя</label>
+                                <input type="text" class="form-control" id="input-form-name" required />
                                 <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
                             </div>
                             <div class="mb-3">

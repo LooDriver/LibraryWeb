@@ -31,6 +31,9 @@ namespace LibraryWeb.Core.Controllers
         [Route("profile")]
         public IActionResult Profile() => View();
 
+        [Route("cart")]
+        public IActionResult Cart() => View();
+
         public bool IsTokenValid(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

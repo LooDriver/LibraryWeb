@@ -3,6 +3,7 @@
     margin: 0 auto;
     box-sizing: border-box;
 }
+
 th, td, tr {
     border: 1px solid black;
 }
@@ -10,21 +11,26 @@ button {
     margin: 0 auto;
     display: block;
 }
+
 .tile {
     background-color: transparent;
     margin-bottom: 20px;
     overflow: hidden;
 }
+
 .btn-about-book {
     background-color: transparent;
     border-radius: 8px;
 }
+
 .tile-book {
     display: none;
 }
+
 .tile img {
     display: table-cell;
 }
+
 .book-container {
     max-width: 800px;
     margin: 0px 0px;
@@ -41,7 +47,7 @@ button {
 
 .book-details {
     margin-bottom: 20px;
-    margin-right: 20px; 
+    margin-right: 20px;
 }
 
 .book-description {
