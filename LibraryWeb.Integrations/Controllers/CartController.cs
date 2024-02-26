@@ -46,12 +46,10 @@ namespace LibraryWeb.Integrations.Controllers
         public async Task<IActionResult> DeleteCartItem([FromQuery] string orderDel)
         {
             Корзина cartDelete = await db.Корзинаs.FindAsync(db.Корзинаs.Include(x => x.КодКнигиNavigation).First(x => x.КодКнигиNavigation.Название == orderDel).КодКорзины);
-            Заказы orderDelete = await db.Заказыs.FindAsync(db.Заказыs.Include(x => x.КодКнигиNavigation).First(x => x.КодКнигиNavigation.Название == orderDel).КодЗаказа); //временный костыль
-            if (cartDelete is null && orderDelete is null ) return BadRequest();
+            if (cartDelete is null) return BadRequest();
             else
             {
                 db.Корзинаs.Remove(cartDelete);
-                db.Заказыs.Remove(orderDelete); //временный костыль
                 await db.SaveChangesAsync();
                 return Ok();
             }
