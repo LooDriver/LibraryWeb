@@ -28,7 +28,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPost("addCartItem")]
         public async Task<IActionResult> AddCartItem([FromQuery] string bookName, int userID)
         {
-            Книги книги = await db.Книгиs.FirstAsync(x => x.Название == bookName);
+            Книги книги = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
             if (книги is null) return BadRequest();
             else
             {
@@ -45,7 +45,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpDelete("deleteCartItem")]
         public async Task<IActionResult> DeleteCartItem([FromQuery] string orderDel)
         {
-            Корзина cartDelete = await db.Корзинаs.FindAsync(db.Корзинаs.Include(x => x.КодКнигиNavigation).First(x => x.КодКнигиNavigation.Название == orderDel).КодКорзины);
+            Корзина cartDelete = await db.Корзинаs.FindAsync(db.Корзинаs.Include(x => x.КодКнигиNavigation).FirstOrDefault(x => x.КодКнигиNavigation.Название == orderDel).КодКорзины);
             if (cartDelete is null) return BadRequest();
             else
             {

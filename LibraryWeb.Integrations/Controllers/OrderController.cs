@@ -30,7 +30,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPost("addOrder")]
         public async Task<IActionResult> AddNewOrder([FromQuery] string bookName, int userID)
         {
-            Книги книги = await db.Книгиs.FirstAsync(x => x.Название == bookName);
+            Книги книги = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
             if (книги is null) return BadRequest();
             else
             {

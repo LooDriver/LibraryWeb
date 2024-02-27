@@ -10,7 +10,7 @@
             <p class="card-text" id="p-user-email"></p>
             <p class="card-text" id="p-user-surname"></p>
             <p class="card-text" id="p-user-name"></p>
-             <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal">Редактировать профиль</button>
+             <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal" id="btn-modal-profile-edit">Редактировать профиль</button>
           </div>
         </div>
       </div>
@@ -49,12 +49,15 @@
                         <input type="text" class="form-control" id="input-form-edit-surname" required>
                         <label for="input-form-edit-name" class="form-label">Имя</label>
                         <input type="text" class="form-control" id="input-form-edit-name" required>
+                        <label for="input-form-edit-email" class="form-label">Электронная почта</label>
+                        <input type="text" class="form-control" id="input-form-edit-email" required>
                     </div>
                     <div class="mb-3">
-                        <label for="input-form-password-register" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="input-form-password-register" required>
-                        <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
-                        <input type="password" class="form-control" id="input-form-password-repeat" required>
+                        <label for="input-form-password-edit" class="form-label">Новый пароль</label>
+                        <input type="password" class="form-control" id="input-form-password-edit" required>
+                        <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
+                        <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
+                        <span id="span-edit-error"></span>
                     </div>
                 </form>
             </div>

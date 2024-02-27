@@ -1,6 +1,7 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -22,19 +23,18 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpGet]
         public async Task<JsonResult> GetBookByName([FromQuery] string name)
         {
-            var bookName = db.Книгиs.First(x => x.Название == name);
+            var bookName = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == name);
             int bookId = bookName != null ? bookName.КодКниги : 0;
             Книги книги = await db.Книгиs.FindAsync(bookId);
             if (книги == null) { return Json(null); }
             else
             {
-                var books = new
+                return Json(new
                 {
                     Book = книги,
                     Author = книги.Автор,
                     Genre = книги.Жанр
-                };
-                return Json(books);
+                });
             }
         }
     }
