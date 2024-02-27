@@ -47,6 +47,7 @@ class Authentication {
                 data: JSON.stringify(this.user)
             }).done(() => {
                 $('#span-register-error').text("");
+                window.location.reload();
             }).fail((error) => {
                 $('#span-register-error').text(error.responseText).css('color', 'red');
                 ;
@@ -79,12 +80,11 @@ class Favorite {
             async: true
         }).done(function (data) {
             var arr = [];
-            for (var i = 0; i < data.length; i++) {
-                var bookName = `${data[i].кодКнигиNavigation.название}`;
+            data.forEach(data => {
                 arr.push('<li>');
-                arr.push(`<a class="btn text-align-center" href="/book/name?${encodeURIComponent(bookName)}" id="a-redirect-about-book">${bookName}</a>`);
+                arr.push(`<a class="btn text-align-center" href="/book/name?${encodeURIComponent(data.кодКнигиNavigation.название)}" id="a-redirect-about-book">${data.кодКнигиNavigation.название}</a>`);
                 arr.push('</li>');
-            }
+            });
             $('#div-favorite-list').append(arr.join(""));
         });
     }
@@ -123,16 +123,16 @@ class Book {
     }
     tileBook(books) {
         var arr = [];
-        for (var i = 0; i < books.length; i++) {
+        books.forEach(books => {
             arr.push('<div class="col-md-2 mt-3">');
             arr.push('<div class="tile">');
             arr.push('<div class="tile-content">');
-            arr.push(`<div class="tile-book">${books[i].название}</div>`);
-            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books[i].обложка}" width="150" height="200" alt="Обложка книги ${books[i].название}"></button>`);
+            arr.push(`<div class="tile-book">${books.название}</div>`);
+            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Обложка книги ${books.название}"></button>`);
             arr.push('</div>');
             arr.push('</div>');
             arr.push('</div>');
-        }
+        });
         $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
     }
     clearUrlBook(bookUrl) {
@@ -171,21 +171,39 @@ class Cart {
     CartElement(cart) {
         var arr = [];
         var sumCostBook = 0;
-        for (var i = 0; i < cart.length; i++) {
-            sumCostBook += cart[i].кодКнигиNavigation.цена;
+        var countCartBooks = 1;
+        cart.forEach(cart => {
+            sumCostBook += cart.кодКнигиNavigation.цена;
             arr.push('<tr>');
-            arr.push(`<th scope="row">${i + 1}</th>`);
-            arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart[i].кодКнигиNavigation.название}"</a>${cart[i].кодКнигиNavigation.название}</td>`);
-            arr.push(`<td>${cart[i].кодКнигиNavigation.цена} руб.</td>`);
-            arr.push(`<td>${cart[i].кодКнигиNavigation.наличие}</td>`);
+            arr.push(`<th scope="row">${countCartBooks++}</th>`);
+            arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart.кодКнигиNavigation.название}"</a>${cart.кодКнигиNavigation.название}</td>`);
+            arr.push(`<td>${cart.кодКнигиNavigation.цена} руб.</td>`);
+            arr.push(`<td>${cart.кодКнигиNavigation.наличие}</td>`);
             arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
             arr.push('</tr>');
-        }
+        });
         $('#h4-final-sum').text(`Общая сумма - ${sumCostBook} руб.`);
         $('#tbody-cart-items').append(arr.join(""));
     }
 }
 class Profile {
+    constructor(name = "", surname = "", username = "", password = "") {
+        this.defaultRole = 2;
+        this.userProfile = {
+            Фамилия: "",
+            Имя: "",
+            Логин: "",
+            Пароль: "",
+            КодРоли: this.defaultRole
+        };
+        this.userProfile = {
+            Фамилия: surname,
+            Имя: name,
+            Логин: username,
+            Пароль: password,
+            КодРоли: this.defaultRole
+        };
+    }
     ShowProfileInfo() {
         $.ajax({
             url: `/${baseUrl}/profile/profileInformation`,
@@ -196,6 +214,28 @@ class Profile {
             $('#p-user-email').text(`Email - ${data.login}`);
             $('#p-user-surname').text(`Фамилия - ${data.surname}`);
             $('#p-user-name').text(`Имя - ${data.name}`);
+        });
+    }
+    EditProfileInfo() {
+        $.ajax({
+            url: `/${baseUrl}/profile/editProfile?userID=${sessionStorage.getItem('userid')}`,
+            method: 'put',
+            data: JSON.stringify(this.userProfile),
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function (data) {
+                sessionStorage.setItem('userlogin', this.userProfile.Логин);
+                window.location.reload();
+            }
+        }).fail((error) => {
+            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+        });
+    }
+    FillEditProfileInfo() {
+        $.get(`/${baseUrl}/profile/getCurrentProfile?userID=${sessionStorage.getItem('userid')}`, function (data) {
+            $('#input-form-edit-name').val(data.name);
+            $('#input-form-edit-surname').val(data.surname);
+            $('#input-form-edit-email').val(data.login);
         });
     }
 }
@@ -220,10 +260,11 @@ class Order {
     }
     tableOrderFill(orders) {
         var arr = [];
+        var countOrders = 1;
         orders.forEach(orders => {
             var bookName = orders.кодКнигиNavigation.название;
             arr.push('<tr>');
-            arr.push(`<th scope="row">1</th>`);
+            arr.push(`<th scope="row">${countOrders++}</th>`);
             arr.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
             arr.push(`<td>${orders.датаЗаказа}</td>`);
             arr.push(`<td>${orders.статус}</td>`);
@@ -233,6 +274,21 @@ class Order {
     }
 }
 $(function () {
+    $('#btn-modal-profile-edit').on('click', function (event) {
+        event.preventDefault();
+        var profile = new Profile();
+        profile.FillEditProfileInfo();
+    });
+    $('#btn-form-profile-edit').on('click', function (event) {
+        event.preventDefault();
+        if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
+            var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-email').val().toString(), $('#input-form-password-edit').val().toString());
+            profile.EditProfileInfo();
+        }
+        else {
+            $('#span-edit-error').text('Пароли должны быть одинаковыми.').css('color', 'red');
+        }
+    });
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
         if (sessionStorage.getItem('userlogin') != null && sessionStorage.getItem('userid') != null) {
@@ -265,15 +321,11 @@ $(function () {
         }
     });
     $(document).ready(function () {
-        var books = new Book();
-        var cart = new Cart();
         $('#p-user-login').text("Войти");
-        if (window.location.pathname.length == 1) {
-            books.AllBook();
-        }
-        else if (window.location.href.includes('/book/name') && sessionStorage.getItem('bookData') != null) {
+        if (window.location.href.includes('/book/name')) {
+            var bookByName = new Book();
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
-            books.createAboutBook(dataStorage.book);
+            bookByName.createAboutBook(dataStorage.book);
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
@@ -281,14 +333,24 @@ $(function () {
             $('#btn-login').removeAttr('data-bs-target');
             $('#btn-login').attr('href', '/profile');
         }
-        if (window.location.href.includes('/cart')) {
-            cart.ShowCartList();
-        }
-        if (window.location.href.includes('/profile')) {
-            var profile = new Profile();
-            var order = new Order();
-            profile.ShowProfileInfo();
-            order.ShowOrders();
+        switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
+            case '/': {
+                var books = new Book();
+                books.AllBook();
+                break;
+            }
+            case '/cart': {
+                var cart = new Cart();
+                cart.ShowCartList();
+                break;
+            }
+            case '/profile': {
+                var profile = new Profile();
+                var order = new Order();
+                profile.ShowProfileInfo();
+                order.ShowOrders();
+                break;
+            }
         }
     });
     $('#btn-form-search').on('click', function (event) {
