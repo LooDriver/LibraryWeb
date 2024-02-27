@@ -168,6 +168,14 @@ class Cart {
             window.location.reload();
         });
     }
+    selectFillPickupPoint() {
+        var arr = [];
+        var data = JSON.parse(sessionStorage.getItem('pickup_point_data'));
+        data.forEach(data => {
+            arr.push(`<option>${data.адрес} | ${data.название}</option>`);
+        });
+        $('#select-list-pickup').append(arr.join(""));
+    }
     CartElement(cart) {
         var arr = [];
         var sumCostBook = 0;
@@ -273,6 +281,28 @@ class Order {
         $('#tbody-profile-table').append(arr.join(""));
     }
 }
+class PickupPoint {
+    ShowPickupPoints() {
+        var pickupData = [];
+        $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) {
+            var arr = [];
+            sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
+            data.forEach(data => {
+                pickupData.push(data);
+                arr.push(`<div class="col-md-2 mt-3">`);
+                arr.push(`<div class="card">`);
+                arr.push(`<div class="card-body">`);
+                arr.push(`<h5 class="card-title">${data.название}</h5>`);
+                arr.push(`<p class="card-text">${data.адрес}</p>`);
+                arr.push(`</div>`);
+                arr.push(`</div>`);
+                arr.push(`</div>`);
+            });
+            $('#div-show-pickup').append(arr.join(""));
+        });
+        return pickupData;
+    }
+}
 $(function () {
     $('#btn-modal-profile-edit').on('click', function (event) {
         event.preventDefault();
@@ -341,7 +371,7 @@ $(function () {
             }
             case '/cart': {
                 var cart = new Cart();
-                cart.ShowCartList();
+                cart.selectFillPickupPoint();
                 break;
             }
             case '/profile': {
@@ -349,6 +379,11 @@ $(function () {
                 var order = new Order();
                 profile.ShowProfileInfo();
                 order.ShowOrders();
+                break;
+            }
+            case '/pickup-point': {
+                var point = new PickupPoint();
+                point.ShowPickupPoints();
                 break;
             }
         }

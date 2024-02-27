@@ -4,9 +4,14 @@
     box-sizing: border-box;
 }
 
+.card {
+    margin-bottom: 20px;
+}
+
 th, td, tr {
     border: 1px solid black;
 }
+
 button {
     margin: 0 auto;
     display: block;
