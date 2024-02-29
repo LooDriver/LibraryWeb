@@ -1,6 +1,29 @@
 ﻿@{
     ViewData["Title"] = "Главная";
 }
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Поиск по названию книги" id="search-input">
+                <button class="btn btn-outline-secondary" type="button" id="search-button">Поиск</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group mb-3">
+                <select class="form-select" id="genre-filter">
+                    <option value="">Выберите жанр</option>
+                    <option value="Фантастика">Фантастика</option>
+                    <option value="Роман">Роман</option>
+                    <option value="Детектив">Детектив</option>
+                </select>
+                <button class="btn btn-outline-secondary" type="button" id="filter-button">Применить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="tileContainer" class="container">
 
 </div>

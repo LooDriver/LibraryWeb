@@ -1,53 +1,95 @@
 ﻿@{
-    ViewData["title"] = "Корзина";
+    ViewData["title"] = "Мои товары";
 }
+
 <div class="container mt-5">
     <h1 class="mb-4">Корзина</h1>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <form>
                 <div class="form-row">
                     <div class="col">
                         <input type="text" class="form-control" placeholder="Поиск">
                     </div>
                     <div class="col">
-                        <label>Пункты выдачи товара</label>
-                        <select class="form-control" id="select-list-pickup"></select>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="deliveryOption" id="pickupOption" value="pickup">
+                            <label class="form-check-label" for="pickupOption">Самовывоз</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="deliveryOption" id="courierOption" value="courier">
+                            <label class="form-check-label" for="courierOption">Курьер</label>
+                        </div>
                     </div>
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Применить</button>
                     </div>
                 </div>
+                <div class="form-row mt-3" id="pickupLocation" style="display: none;">
+                    <div class="col">
+                        <label for="select-pickup-point">Адрес пункта выдачи</label>
+                        <select class="form-control" id="select-pickup-point"></select>
+                    </div>
+                </div>
+                <div class="form-row mt-3" id="deliveryAddress" style="display: none;">
+                    <div class="col">
+                        <label for="homeAddress">Адрес доставки</label>
+                        <input type="text" class="form-control" id="homeAddress" placeholder="Введите ваш адрес">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Наименование</th>
+                                    <th scope="col">Цена</th>
+                                    <th scope="col">Количество</th>
+                                    <th scope="col">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-cart-items">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h4 id="h4-final-sum"></h4>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary mr-2" id="btn-order-success">Оформить заказ</button>
+                        <button type="button" class="btn btn-secondary">Очистить корзину</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Наименование</th>
-                        <th scope="col">Цена</th>
-                        <th scope="col">Количество</th>
-                        <th scope="col">Действия</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-cart-items">
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <h4 id="h4-final-sum"></h4>
-        </div>
-    </div>
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-primary mr-2" id="btn-order-success">Оформить заказ</button>
-            <button type="button" class="btn btn-secondary">Очистить корзину</button>
-        </div>
-    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const pickupOption = document.getElementById('pickupOption');
+        const courierOption = document.getElementById('courierOption');
+        const pickupLocation = document.getElementById('pickupLocation');
+        const deliveryAddress = document.getElementById('deliveryAddress');
+
+        pickupOption.addEventListener('change', function () {
+            if (pickupOption.checked) {
+                pickupLocation.style.display = 'block';
+                deliveryAddress.style.display = 'none';
+            }
+        });
+
+        courierOption.addEventListener('change', function () {
+            if (courierOption.checked) {
+                pickupLocation.style.display = 'none';
+                deliveryAddress.style.display = 'block';
+            }
+        });
+    });
+</script>

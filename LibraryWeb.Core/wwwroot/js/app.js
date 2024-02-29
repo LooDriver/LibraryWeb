@@ -116,24 +116,24 @@ class Book {
     }
     createAboutBook(book) {
         $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-        $('#h2-tittle-about-book').text(`${book.название}`);
+        $('#h2-title-about-book').text(`${book.название}`);
         $('#p-author-about-book').text(`${book.автор}`);
         $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
         $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
     }
     tileBook(books) {
-        var arr = [];
+        var bookTiles = [];
         books.forEach(books => {
-            arr.push('<div class="col-md-2 mt-3">');
-            arr.push('<div class="tile">');
-            arr.push('<div class="tile-content">');
-            arr.push(`<div class="tile-book">${books.название}</div>`);
-            arr.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Обложка книги ${books.название}"></button>`);
-            arr.push('</div>');
-            arr.push('</div>');
-            arr.push('</div>');
+            bookTiles.push('<div class="col-md-2 mt-3">');
+            bookTiles.push('<div class="tile">');
+            bookTiles.push('<div class="tile-content">');
+            bookTiles.push(`<div class="tile-book">${books.название}</div>`);
+            bookTiles.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Обложка книги ${books.название}"></button>`);
+            bookTiles.push('</div>');
+            bookTiles.push('</div>');
+            bookTiles.push('</div>');
         });
-        $('#tileContainer').append('<div class="row">' + arr.join('') + '</div>');
+        $('#tileContainer').append('<div class="row">' + bookTiles.join('') + '</div>');
     }
     clearUrlBook(bookUrl) {
         return bookUrl.substr((bookUrl.indexOf('?') + 1));
@@ -174,7 +174,7 @@ class Cart {
         data.forEach(data => {
             arr.push(`<option>${data.адрес} | ${data.название}</option>`);
         });
-        $('#select-list-pickup').append(arr.join(""));
+        $('#select-pickup-point').append(arr.join(""));
     }
     CartElement(cart) {
         var arr = [];
@@ -288,8 +288,7 @@ class PickupPoint {
             var arr = [];
             sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
             data.forEach(data => {
-                pickupData.push(data);
-                arr.push(`<div class="col-md-2 mt-3">`);
+                arr.push(`<div class="col-md-2 mt-3 card-wrapper">`);
                 arr.push(`<div class="card">`);
                 arr.push(`<div class="card-body">`);
                 arr.push(`<h5 class="card-title">${data.название}</h5>`);
@@ -300,7 +299,6 @@ class PickupPoint {
             });
             $('#div-show-pickup').append(arr.join(""));
         });
-        return pickupData;
     }
 }
 $(function () {
@@ -333,7 +331,7 @@ $(function () {
     $('#btn-favorite-book').on('click', function (event) {
         event.preventDefault();
         if (document.cookie.includes("auth_key=")) {
-            var favorClass = new Favorite($('#h2-tittle-about-book').text());
+            var favorClass = new Favorite($('#h2-title-about-book').text());
             favorClass.AddToFavorite();
         }
         else {
@@ -344,7 +342,7 @@ $(function () {
         event.preventDefault();
         if (document.cookie.includes("auth_key=")) {
             var cart = new Cart();
-            cart.AddCartItem($('#h2-tittle-about-book').text());
+            cart.AddCartItem($('#h2-title-about-book').text());
         }
         else {
             alert("Войдите в профиль для сохранение книги в корзину.");
@@ -371,6 +369,7 @@ $(function () {
             }
             case '/cart': {
                 var cart = new Cart();
+                cart.ShowCartList();
                 cart.selectFillPickupPoint();
                 break;
             }

@@ -1,40 +1,42 @@
 ﻿@{
     ViewData["Title"] = "Профиль";
 }
-  <div class="container mt-5">
+<div class="container mt-5">
     <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Информация о пользователе</h5>
-            <p class="card-text" id="p-user-email"></p>
-            <p class="card-text" id="p-user-surname"></p>
-            <p class="card-text" id="p-user-name"></p>
-             <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal" id="btn-modal-profile-edit">Редактировать профиль</button>
-          </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Информация о пользователе</h5>
+                    <p class="card-text" id="p-user-email"></p>
+                    <p class="card-text" id="p-user-surname"></p>
+                    <p class="card-text" id="p-user-name"></p>
+                    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal" id="btn-modal-profile-edit">Редактировать профиль</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Мои заказы</h5>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Название книги</th>
-                  <th>Дата заказа</th>
-                  <th>Статус</th>
-                </tr>
-              </thead>
-              <tbody id="tbody-profile-table">
-              </tbody>
-            </table>
-          </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Мои заказы</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Название книги</th>
+                                    <th>Дата заказа</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-profile-table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
 <div class="modal fade" id="div-profile-edit-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-centred">
@@ -47,14 +49,20 @@
                     <div class="mb-3">
                         <label for="input-form-edit-surname" class="form-label">Фамилия</label>
                         <input type="text" class="form-control" id="input-form-edit-surname" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="input-form-edit-name" class="form-label">Имя</label>
                         <input type="text" class="form-control" id="input-form-edit-name" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="input-form-edit-email" class="form-label">Электронная почта</label>
                         <input type="text" class="form-control" id="input-form-edit-email" required>
                     </div>
                     <div class="mb-3">
                         <label for="input-form-password-edit" class="form-label">Новый пароль</label>
                         <input type="password" class="form-control" id="input-form-password-edit" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
                         <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
                         <span id="span-edit-error"></span>
