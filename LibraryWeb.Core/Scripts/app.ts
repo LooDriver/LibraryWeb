@@ -108,30 +108,17 @@ class Favorite {
 
 class Book {
 
-    BookByName(bookTitle:string) {
-        $.ajax({
-            url: `/${baseUrl}/books`,
-            method: 'get',
-            dataType: 'json',
-            data: { 'name': bookTitle },
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function (data) {
+    BookByName(bookTitle: string) {
+        $.get(`/${baseUrl}/books`, { 'name': bookTitle }, ((data) => { 
             sessionStorage.setItem('bookData', JSON.stringify(data));
             window.location.href = `/book/name?${data.book.название}`;
-        });
+        }));
     }
 
     AllBook() {
-        $.ajax({
-            url: `${baseUrl}/books/allBooks`,
-            method: 'get',
-            contentType: 'application/json;charset=utf-8',
-            dataType: 'json',
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/books/allBooks`, ((data) => {
             this.tileBook(data);
-        });
+        }));
     }
 
     createAboutBook(book) {
@@ -165,29 +152,17 @@ class Book {
 
 class Cart {
 
-    AddCartItem(orderName:string) {
-        $.ajax({
-            url: `/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`,
-            method: 'post',
-            async: true
-        });
+    AddCartItem(orderName: string) {
+        $.post(`/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`);
     }
 
     ShowCartList() {
-        $.ajax({
-            url: `/${baseUrl}/cart/allCartItems`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-
-        }).done((data) => {
+        $.get(`/${baseUrl}/cart/allCartItems`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             this.CartElement(data);
-        });
+        }));
     }
     
-    DeleteCartItem(orderDelete:string) {
+    DeleteCartItem(orderDelete: string) {
         $.ajax({
             url: `/${baseUrl}/cart/deleteCartItem?orderDel=${orderDelete}`,
             method: 'delete',
@@ -204,6 +179,8 @@ class Cart {
                     url: `/${baseUrl}/cart/deleteCartItem?orderDel=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}`,
                     method: 'delete',
                     async: true
+                }).done(() => {
+                    window.location.reload();
                 });
             }
         });
@@ -265,17 +242,12 @@ class Profile {
     }
 
     ShowProfileInfo() {
-        $.ajax({
-            url: `/${baseUrl}/profile/profileInformation`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/profile/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             $('#p-user-email').text(`Email - ${data.login}`);
             $('#p-user-surname').text(`Фамилия - ${data.surname}`);
             $('#p-user-name').text(`Имя - ${data.name}`);
             $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
-        });
+        }));
     }
     EditProfileInfo() {
         $.ajax({
@@ -284,10 +256,9 @@ class Profile {
             data: JSON.stringify(this.userProfile),
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-            success: function (data) {
-                sessionStorage.setItem('userlogin', this.userProfile.Логин);
-                window.location.reload();
-            }
+        }).done((data) => {
+            sessionStorage.setItem('userlogin', this.userProfile.Логин);
+            window.location.reload();
         }).fail((error) => {
             $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
         });
@@ -314,8 +285,6 @@ class Profile {
             $('#input-form-edit-email').val(data.login);
         });
     }
-
-
 }
 
 class Order {
@@ -326,16 +295,9 @@ class Order {
         });
     }
     ShowOrders() {
-        $.ajax({
-            url: `/${baseUrl}/order/getOrder`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/order/getOrder`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             this.tableOrderFill(data);
-        });
+        }));
     }
 
     tableOrderFill(orders) {
@@ -402,21 +364,26 @@ function deleteCookie(name: string) {
     document.cookie = name + "=; expires=" + date.toUTCString() + "; path=/";
 }
 
-
-function readFileAsByteArray(file: File, callback: (byteArray: Uint8Array) => void) {
+function readFileAsByteArray(input: HTMLInputElement, callback: (byteArray: Uint8Array) => void) {
     const reader = new FileReader();
 
-    reader.onload = (event) => {
-        const arrayBuffer = event.target?.result as ArrayBuffer;
-        const byteArray = new Uint8Array(arrayBuffer);
-        callback(byteArray);
-    };
+    const files = $(input).prop('files'); 
 
-    reader.readAsArrayBuffer(file);
+    if (files && files.length > 0) {
+        const file = files[0];
+
+        reader.onload = (event) => {
+            const arrayBuffer = event.target?.result as ArrayBuffer;
+            const byteArray = new Uint8Array(arrayBuffer);
+            callback(byteArray);
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
 }
 
 function byteArrayToBase64(byteArray: Uint8Array): Promise<string | null> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const blob = new Blob([byteArray], { type: 'application/octet-stream' });
         const reader = new FileReader();
         reader.onload = () => {
@@ -431,29 +398,17 @@ function byteArrayToBase64(byteArray: Uint8Array): Promise<string | null> {
 }
 
 
-
 $(function () {
-
 
     $('#btn-photo-change').on('click', function (event) {
         event.preventDefault();
-        const input = $('#input-photo-edit').get(0) as HTMLInputElement;
-        const files = $(input).prop('files'); // Получаем файлы, выбранные пользователем
-        if (files && files.length > 0) {
-            const file = files[0]; // Получаем первый выбранный файл
-            readFileAsByteArray(file, (byteArray) => {
-                byteArrayToBase64(byteArray)
-                    .then(base64String => {
-                        var profile = new Profile();
-
-                        sessionStorage.setItem('imgData', base64String);
-                        profile.EditProfilePhoto();
-                        console.log(sessionStorage.getItem('imgData'));
-                    });
+        readFileAsByteArray(($('#input-photo-edit').get(0) as HTMLInputElement), (byteArray) => {
+            byteArrayToBase64(byteArray).then(base64String => {
+                var profile = new Profile();
+                sessionStorage.setItem('imgData', base64String);
+                profile.EditProfilePhoto();
             });
-        }
-
-
+        });
     });
     $('#btn-order-clear').on('click', function (event) {
         event.preventDefault();
@@ -492,7 +447,6 @@ $(function () {
             window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
-
     });
 
     $('#btn-favorite-book').on('click', function (event) {
@@ -562,22 +516,6 @@ $(function () {
         }
     });
 
-    $('#btn-form-search').on('click', function (event) {
-        event.preventDefault();
-
-        var searchText = $('#input-text-search').val();
-
-        $('.col-md-4').each(function () {
-            var tileDescriptionText = $(this).find('.tile-book').text().toLowerCase();
-
-            if (tileDescriptionText.search(searchText.toString().toLowerCase())) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-    });
-
     $(document).on('click', '#a-redirect-about-book', function (event) {
         event.preventDefault();
         var book = new Book();
@@ -627,7 +565,6 @@ $(function () {
         if ($('#input-form-password-register').val() == $('#input-form-password-repeat').val()) {
             var register = new Authentication($('#input-form-surname').val().toString(), $('#input-form-name').val().toString(), $('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
             register.Register();
-            
         }
         else {
             $('#span-register-error').text("Пароли должны быть одинаковые").css('color', 'red');

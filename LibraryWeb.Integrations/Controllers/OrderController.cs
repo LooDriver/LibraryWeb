@@ -9,7 +9,6 @@ namespace LibraryWeb.Integrations.Controllers
     public class OrderController : Controller
     {
         DatabaseEntities db;
-        bool isClear = false;
 
         public OrderController()
         {

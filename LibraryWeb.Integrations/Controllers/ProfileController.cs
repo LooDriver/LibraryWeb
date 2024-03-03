@@ -27,6 +27,7 @@ namespace LibraryWeb.Integrations.Controllers
                 Photo = userProfile.Фото
             });
         }
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getCurrentProfile")]
         public async Task<IActionResult> GetCurrentProfile([FromQuery] int userID)
@@ -35,7 +36,6 @@ namespace LibraryWeb.Integrations.Controllers
             if (userProfile is null) return BadRequest();
             else
             {
-
                 return Json(new
                 {
                     Name = userProfile.Имя,
@@ -50,8 +50,7 @@ namespace LibraryWeb.Integrations.Controllers
         public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromBody] Пользователи пользователи)
         {
             Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
-            bool isValid = пользователи.Пароль == "" ? true : false;
-            if (userProfile is null || isValid) return BadRequest("Поле с паролем не может быть пустым");
+            if (userProfile is null || пользователи.Пароль == "") return BadRequest("Поле с паролем не может быть пустым");
             else
             {
                 userProfile.Фамилия = пользователи.Фамилия;
@@ -62,13 +61,13 @@ namespace LibraryWeb.Integrations.Controllers
                 return Ok();
             }
         }
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editPhoto")]
         public async Task<IActionResult> PutNewPhoto([FromQuery] int userID, [FromBody] string photoData)
         {
             Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
-            bool isValid = photoData == "" ? true : false;
-            if (userProfile is null || isValid) return BadRequest("Картинка не может быть пустая");
+            if (userProfile is null || photoData == "") return BadRequest("Картинка не может быть пустая");
             userProfile.Фото = Convert.FromBase64String(photoData);
             await db.SaveChangesAsync();
             return Ok();
