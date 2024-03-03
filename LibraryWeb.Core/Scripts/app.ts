@@ -32,12 +32,17 @@ class Authentication {
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user)
             }).done((data) => {
+                console.log(data);
+             
                 setCookie("auth_key", data.auth_key);
+                setCookie("permission", data.role);
+
                 sessionStorage.setItem('userlogin', this.user.Логин);
                 sessionStorage.setItem('userid', data.userID);
 
                 $('#span-login-error').text("");
                 window.location.reload();
+                if (data.role == 1) { $('#a-admin-panel').css('display', 'inline'); }
 
             }).fail((error) => {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
@@ -416,8 +421,9 @@ $(function () {
         cart.ClearCart('#a-redirect-cart-about-book');
     });
 
-    $('#btn-logout-profile').on('click', function (event) {
+    $('#btn-logout-profile').on('click', function () {
         deleteCookie("auth_key");
+        deleteCookie("permission");
         sessionStorage.clear();
         window.location.href = "/"
     });
@@ -474,6 +480,7 @@ $(function () {
 
     $(document).ready(function () {
 
+        if (getCookie('permission') == '1') $('#a-admin-panel').removeAttr('style'); 
         $('#p-user-login').text("Войти");
 
         if (window.location.href.includes('/book/name')) {
@@ -490,6 +497,7 @@ $(function () {
 
         switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
             case '/': {
+               
                 var books = new Book();
                 books.AllBook();
                 $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); });

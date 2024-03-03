@@ -18,7 +18,7 @@ namespace LibraryWeb.Core.Controllers
         [Route("easydata/{**entity}")]
         public IActionResult EasyData()
         {
-            if (!IsTokenValid(HttpContext.Request.Cookies["auth_key"]))
+            if (!IsTokenValid(HttpContext.Request.Cookies["auth_key"]) || HttpContext.Request.Cookies["permission"] == "2")
             {
                 return Redirect("accessdenied");
             }
