@@ -4,9 +4,22 @@
     box-sizing: border-box;
 }
 
+.card {
+    margin-bottom: 20px;
+}
+
+.card-wrapper {
+    display: flex;
+}
+
+    .card-wrapper .col-md-2 {
+        flex: 1;
+    }
+
 th, td, tr {
     border: 1px solid black;
 }
+
 button {
     margin: 0 auto;
     display: block;
@@ -33,7 +46,7 @@ button {
 
 .book-container {
     max-width: 800px;
-    margin: 0px 0px;
+    margin: 0 auto;
     background-color: #fff;
     padding: 20px;
 }

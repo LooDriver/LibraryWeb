@@ -34,6 +34,9 @@ namespace LibraryWeb.Core.Controllers
         [Route("cart")]
         public IActionResult Cart() => View();
 
+        [Route("pickup-point")]
+        public IActionResult PickupPoint() => View();
+
         public bool IsTokenValid(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

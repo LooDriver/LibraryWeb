@@ -57,6 +57,8 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Пользователи> Пользователиs { get; set; }
 
+        public virtual DbSet<ПунктыВыдачи> ПунктыВыдачиs { get; set; }
+
         public virtual DbSet<Роли> Ролиs { get; set; }
 
 
@@ -74,6 +76,8 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.ДатаЗаказа).HasColumnName("Дата_заказа");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+                entity.Property(e => e.КодПунктаВыдачи).HasColumnName("Код_пункта_выдачи");
+                entity.Property(e => e.Статус).HasMaxLength(50);
 
                 entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Заказыs)
                     .HasForeignKey(d => d.КодКниги)
@@ -84,6 +88,10 @@ namespace LibraryWeb.Sql.Context
                     .HasForeignKey(d => d.КодПользователя)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Заказы_Пользователи");
+
+                entity.HasOne(d => d.КодПунктаВыдачиNavigation).WithMany(p => p.Заказыs)
+                    .HasForeignKey(d => d.КодПунктаВыдачи)
+                    .HasConstraintName("FK_Заказы_Пункты_выдачи");
             });
 
             modelBuilder.Entity<Избранное>(entity =>
@@ -177,6 +185,17 @@ namespace LibraryWeb.Sql.Context
                     .HasForeignKey(d => d.КодРоли)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Пользователи_Роли");
+            });
+
+            modelBuilder.Entity<ПунктыВыдачи>(entity =>
+            {
+                entity.HasKey(e => e.КодПунктаВыдачи);
+
+                entity.ToTable("Пункты_выдачи");
+
+                entity.Property(e => e.КодПунктаВыдачи).HasColumnName("Код_пункта_выдачи");
+                entity.Property(e => e.Адрес).HasMaxLength(150);
+                entity.Property(e => e.Название).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Роли>(entity =>

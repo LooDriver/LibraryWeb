@@ -1,7 +1,6 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -24,18 +23,19 @@ namespace LibraryWeb.Integrations.Controllers
             {
                 Surname = userProfile.Фамилия,
                 Name = userProfile.Имя,
-                Login = userProfile.Логин
+                Login = userProfile.Логин,
+                Photo = userProfile.Фото
             });
         }
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getCurrentProfile")]
-        public async Task<IActionResult> GetCurrentProfile ([FromQuery] int userID)
+        public async Task<IActionResult> GetCurrentProfile([FromQuery] int userID)
         {
             Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
             if (userProfile is null) return BadRequest();
             else
             {
-                
+
                 return Json(new
                 {
                     Name = userProfile.Имя,
@@ -61,6 +61,17 @@ namespace LibraryWeb.Integrations.Controllers
                 await db.SaveChangesAsync();
                 return Ok();
             }
+        }
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("editPhoto")]
+        public async Task<IActionResult> PutNewPhoto([FromQuery] int userID, [FromBody] string photoData)
+        {
+            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            bool isValid = photoData == "" ? true : false;
+            if (userProfile is null || isValid) return BadRequest("Картинка не может быть пустая");
+            userProfile.Фото = Convert.FromBase64String(photoData);
+            await db.SaveChangesAsync();
+            return Ok();
         }
     }
 }

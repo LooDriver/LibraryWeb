@@ -3,22 +3,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
 
-    <script src="~/lib/jquery-3.7.1.min.js"></script>
-    <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="~/js/app.js" asp-append-version="true"></script>
-
     <link href="~/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/css/style.css" rel="stylesheet" asp-append-version="true" />
 
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-md bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand" icon="~/favicon.ico">Книжный магазин</a>
+                <a class="navbar-brand" href="/">Книжный магазин</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Переключатель навигации">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -27,128 +24,149 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="/">Главная</a>
                         </li>
-                        <li class="nav-item" id="li-admin-list">
+                        <li class="nav-item">
                             <a class="nav-link" href="/easydata">Панель управления</a>
                         </li>
-                        @* <li class="nav-item">
-                            <div class="input-group input-group-sm mb-3">
-                                <input type="text" class="form-control" aria-label="Поле для ввода названия книги для поиска" aria-describedby="inputGroup-sizing-sm" placeholder="Название книги">
-                                <a class="btn input-group-text" id="inputGroup-sizing-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </li> *@
                     </ul>
+                    <div class="mx-2">
+                        <a class="btn" href="/pickup-point">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                                <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                                <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                            </svg>
+                            <span>Пункты выдачи</span>
+                        </a>
+                    </div>
                     <div class="mx-2">
                         <a class="btn" data-bs-toggle="modal" id="btn-favorite-show" data-bs-target="#favoriteModal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                                 <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
                             </svg>
-                            <p>Избранное</p>
+                            <span>Избранное</span>
                         </a>
                     </div>
                     <div class="mx-2">
                         <a id="btn-cart-open" class="btn" href="/cart">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket-fill" viewBox="0 0 16 16">
-                                <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717L5.07 1.243zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                                <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z" />
                             </svg>
-                            <p>Корзина</p>
+                            <span>Корзина</span>
                         </a>
                     </div>
-                    <div>
+                    <div class="mx-2">
                         <a id="btn-login" class="btn" data-bs-toggle="modal" data-bs-target="#div-login-modal">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
                             </svg>
-                            <p id="p-user-login">Войти</p>
+                            <span id="p-user-login">Войти</span>
                         </a>
                     </div>
+                </div>
             </div>
         </nav>
-        <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-centred">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title" id="exampleModalLabel">Избранное</h1>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <div class="list-group" id="div-favorite-list">
-                                </div>
-                            </div>
-                        </form>
-                        <button type="submit" class="btn btn-primary" id="btn-form-d">К покупкам</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-centred">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title">Авторизация</h1>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                                <input type="email" class="form-control" required placeholder="Почта" id="input-form-email" aria-describedby="emailHelp"/>
-                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="input-form-password" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="input-form-password" required />
-                                <span id="span-login-error"></span><br/>
-                                <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-centred">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title" id="exampleModalLabel">Регистрация</h1>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
-                                <input type="text" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
-                                <label for="input-form-email-register" class="form-label">Фамилия</label>
-                                <input type="text" class="form-control" id="input-form-surname" required/>
-                                <label for="input-form-email-register" class="form-label">Имя</label>
-                                <input type="text" class="form-control" id="input-form-name" required />
-                                <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="input-form-password-register" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="input-form-password-register" required>
-                                <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
-                                <input type="password" class="form-control" id="input-form-password-repeat" required>
-                                <span id="span-register-error"></span><br/>
-                                <label><a data-bs-toggle="modal" href="#div-login-modal" role="button">Уже зарегистрированы? Авторизация</a></label>
-                            </div>
-                        </form>
-                        <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </header>
+    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Избранное</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <div class="list-group" id="div-favorite-list"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-form-d">К покупкам</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Авторизация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="input-form-email" class="form-label">Адрес электронной почты</label>
+                            <input type="email" class="form-control" required placeholder="Почта" id="input-form-email" aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-password" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="input-form-password" required>
+                            <span id="span-login-error"></span><br>
+                            <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btn-form-login">Авторизация</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
+                            <input type="text" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
+                            <label for="input-form-email-register" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="input-form-surname" required>
+                            <label for="input-form-email-register" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="input-form-name" required>
+                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-password-register" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-register" required>
+                            <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-repeat" required>
+                            <span id="span-register-error"></span><br>
+                            <label><a data-bs-toggle="modal" href="#div-login-modal" role="button">Уже зарегистрированы? Авторизация</a></label>
+                        </div>
+                    </form>
+                    <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
     @RenderBody()
+
+@*     <footer class="text-dark py-4 fixed-bottom">
+        <div class="container text-center">
+            <p>&copy; 2024 Книжный магазин. Все права защищены.</p>
+            <a href="" class="btn">О нас</a>
+            <a href="" class="btn">Контакты</a>
+            <a href="" class="btn">Документация</a>
+        </div>
+    </footer> *@
+
+    <script src="~/lib/jquery-3.7.1.min.js"></script>
+    <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="~/js/app.js" asp-append-version="true"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
