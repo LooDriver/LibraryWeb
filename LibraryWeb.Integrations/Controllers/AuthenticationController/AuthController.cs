@@ -41,6 +41,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
                 var authKey = new
                 {
                     auth_key = JWTCreate(logins),
+                    role = item.Select(x => x.КодРоли).Single(),
                     userID = item.Select(x => x.КодПользователя).Single()
                 };
                 return Ok(authKey);

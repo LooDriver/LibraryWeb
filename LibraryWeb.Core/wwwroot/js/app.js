@@ -25,11 +25,16 @@ class Authentication {
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user)
             }).done((data) => {
+                console.log(data);
                 setCookie("auth_key", data.auth_key);
+                setCookie("permission", data.role);
                 sessionStorage.setItem('userlogin', this.user.Логин);
                 sessionStorage.setItem('userid', data.userID);
                 $('#span-login-error').text("");
                 window.location.reload();
+                if (data.role == 1) {
+                    $('#a-admin-panel').css('display', 'inline');
+                }
             }).fail((error) => {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
             });
@@ -91,28 +96,15 @@ class Favorite {
 }
 class Book {
     BookByName(bookTitle) {
-        $.ajax({
-            url: `/${baseUrl}/books`,
-            method: 'get',
-            dataType: 'json',
-            data: { 'name': bookTitle },
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function (data) {
+        $.get(`/${baseUrl}/books`, { 'name': bookTitle }, ((data) => {
             sessionStorage.setItem('bookData', JSON.stringify(data));
             window.location.href = `/book/name?${data.book.название}`;
-        });
+        }));
     }
     AllBook() {
-        $.ajax({
-            url: `${baseUrl}/books/allBooks`,
-            method: 'get',
-            contentType: 'application/json;charset=utf-8',
-            dataType: 'json',
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/books/allBooks`, ((data) => {
             this.tileBook(data);
-        });
+        }));
     }
     createAboutBook(book) {
         $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
@@ -141,23 +133,12 @@ class Book {
 }
 class Cart {
     AddCartItem(orderName) {
-        $.ajax({
-            url: `/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`,
-            method: 'post',
-            async: true
-        });
+        $.post(`/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`);
     }
     ShowCartList() {
-        $.ajax({
-            url: `/${baseUrl}/cart/allCartItems`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/cart/allCartItems`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             this.CartElement(data);
-        });
+        }));
     }
     DeleteCartItem(orderDelete) {
         $.ajax({
@@ -176,6 +157,8 @@ class Cart {
                     url: `/${baseUrl}/cart/deleteCartItem?orderDel=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}`,
                     method: 'delete',
                     async: true
+                }).done(() => {
+                    window.location.reload();
                 });
             }
         });
@@ -227,17 +210,12 @@ class Profile {
         };
     }
     ShowProfileInfo() {
-        $.ajax({
-            url: `/${baseUrl}/profile/profileInformation`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/profile/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             $('#p-user-email').text(`Email - ${data.login}`);
             $('#p-user-surname').text(`Фамилия - ${data.surname}`);
             $('#p-user-name').text(`Имя - ${data.name}`);
             $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
-        });
+        }));
     }
     EditProfileInfo() {
         $.ajax({
@@ -246,10 +224,9 @@ class Profile {
             data: JSON.stringify(this.userProfile),
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-            success: function (data) {
-                sessionStorage.setItem('userlogin', this.userProfile.Логин);
-                window.location.reload();
-            }
+        }).done((data) => {
+            sessionStorage.setItem('userlogin', this.userProfile.Логин);
+            window.location.reload();
         }).fail((error) => {
             $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
         });
@@ -283,16 +260,9 @@ class Order {
         });
     }
     ShowOrders() {
-        $.ajax({
-            url: `/${baseUrl}/order/getOrder`,
-            method: 'get',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done((data) => {
+        $.get(`/${baseUrl}/order/getOrder`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             this.tableOrderFill(data);
-        });
+        }));
     }
     tableOrderFill(orders) {
         var arr = [];
@@ -348,18 +318,22 @@ function deleteCookie(name) {
     date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
     document.cookie = name + "=; expires=" + date.toUTCString() + "; path=/";
 }
-function readFileAsByteArray(file, callback) {
+function readFileAsByteArray(input, callback) {
     const reader = new FileReader();
-    reader.onload = (event) => {
-        var _a;
-        const arrayBuffer = (_a = event.target) === null || _a === void 0 ? void 0 : _a.result;
-        const byteArray = new Uint8Array(arrayBuffer);
-        callback(byteArray);
-    };
-    reader.readAsArrayBuffer(file);
+    const files = $(input).prop('files');
+    if (files && files.length > 0) {
+        const file = files[0];
+        reader.onload = (event) => {
+            var _a;
+            const arrayBuffer = (_a = event.target) === null || _a === void 0 ? void 0 : _a.result;
+            const byteArray = new Uint8Array(arrayBuffer);
+            callback(byteArray);
+        };
+        reader.readAsArrayBuffer(file);
+    }
 }
 function byteArrayToBase64(byteArray) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const blob = new Blob([byteArray], { type: 'application/octet-stream' });
         const reader = new FileReader();
         reader.onload = () => {
@@ -376,28 +350,22 @@ function byteArrayToBase64(byteArray) {
 $(function () {
     $('#btn-photo-change').on('click', function (event) {
         event.preventDefault();
-        const input = $('#input-photo-edit').get(0);
-        const files = $(input).prop('files');
-        if (files && files.length > 0) {
-            const file = files[0];
-            readFileAsByteArray(file, (byteArray) => {
-                byteArrayToBase64(byteArray)
-                    .then(base64String => {
-                    var profile = new Profile();
-                    sessionStorage.setItem('imgData', base64String);
-                    profile.EditProfilePhoto();
-                    console.log(sessionStorage.getItem('imgData'));
-                });
+        readFileAsByteArray($('#input-photo-edit').get(0), (byteArray) => {
+            byteArrayToBase64(byteArray).then(base64String => {
+                var profile = new Profile();
+                sessionStorage.setItem('imgData', base64String);
+                profile.EditProfilePhoto();
             });
-        }
+        });
     });
     $('#btn-order-clear').on('click', function (event) {
         event.preventDefault();
         var cart = new Cart();
         cart.ClearCart('#a-redirect-cart-about-book');
     });
-    $('#btn-logout-profile').on('click', function (event) {
+    $('#btn-logout-profile').on('click', function () {
         deleteCookie("auth_key");
+        deleteCookie("permission");
         sessionStorage.clear();
         window.location.href = "/";
     });
@@ -451,6 +419,8 @@ $(function () {
         }
     });
     $(document).ready(function () {
+        if (getCookie('permission') == '1')
+            $('#a-admin-panel').removeAttr('style');
         $('#p-user-login').text("Войти");
         if (window.location.href.includes('/book/name')) {
             var bookByName = new Book();
@@ -489,19 +459,6 @@ $(function () {
                 break;
             }
         }
-    });
-    $('#btn-form-search').on('click', function (event) {
-        event.preventDefault();
-        var searchText = $('#input-text-search').val();
-        $('.col-md-4').each(function () {
-            var tileDescriptionText = $(this).find('.tile-book').text().toLowerCase();
-            if (tileDescriptionText.search(searchText.toString().toLowerCase())) {
-                $(this).show();
-            }
-            else {
-                $(this).hide();
-            }
-        });
     });
     $(document).on('click', '#a-redirect-about-book', function (event) {
         event.preventDefault();
