@@ -25,7 +25,7 @@ class Authentication {
                 contentType: 'application/json;charset=utf-8',
                 data: JSON.stringify(this.user)
             }).done((data) => {
-                document.cookie = "auth_key=" + data.auth_key;
+                setCookie("auth_key", data.auth_key);
                 sessionStorage.setItem('userlogin', this.user.Логин);
                 sessionStorage.setItem('userid', data.userID);
                 $('#span-login-error').text("");
@@ -168,6 +168,18 @@ class Cart {
             window.location.reload();
         });
     }
+    ClearCart(elementHref) {
+        var books = new Book();
+        document.querySelectorAll(`${elementHref}`).forEach(links => {
+            if (links.getAttribute('href').length > 0) {
+                $.ajax({
+                    url: `/${baseUrl}/cart/deleteCartItem?orderDel=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}`,
+                    method: 'delete',
+                    async: true
+                });
+            }
+        });
+    }
     selectFillPickupPoint() {
         var arr = [];
         var data = JSON.parse(sessionStorage.getItem('pickup_point_data'));
@@ -195,13 +207,14 @@ class Cart {
     }
 }
 class Profile {
-    constructor(name = "", surname = "", username = "", password = "") {
+    constructor(name = "", surname = "", username = "", password = "", photo = null) {
         this.defaultRole = 2;
         this.userProfile = {
             Фамилия: "",
             Имя: "",
             Логин: "",
             Пароль: "",
+            Фото: new Uint8Array(0),
             КодРоли: this.defaultRole
         };
         this.userProfile = {
@@ -209,6 +222,7 @@ class Profile {
             Имя: name,
             Логин: username,
             Пароль: password,
+            Фото: photo,
             КодРоли: this.defaultRole
         };
     }
@@ -222,6 +236,7 @@ class Profile {
             $('#p-user-email').text(`Email - ${data.login}`);
             $('#p-user-surname').text(`Фамилия - ${data.surname}`);
             $('#p-user-name').text(`Имя - ${data.name}`);
+            $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
         });
     }
     EditProfileInfo() {
@@ -237,6 +252,19 @@ class Profile {
             }
         }).fail((error) => {
             $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+        });
+    }
+    EditProfilePhoto() {
+        $.ajax({
+            url: `/${baseUrl}/profile/editPhoto?userID=${sessionStorage.getItem('userid')}`,
+            method: 'post',
+            data: JSON.stringify(`${sessionStorage.getItem('imgData')}`),
+            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            success: function () {
+                window.location.reload();
+                $('#input-photo-edit').empty();
+            }
         });
     }
     FillEditProfileInfo() {
@@ -283,10 +311,8 @@ class Order {
 }
 class PickupPoint {
     ShowPickupPoints() {
-        var pickupData = [];
         $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) {
             var arr = [];
-            sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
             data.forEach(data => {
                 arr.push(`<div class="col-md-2 mt-3 card-wrapper">`);
                 arr.push(`<div class="card">`);
@@ -301,7 +327,80 @@ class PickupPoint {
         });
     }
 }
+function setCookie(name, val) {
+    const date = new Date();
+    const value = val;
+    date.setTime(date.getTime() + (7 * 24 * 60 * 60 * 1000));
+    document.cookie = name + "=" + value + "; expires=" + date.toUTCString() + "; path=/";
+}
+function getCookie(name) {
+    const value = "; " + document.cookie;
+    const parts = value.split("; " + name + "=");
+    if (parts.length == 2) {
+        return parts.pop().split(";").shift();
+    }
+    else {
+        return "";
+    }
+}
+function deleteCookie(name) {
+    const date = new Date();
+    date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
+    document.cookie = name + "=; expires=" + date.toUTCString() + "; path=/";
+}
+function readFileAsByteArray(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        var _a;
+        const arrayBuffer = (_a = event.target) === null || _a === void 0 ? void 0 : _a.result;
+        const byteArray = new Uint8Array(arrayBuffer);
+        callback(byteArray);
+    };
+    reader.readAsArrayBuffer(file);
+}
+function byteArrayToBase64(byteArray) {
+    return new Promise((resolve, reject) => {
+        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+        const reader = new FileReader();
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                resolve(reader.result.split(',')[1]);
+            }
+            else {
+                resolve(null);
+            }
+        };
+        reader.readAsDataURL(blob);
+    });
+}
 $(function () {
+    $('#btn-photo-change').on('click', function (event) {
+        event.preventDefault();
+        const input = $('#input-photo-edit').get(0);
+        const files = $(input).prop('files');
+        if (files && files.length > 0) {
+            const file = files[0];
+            readFileAsByteArray(file, (byteArray) => {
+                byteArrayToBase64(byteArray)
+                    .then(base64String => {
+                    var profile = new Profile();
+                    sessionStorage.setItem('imgData', base64String);
+                    profile.EditProfilePhoto();
+                    console.log(sessionStorage.getItem('imgData'));
+                });
+            });
+        }
+    });
+    $('#btn-order-clear').on('click', function (event) {
+        event.preventDefault();
+        var cart = new Cart();
+        cart.ClearCart('#a-redirect-cart-about-book');
+    });
+    $('#btn-logout-profile').on('click', function (event) {
+        deleteCookie("auth_key");
+        sessionStorage.clear();
+        window.location.href = "/";
+    });
     $('#btn-modal-profile-edit').on('click', function (event) {
         event.preventDefault();
         var profile = new Profile();
@@ -319,32 +418,35 @@ $(function () {
     });
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
-        if (sessionStorage.getItem('userlogin') != null && sessionStorage.getItem('userid') != null) {
+        if (getCookie("auth_key") != "") {
             $('#div-favorite-list').empty();
             var favorite = new Favorite();
             favorite.ShowListFavorite();
         }
         else {
+            window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
     });
     $('#btn-favorite-book').on('click', function (event) {
         event.preventDefault();
-        if (document.cookie.includes("auth_key=")) {
+        if (getCookie("auth_key") != "") {
             var favorClass = new Favorite($('#h2-title-about-book').text());
             favorClass.AddToFavorite();
         }
         else {
+            window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
     });
     $('#btn-cart-book').on('click', function (event) {
         event.preventDefault();
-        if (document.cookie.includes("auth_key=")) {
+        if (getCookie("auth_key") != "") {
             var cart = new Cart();
             cart.AddCartItem($('#h2-title-about-book').text());
         }
         else {
+            window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в корзину.");
         }
     });
@@ -365,6 +467,7 @@ $(function () {
             case '/': {
                 var books = new Book();
                 books.AllBook();
+                $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); });
                 break;
             }
             case '/cart': {

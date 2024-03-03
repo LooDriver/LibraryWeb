@@ -14,6 +14,7 @@ public partial class Пользователи
     public string Логин { get; set; } = null!;
 
     public string Пароль { get; set; } = null!;
+    public byte[]? Фото { get; set; }
 
     public int КодРоли { get; set; }
 
