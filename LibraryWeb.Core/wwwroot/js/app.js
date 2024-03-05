@@ -115,6 +115,7 @@ class Book {
     }
     tileBook(books) {
         var bookTiles = [];
+        console.log(books);
         books.forEach(books => {
             bookTiles.push('<div class="col-md-2 mt-3">');
             bookTiles.push('<div class="tile">');
@@ -224,7 +225,8 @@ class Profile {
             data: JSON.stringify(this.userProfile),
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-        }).done((data) => {
+            async: true
+        }).done(() => {
             sessionStorage.setItem('userlogin', this.userProfile.Логин);
             window.location.reload();
         }).fail((error) => {
@@ -238,10 +240,10 @@ class Profile {
             data: JSON.stringify(`${sessionStorage.getItem('imgData')}`),
             dataType: 'json',
             contentType: 'application/json;charset=utf-8',
-            success: function () {
-                window.location.reload();
-                $('#input-photo-edit').empty();
-            }
+            async: true
+        }).done(() => {
+            $('#input-photo-edit').empty();
+            window.location.reload();
         });
     }
     FillEditProfileInfo() {
@@ -348,7 +350,22 @@ function byteArrayToBase64(byteArray) {
     });
 }
 $(function () {
-    $('#btn-photo-change').on('click', function (event) {
+    $('#test-input-book-photo').on('change', function (event) {
+        event.preventDefault();
+        readFileAsByteArray($('#test-input-book-photo').get(0), (byteArray) => {
+            byteArrayToBase64(byteArray).then(base64String => {
+                $.ajax({
+                    url: `/${baseUrl}/books/editBookPhoto`,
+                    method: 'post',
+                    data: JSON.stringify(`${base64String}`),
+                    dataType: 'json',
+                    contentType: 'application/json;charset=utf-8',
+                    async: true
+                });
+            });
+        });
+    });
+    $('#input-photo-edit').on('change', function (event) {
         event.preventDefault();
         readFileAsByteArray($('#input-photo-edit').get(0), (byteArray) => {
             byteArrayToBase64(byteArray).then(base64String => {
