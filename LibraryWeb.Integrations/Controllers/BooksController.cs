@@ -24,17 +24,10 @@ namespace LibraryWeb.Integrations.Controllers
         public async Task<JsonResult> GetBookByName([FromQuery] string name)
         {
             var bookName = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == name);
-            int bookId = bookName != null ? bookName.КодКниги : 0;
-            Книги книги = await db.Книгиs.FindAsync(bookId);
-            if (книги == null) { return Json(null); }
+            if (bookName == null) { return Json(default); }
             else
             {
-                return Json(new
-                {
-                    Book = книги,
-                    Author = книги.Автор,
-                    Genre = книги.Жанр
-                });
+                return Json(bookName);
             }
         }
     }

@@ -69,11 +69,7 @@ class Favorite {
         this.bookName = bookName;
     }
     AddToFavorite() {
-        $.ajax({
-            url: `/${baseUrl}/Favorite/addFavorite?nameBook=${this.bookName}&userID=${sessionStorage.getItem('userid')}`,
-            method: 'post',
-            async: true
-        });
+        $.post(`/${baseUrl}/favorite/addFavorite?nameBook=${this.bookName}&userID=${sessionStorage.getItem('userid')}`);
     }
     ShowListFavorite() {
         $.ajax({
@@ -98,7 +94,7 @@ class Book {
     BookByName(bookTitle) {
         $.get(`/${baseUrl}/books`, { 'name': bookTitle }, ((data) => {
             sessionStorage.setItem('bookData', JSON.stringify(data));
-            window.location.href = `/book/name?${data.book.название}`;
+            window.location.href = `/book/name?${data.название}`;
         }));
     }
     AllBook() {
@@ -115,7 +111,6 @@ class Book {
     }
     tileBook(books) {
         var bookTiles = [];
-        console.log(books);
         books.forEach(books => {
             bookTiles.push('<div class="col-md-2 mt-3">');
             bookTiles.push('<div class="tile">');
@@ -212,10 +207,13 @@ class Profile {
     }
     ShowProfileInfo() {
         $.get(`/${baseUrl}/profile/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
-            $('#p-user-email').text(`Email - ${data.login}`);
-            $('#p-user-surname').text(`Фамилия - ${data.surname}`);
-            $('#p-user-name').text(`Имя - ${data.name}`);
+            $('#input-form-edit-email').val(`${data.login}`);
+            $('#input-form-edit-surname').val(`${data.surname}`);
+            $('#input-form-edit-name').val(`${data.name}`);
             $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
+            $('#img-photo-edit-modal').attr('src', `data:image/png;base64,${data.photo}`);
+            $('#img-photo-edit-modal-medium').attr('src', `data:image/png;base64,${data.photo}`);
+            $('#img-photo-edit-modal-small').attr('src', `data:image/png;base64,${data.photo}`);
         }));
     }
     EditProfileInfo() {
@@ -350,28 +348,13 @@ function byteArrayToBase64(byteArray) {
     });
 }
 $(function () {
-    $('#test-input-book-photo').on('change', function (event) {
-        event.preventDefault();
-        readFileAsByteArray($('#test-input-book-photo').get(0), (byteArray) => {
-            byteArrayToBase64(byteArray).then(base64String => {
-                $.ajax({
-                    url: `/${baseUrl}/books/editBookPhoto`,
-                    method: 'post',
-                    data: JSON.stringify(`${base64String}`),
-                    dataType: 'json',
-                    contentType: 'application/json;charset=utf-8',
-                    async: true
-                });
-            });
-        });
-    });
-    $('#input-photo-edit').on('change', function (event) {
-        event.preventDefault();
+    $('#btn-profile-photo-change').on('click', function (event) {
         readFileAsByteArray($('#input-photo-edit').get(0), (byteArray) => {
             byteArrayToBase64(byteArray).then(base64String => {
                 var profile = new Profile();
                 sessionStorage.setItem('imgData', base64String);
                 profile.EditProfilePhoto();
+                window.location.reload();
             });
         });
     });
@@ -413,7 +396,7 @@ $(function () {
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
     });
-    $('#btn-favorite-book').on('click', function (event) {
+    $('#btn-favorite-about-book').on('click', function (event) {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
             var favorClass = new Favorite($('#h2-title-about-book').text());
@@ -442,7 +425,7 @@ $(function () {
         if (window.location.href.includes('/book/name')) {
             var bookByName = new Book();
             var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
-            bookByName.createAboutBook(dataStorage.book);
+            bookByName.createAboutBook(dataStorage);
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
