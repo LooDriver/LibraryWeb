@@ -23,10 +23,13 @@ namespace LibraryWeb.IntegrationTest.ApiTest
         {
             var users = new
             {
-                Логин = "test",
-                Пароль = "test123",
+                Фамилия = "Анатолий",
+                Имя = "Петрович",
+                Логин = "pert",
+                Пароль = "123456789",
                 КодРоли = 2
             };
+
             string json = JsonConvert.SerializeObject(users);
             StringContent httpContent = new StringContent(json);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -41,8 +44,10 @@ namespace LibraryWeb.IntegrationTest.ApiTest
         {
             var users = new
             {
-                Логин = "test",
-                Пароль = "test123",
+                Фамилия = "Анатолий",
+                Имя = "Петрович",
+                Логин = "pert",
+                Пароль = "123456789",
                 КодРоли = 2
             };
             string json = JsonConvert.SerializeObject(users);

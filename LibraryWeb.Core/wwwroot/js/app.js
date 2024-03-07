@@ -349,12 +349,12 @@ function byteArrayToBase64(byteArray) {
 }
 $(function () {
     $('#btn-profile-photo-change').on('click', function (event) {
+        event.preventDefault();
         readFileAsByteArray($('#input-photo-edit').get(0), (byteArray) => {
             byteArrayToBase64(byteArray).then(base64String => {
                 var profile = new Profile();
                 sessionStorage.setItem('imgData', base64String);
                 profile.EditProfilePhoto();
-                window.location.reload();
             });
         });
     });

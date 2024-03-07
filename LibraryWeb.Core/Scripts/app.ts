@@ -407,12 +407,12 @@ function byteArrayToBase64(byteArray: Uint8Array): Promise<string | null> {
 $(function () {
 
     $('#btn-profile-photo-change').on('click', function (event) {
+        event.preventDefault();
         readFileAsByteArray(($('#input-photo-edit').get(0) as HTMLInputElement), (byteArray) => {
             byteArrayToBase64(byteArray).then(base64String => {
                 var profile = new Profile();
                 sessionStorage.setItem('imgData', base64String);
                 profile.EditProfilePhoto();
-                window.location.reload();
             });
         });
     });
