@@ -1,6 +1,7 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -32,7 +33,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpGet("getCurrentProfile")]
         public async Task<IActionResult> GetCurrentProfile([FromQuery] int userID)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
             if (userProfile is null) return BadRequest();
             else
             {
@@ -49,7 +50,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPut("editProfile")]
         public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromBody] Пользователи пользователи)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
             if (userProfile is null || пользователи.Пароль == "") return BadRequest("Поле с паролем не может быть пустым");
             else
             {
@@ -66,7 +67,7 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpPost("editPhoto")]
         public async Task<IActionResult> PutNewPhoto([FromQuery] int userID, [FromBody] string photoData)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
             if (userProfile is null || photoData == "") return BadRequest("Картинка не может быть пустая");
             userProfile.Фото = Convert.FromBase64String(photoData);
             await db.SaveChangesAsync();
