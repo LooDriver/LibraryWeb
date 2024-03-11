@@ -19,7 +19,6 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Информация о пользователе</h5>
-                    <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#div-profile-edit-password-modal">Сменить пароль</a>
                     <form>
                         <div class="mb-3">
                             <label for="input-form-edit-email" class="form-label">Электронная почта</label>
@@ -33,7 +32,16 @@
                             <label for="input-form-edit-name" class="form-label">Имя</label>
                             <input type="text" class="form-control" id="input-form-edit-name" required>
                         </div>
-
+                        <div class="mb-3">
+                            <label for="input-form-password-edit" class="form-label">Новый пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-edit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
+                            <span id="span-edit-error"></span>
+                        </div>
+                        <button type="submit" class="btn btn-outline-warning" id="btn-profile-information-edit">Изменить</button>
                     </form>
                 </div>
             </div>

@@ -19,12 +19,12 @@ namespace LibraryWeb.Core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            DatabaseEntities.connectionString = Configuration.GetConnectionString("SQLITE");
             services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddDbContext<DatabaseEntities>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("MSSQLSERVER"));
+                options.UseSqlite(Configuration.GetConnectionString(DatabaseEntities.connectionString));
             });
-            DatabaseEntities.connectionString = Configuration.GetConnectionString("MSSQLSERVER");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

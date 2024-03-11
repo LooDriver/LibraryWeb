@@ -58,7 +58,7 @@ class Favorite {
         this.bookName = bookName;
     }
     AddToFavorite() {
-        $.post(`/${baseUrl}/favorite/addFavorite?nameBook=${this.bookName}&userID=${sessionStorage.getItem('userid')}`);
+        $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': this.bookName, 'userID': sessionStorage.getItem('userid') });
     }
     ShowListFavorite() {
         $.get(`/${baseUrl}/favorite/getFavorite`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
@@ -199,30 +199,16 @@ class Profile {
         }));
     }
     EditProfileInfo() {
-        $.ajax({
-            url: `/${baseUrl}/profile/editProfile?userID=${sessionStorage.getItem('userid')}`,
-            method: 'put',
-            data: JSON.stringify(this.userProfile),
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(() => {
-            sessionStorage.setItem('userlogin', this.userProfile.Логин);
-            window.location.reload();
+        $.post(`/${baseUrl}/profile/editProfile?userID=${sessionStorage.getItem('userid')}`, this.userProfile, () => {
+            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
+            $('#span-edit-error').empty();
+            Logout();
         }).fail((error) => {
             $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
         });
     }
     EditProfilePhoto() {
-        $.ajax({
-            url: `/${baseUrl}/profile/editPhoto?userID=${sessionStorage.getItem('userid')}`,
-            method: 'post',
-            data: JSON.stringify(`${sessionStorage.getItem('imgData')}`),
-            dataType: 'json',
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(() => {
-            $('#input-photo-edit').empty();
+        $.post(`/${baseUrl}/profile/editPhoto`, { 'userID': sessionStorage.getItem('userid'), 'photoData': sessionStorage.getItem('imgData') }, () => {
             window.location.reload();
         });
     }
@@ -231,7 +217,7 @@ class Order {
     AddNewOrder(elementHref, userID) {
         var books = new Book();
         document.querySelectorAll(`${elementHref}`).forEach(links => {
-            $.post(`/${baseUrl}/order/addOrder?bookName=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}&userID=${userID}`);
+            $.post(`/${baseUrl}/order/addOrder`, { 'bookName': books.clearUrlBook(decodeURI(links.getAttribute('href'))), 'userID': sessionStorage.getItem('userid') });
         });
     }
     ShowOrders() {
@@ -322,6 +308,12 @@ function byteArrayToBase64(byteArray) {
         reader.readAsDataURL(blob);
     });
 }
+function Logout() {
+    deleteCookie("auth_key");
+    deleteCookie("permission");
+    sessionStorage.clear();
+    window.location.href = "/";
+}
 $(function () {
     $('#btn-profile-photo-change').on('click', function (event) {
         event.preventDefault();
@@ -333,18 +325,7 @@ $(function () {
             });
         });
     });
-    $('#btn-order-clear').on('click', function (event) {
-        event.preventDefault();
-        var cart = new Cart();
-        cart.ClearCart('#a-redirect-cart-about-book');
-    });
-    $('#btn-logout-profile').on('click', function () {
-        deleteCookie("auth_key");
-        deleteCookie("permission");
-        sessionStorage.clear();
-        window.location.href = "/";
-    });
-    $('#btn-form-profile-edit').on('click', function (event) {
+    $('#btn-profile-information-edit').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
             var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-email').val().toString(), $('#input-form-password-edit').val().toString());
@@ -353,6 +334,14 @@ $(function () {
         else {
             $('#span-edit-error').text('Пароли должны быть одинаковыми.').css('color', 'red');
         }
+    });
+    $('#btn-order-clear').on('click', function (event) {
+        event.preventDefault();
+        var cart = new Cart();
+        cart.ClearCart('#a-redirect-cart-about-book');
+    });
+    $('#btn-logout-profile').on('click', function () {
+        Logout();
     });
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();

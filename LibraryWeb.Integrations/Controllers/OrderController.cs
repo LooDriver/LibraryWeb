@@ -27,7 +27,7 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addOrder")]
-        public async Task<IActionResult> AddNewOrder([FromQuery] string bookName, int userID)
+        public async Task<IActionResult> AddNewOrder([FromForm] string bookName, [FromForm] int userID)
         {
             Книги книги = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
             if (книги is null) return BadRequest();

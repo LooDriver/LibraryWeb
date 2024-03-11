@@ -1,5 +1,6 @@
 ﻿using LibraryWeb.Sql.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Sql.Context
@@ -28,10 +29,18 @@ namespace LibraryWeb.Sql.Context
         {
             try
             {
-                SqlConnection connection = new SqlConnection(connectionString);
-                connection.Open();
-                connection.Dispose();
-                return true;
+                if (connectionString.Contains(".db"))
+                {
+                    return File.Exists(connectionString[(connectionString.IndexOf('=') + 1)..]);
+                }
+                else
+                {
+                    using(SqliteConnection connection = new SqliteConnection(connectionString))
+                    {
+                        connection.Open();
+                        return true;
+                    }
+                }
             }
             catch (SqlException ex)
             {
@@ -62,7 +71,7 @@ namespace LibraryWeb.Sql.Context
         public virtual DbSet<Роли> Ролиs { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(connectionString);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite(connectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

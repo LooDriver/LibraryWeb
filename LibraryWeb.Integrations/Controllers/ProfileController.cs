@@ -30,11 +30,11 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpPut("editProfile")]
-        public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromBody] Пользователи пользователи)
+        [HttpPost("editProfile")]
+        public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromForm] Пользователи пользователи)
         {
             Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
-            if (userProfile is null || пользователи.Пароль == "") return BadRequest("Поле с паролем не может быть пустым");
+            if (userProfile is null || пользователи.Пароль.Length <= 0) return BadRequest("Поле с паролем не может быть пустым");
             else
             {
                 userProfile.Фамилия = пользователи.Фамилия;
@@ -48,10 +48,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editPhoto")]
-        public async Task<IActionResult> PutNewPhoto([FromQuery] int userID, [FromBody] string photoData)
+        public async Task<IActionResult> PutNewPhoto([FromForm] int userID, [FromForm] string photoData)
         {
             Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
-            if (userProfile is null || photoData == "") return BadRequest("Картинка не может быть пустая");
+            if (userProfile is null || photoData.Length == 0) return BadRequest("Картинка не может быть пустая");
             userProfile.Фото = Convert.FromBase64String(photoData);
             await db.SaveChangesAsync();
             return Ok();
