@@ -16,9 +16,9 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("profileInformation")]
-        public IActionResult GetProfileInformation([FromQuery] int userID)
+        public async Task<IActionResult> GetProfileInformation([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            Пользователи userProfile = await db.Пользователиs.AsNoTracking().FirstOrDefaultAsync(f => f.КодПользователя == userID, cancellationToken);
             if (userProfile is null) return BadRequest();
             return Json(new
             {
@@ -27,23 +27,6 @@ namespace LibraryWeb.Integrations.Controllers
                 Login = userProfile.Логин,
                 Photo = userProfile.Фото
             });
-        }
-
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("getCurrentProfile")]
-        public async Task<IActionResult> GetCurrentProfile([FromQuery] int userID)
-        {
-            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
-            if (userProfile is null) return BadRequest();
-            else
-            {
-                return Json(new
-                {
-                    Name = userProfile.Имя,
-                    Surname = userProfile.Фамилия,
-                    Login = userProfile.Логин
-                });
-            }
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

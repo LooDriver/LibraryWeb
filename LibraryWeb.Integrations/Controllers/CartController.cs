@@ -16,10 +16,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allCartItems")]
-        public async Task<IActionResult> GetAllCartItems([FromQuery] int userID)
+        public async Task<IActionResult> GetAllCartItems([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
             db.Корзинаs.Include(x => x.КодКнигиNavigation).Load();
-            var userCart = await db.Корзинаs.Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+            var userCart = await db.Корзинаs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
             if (userCart is null) return BadRequest();
             return Json(userCart);
         }
@@ -43,13 +43,13 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpDelete("deleteCartItem")]
-        public async Task<IActionResult> DeleteCartItem([FromQuery] string orderDel)
+        public async Task<IActionResult> DeleteCartItem([FromQuery] string orderDel, CancellationToken cancellationToken = default)
         {
-            var cartDelete = db.Корзинаs.FirstOrDefault(x => x.КодКнигиNavigation.Название == orderDel);
+            var cartDelete = await db.Корзинаs.FirstOrDefaultAsync(x => x.КодКнигиNavigation.Название == orderDel, cancellationToken);
             if (cartDelete is null) return BadRequest("Данного товара нету в корзине");
             else
             {
-                db.Корзинаs.Remove(cartDelete);
+                db.Корзинаs.RemoveRange(cartDelete);
                 await db.SaveChangesAsync();
                 return Ok("Товар был успешно удален из корзины");
             }

@@ -34,7 +34,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]
-        public async Task<IActionResult> CheckLogin([FromBody] Пользователи logins)
+        public async Task<IActionResult> CheckLogin([FromForm] Пользователи logins)
         {
             Пользователи usersExists = await db.Пользователиs.FirstOrDefaultAsync(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
             if (usersExists is null) { return Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа или зарегистрируетесь"); }
@@ -51,7 +51,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] Пользователи registers)
+        public async Task<IActionResult> RegisterUser([FromForm] Пользователи registers)
         {
             if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
             {

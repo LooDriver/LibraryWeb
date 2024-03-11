@@ -17,10 +17,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]
-        public async Task<IActionResult> GetAllFavorite([FromQuery] int userID)
+        public async Task<IActionResult> GetAllFavorite([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
             db.Избранноеs.Include(x => x.КодКнигиNavigation).Load();
-            var userFavorites = await db.Избранноеs.Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+            var userFavorites = await db.Избранноеs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
             if (userFavorites is null) return BadRequest();
             return Json(userFavorites);
         }

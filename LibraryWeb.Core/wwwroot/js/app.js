@@ -19,13 +19,7 @@ class Authentication {
     }
     Login() {
         if (this.user.Логин !== "" && this.user.Пароль !== "") {
-            $.ajax({
-                url: `/${baseUrl}/auth/login`,
-                method: 'post',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(this.user)
-            }).done((data) => {
-                console.log(data);
+            $.post(`/${baseUrl}/auth/login`, this.user, ((data) => {
                 setCookie("auth_key", data.auth_key);
                 setCookie("permission", data.role);
                 sessionStorage.setItem('userlogin', this.user.Логин);
@@ -35,7 +29,7 @@ class Authentication {
                 if (data.role == 1) {
                     $('#a-admin-panel').css('display', 'inline');
                 }
-            }).fail((error) => {
+            })).fail((error) => {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
             });
         }
@@ -45,15 +39,10 @@ class Authentication {
     }
     Register() {
         if (this.user.Фамилия != "" && this.user.Имя != "") {
-            $.ajax({
-                url: `/${baseUrl}/auth/register`,
-                method: 'post',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(this.user)
-            }).done(() => {
+            $.post(`/${baseUrl}/auth/register`, this.user, (() => {
                 $('#span-register-error').text("");
                 window.location.reload();
-            }).fail((error) => {
+            })).fail((error) => {
                 $('#span-register-error').text(error.responseText).css('color', 'red');
                 ;
             });
@@ -72,14 +61,7 @@ class Favorite {
         $.post(`/${baseUrl}/favorite/addFavorite?nameBook=${this.bookName}&userID=${sessionStorage.getItem('userid')}`);
     }
     ShowListFavorite() {
-        $.ajax({
-            url: `/${baseUrl}/Favorite/getFavorite`,
-            method: 'get',
-            dataType: 'json',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function (data) {
+        $.get(`/${baseUrl}/favorite/getFavorite`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             var arr = [];
             data.forEach(data => {
                 arr.push('<li>');
@@ -87,7 +69,7 @@ class Favorite {
                 arr.push('</li>');
             });
             $('#div-favorite-list').append(arr.join(""));
-        });
+        }));
     }
 }
 class Book {
@@ -244,13 +226,6 @@ class Profile {
             window.location.reload();
         });
     }
-    FillEditProfileInfo() {
-        $.get(`/${baseUrl}/profile/getCurrentProfile?userID=${sessionStorage.getItem('userid')}`, function (data) {
-            $('#input-form-edit-name').val(data.name);
-            $('#input-form-edit-surname').val(data.surname);
-            $('#input-form-edit-email').val(data.login);
-        });
-    }
 }
 class Order {
     AddNewOrder(elementHref, userID) {
@@ -368,11 +343,6 @@ $(function () {
         deleteCookie("permission");
         sessionStorage.clear();
         window.location.href = "/";
-    });
-    $('#btn-modal-profile-edit').on('click', function (event) {
-        event.preventDefault();
-        var profile = new Profile();
-        profile.FillEditProfileInfo();
     });
     $('#btn-form-profile-edit').on('click', function (event) {
         event.preventDefault();

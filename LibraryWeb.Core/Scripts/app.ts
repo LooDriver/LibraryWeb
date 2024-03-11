@@ -2,7 +2,7 @@
 
 class Authentication {
 
-    private readonly defaultRole: number = 2; 
+    private readonly defaultRole: number = 2;
 
     user = {
         Фамилия: "",
@@ -26,14 +26,7 @@ class Authentication {
 
     Login() {
         if (this.user.Логин !== "" && this.user.Пароль !== "") {
-            $.ajax({
-                url: `/${baseUrl}/auth/login`,
-                method: 'post',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(this.user)
-            }).done((data) => {
-                console.log(data);
-             
+            $.post(`/${baseUrl}/auth/login`, this.user, ((data) => {
                 setCookie("auth_key", data.auth_key);
                 setCookie("permission", data.role);
 
@@ -44,7 +37,7 @@ class Authentication {
                 window.location.reload();
                 if (data.role == 1) { $('#a-admin-panel').css('display', 'inline'); }
 
-            }).fail((error) => {
+            })).fail((error) => {
                 $('#span-login-error').text(`${error.responseText}`).css('color', 'red');
             });
         }
@@ -55,15 +48,10 @@ class Authentication {
 
     Register() {
         if (this.user.Фамилия != "" && this.user.Имя != "") {
-            $.ajax({
-                url: `/${baseUrl}/auth/register`,
-                method: 'post',
-                contentType: 'application/json;charset=utf-8',
-                data: JSON.stringify(this.user)
-            }).done(() => {
+            $.post(`/${baseUrl}/auth/register`, this.user, (() => {
                 $('#span-register-error').text("");
                 window.location.reload();
-            }).fail((error) => {
+            })).fail((error) => {
                 $('#span-register-error').text(error.responseText).css('color', 'red');;
             });
         }
@@ -71,9 +59,6 @@ class Authentication {
             $('#span-register-error').text("Фамилия и имя должны быть заполнены.").css('color', 'red');;
         }
     }
-
-   
-
 }
 
 class Favorite {
@@ -88,14 +73,7 @@ class Favorite {
     }
 
     ShowListFavorite() {
-        $.ajax({
-            url: `/${baseUrl}/Favorite/getFavorite`,
-            method: 'get',
-            dataType: 'json',
-            data: { 'userID': sessionStorage.getItem('userid') },
-            contentType: 'application/json;charset=utf-8',
-            async: true
-        }).done(function (data) {
+        $.get(`/${baseUrl}/favorite/getFavorite`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             var arr = [];
             data.forEach(data => {
                 arr.push('<li>');
@@ -103,14 +81,14 @@ class Favorite {
                 arr.push('</li>');
             });
             $('#div-favorite-list').append(arr.join(""));
-        });
+        }));
     }
 }
 
 class Book {
 
     BookByName(bookTitle: string) {
-        $.get(`/${baseUrl}/books`, { 'name': bookTitle }, ((data) => { 
+        $.get(`/${baseUrl}/books`, { 'name': bookTitle }, ((data) => {
             sessionStorage.setItem('bookData', JSON.stringify(data));
             window.location.href = `/book/name?${data.название}`;
         }));
@@ -162,7 +140,7 @@ class Cart {
             this.CartElement(data);
         }));
     }
-    
+
     DeleteCartItem(orderDelete: string) {
         $.ajax({
             url: `/${baseUrl}/cart/deleteCartItem?orderDel=${orderDelete}`,
@@ -209,7 +187,7 @@ class Cart {
             arr.push(`<td>${cart.кодКнигиNavigation.цена} руб.</td>`);
             arr.push(`<td>${cart.кодКнигиNavigation.наличие}</td>`);
             arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
-            arr.push('</tr>'); 
+            arr.push('</tr>');
         });
 
         $('#h4-final-sum').text(`Общая сумма - ${sumCostBook} руб.`);
@@ -219,7 +197,7 @@ class Cart {
 
 class Profile {
 
-    private readonly defaultRole: number = 2; 
+    private readonly defaultRole: number = 2;
 
     userProfile = {
         Фамилия: "",
@@ -280,21 +258,13 @@ class Profile {
         }).done(() => {
             $('#input-photo-edit').empty();
             window.location.reload();
-           
-        });
-    }
 
-    FillEditProfileInfo() {
-        $.get(`/${baseUrl}/profile/getCurrentProfile?userID=${sessionStorage.getItem('userid')}`, function (data) {
-            $('#input-form-edit-name').val(data.name);
-            $('#input-form-edit-surname').val(data.surname);
-            $('#input-form-edit-email').val(data.login);
         });
     }
 }
 
 class Order {
-    AddNewOrder(elementHref:string, userID:number) {
+    AddNewOrder(elementHref: string, userID: number) {
         var books = new Book();
         document.querySelectorAll(`${elementHref}`).forEach(links => {
             $.post(`/${baseUrl}/order/addOrder?bookName=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}&userID=${userID}`);
@@ -313,9 +283,9 @@ class Order {
             var bookName = orders.кодКнигиNavigation.название;
             arr.push('<tr>');
             arr.push(`<th scope="row">${countOrders++}</th>`);
-            arr.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`); 
-            arr.push(`<td>${orders.датаЗаказа}</td>`); 
-            arr.push(`<td>${orders.статус}</td>`); 
+            arr.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
+            arr.push(`<td>${orders.датаЗаказа}</td>`);
+            arr.push(`<td>${orders.статус}</td>`);
             arr.push('</tr>');
         });
         $('#tbody-profile-table').append(arr.join(""));
@@ -373,7 +343,7 @@ function deleteCookie(name: string) {
 function readFileAsByteArray(input: HTMLInputElement, callback: (byteArray: Uint8Array) => void) {
     const reader = new FileReader();
 
-    const files = $(input).prop('files'); 
+    const files = $(input).prop('files');
 
     if (files && files.length > 0) {
         const file = files[0];
@@ -430,12 +400,6 @@ $(function () {
         window.location.href = "/"
     });
 
-    $('#btn-modal-profile-edit').on('click', function (event) {
-        event.preventDefault();
-        var profile = new Profile();
-        profile.FillEditProfileInfo();
-    });
-
     $('#btn-form-profile-edit').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
@@ -466,7 +430,7 @@ $(function () {
             window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
-     
+
     });
     $('#btn-cart-book').on('click', function (event) {
         event.preventDefault();
@@ -478,11 +442,11 @@ $(function () {
             alert("Войдите в профиль для сохранение книги в корзину.");
         }
     });
-    
+
 
     $(document).ready(function () {
 
-        if (getCookie('permission') == '1') $('#a-admin-panel').removeAttr('style'); 
+        if (getCookie('permission') == '1') $('#a-admin-panel').removeAttr('style');
         $('#p-user-login').text("Войти");
 
         if (window.location.href.includes('/book/name')) {
@@ -499,7 +463,7 @@ $(function () {
 
         switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
             case '/': {
-               
+
                 var books = new Book();
                 books.AllBook();
                 $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); });
@@ -547,14 +511,14 @@ $(function () {
         event.preventDefault();
         var cart = new Cart();
         cart.DeleteCartItem($(this).closest('tr').find('.td-book-name').text());
-        
+
     });
 
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();
         var book = new Book();
         book.BookByName($(this).closest('.tile').find('.tile-book').text());
-       
+
     });
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
@@ -579,5 +543,5 @@ $(function () {
         else {
             $('#span-register-error').text("Пароли должны быть одинаковые").css('color', 'red');
         }
-    }); 
+    });
 });

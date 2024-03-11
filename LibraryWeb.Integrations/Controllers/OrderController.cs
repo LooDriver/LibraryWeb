@@ -17,10 +17,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getOrder")]
-        public async Task<IActionResult> GetAllOrders([FromQuery] int userID)
+        public async Task<IActionResult> GetAllOrders([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
             db.Заказыs.Include(x => x.КодКнигиNavigation).Load();
-            var userOrders = await db.Заказыs.Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+            var userOrders = await db.Заказыs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
             if (userOrders is null) return BadRequest();
             return Json(userOrders);
         }
