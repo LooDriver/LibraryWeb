@@ -513,7 +513,7 @@ $(function () {
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
         var order = new Order();
-        order.AddNewOrder('#a-redirect-cart-about-book', Number.parseInt(sessionStorage.getItem('userid')));
+        order.AddNewOrder('#a-redirect-cart-about-book');
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();

@@ -214,7 +214,7 @@ class Profile {
     }
 }
 class Order {
-    AddNewOrder(elementHref, userID) {
+    AddNewOrder(elementHref) {
         var books = new Book();
         document.querySelectorAll(`${elementHref}`).forEach(links => {
             $.post(`/${baseUrl}/order/addOrder`, { 'bookName': books.clearUrlBook(decodeURI(links.getAttribute('href'))), 'userID': sessionStorage.getItem('userid') });
@@ -447,7 +447,7 @@ $(function () {
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
         var order = new Order();
-        order.AddNewOrder('#a-redirect-cart-about-book', Number.parseInt(sessionStorage.getItem('userid')));
+        order.AddNewOrder('#a-redirect-cart-about-book');
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();

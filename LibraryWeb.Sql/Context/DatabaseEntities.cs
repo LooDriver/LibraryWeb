@@ -44,12 +44,10 @@ namespace LibraryWeb.Sql.Context
             }
             catch (SqlException ex)
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
         }
