@@ -69,7 +69,13 @@ class Favorite {
     }
 
     AddToFavorite() {
-        $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': this.bookName, 'userID': sessionStorage.getItem('userid') });
+        this.checkIfFavoriteExists().then((result) => {
+            if (result) {
+                $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': this.bookName, 'userID': sessionStorage.getItem('userid') });
+            } else { 
+                $('#btn-favorite-about-book').text('Удалить из избранного');
+            }
+        });
     }
 
     ShowListFavorite() {
@@ -82,6 +88,18 @@ class Favorite {
             });
             $('#div-favorite-list').append(arr.join(""));
         }));
+    }
+
+
+
+    private checkIfFavoriteExists() {
+        return new Promise((resolve) => {
+            $.get(`/${baseUrl}/favorite/existFavorite`, { 'userID': sessionStorage.getItem('userid'), 'bookName': $('#h2-title-about-book').text() }, () => {
+                resolve(true);
+            }).fail(() => {
+                resolve(false);
+            });
+        });
     }
 }
 
@@ -106,6 +124,8 @@ class Book {
         $('#p-author-about-book').text(`${book.автор}`);
         $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
         $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
+        $('#p-quantity-about-book').text(`${book.наличие}`);
+        $('#input-quantity-about-book').attr('max', `${book.наличие}`);
     }
 
     tileBook(books) {
@@ -114,8 +134,14 @@ class Book {
             bookTiles.push('<div class="col-md-2 mt-3">');
             bookTiles.push('<div class="tile">');
             bookTiles.push('<div class="tile-content">');
-            bookTiles.push(`<div class="tile-book">${books.название}</div>`);
-            bookTiles.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Обложка книги ${books.название}"></button>`);
+            if (books.наличие == 0) {
+                bookTiles.push(`<div class="tile-book">${books.название}</div>`);
+                bookTiles.push(`<button class="btn-about-book" disabled="true"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Нету в наличии книги ${books.название}"></button>`);
+            }
+            else {
+                bookTiles.push(`<div class="tile-book">${books.название}</div>`);
+                bookTiles.push(`<button class="btn-about-book"><img src="data:image/png;base64,${books.обложка}" width="150" height="200" alt="Обложка книги ${books.название}"></button>`);
+            }
             bookTiles.push('</div>');
             bookTiles.push('</div>');
             bookTiles.push('</div>');
@@ -131,8 +157,14 @@ class Book {
 
 class Cart {
 
-    AddCartItem(orderName: string) {
-        $.post(`/${baseUrl}/cart/addCartItem?bookName=${orderName}&userID=${sessionStorage.getItem('userid')}`);
+    AddCartItem(orderName: string, quantity = 0) {
+        if (quantity > Number.parseInt($('#p-quantity-about-book').text().toString())) {
+            $('#span-information-quantity').text(`Количество не может быть больше максимального значения ${$('#input-quantity-about-book').attr('max')}`).css('color', 'red');
+        }
+        else {
+            $('#span-information-quantity').empty();
+            $.post(`/${baseUrl}/cart/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity });
+        }
     }
 
     ShowCartList() {
@@ -181,12 +213,12 @@ class Cart {
         var countCartBooks = 1;
 
         cart.forEach(cart => {
-            sumCostBook += cart.кодКнигиNavigation.цена;
+            sumCostBook += cart.кодКнигиNavigation.цена * cart.количество;
             arr.push('<tr>');
             arr.push(`<th scope="row">${countCartBooks++}</th>`);
             arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart.кодКнигиNavigation.название}"</a>${cart.кодКнигиNavigation.название}</td>`);
             arr.push(`<td>${cart.кодКнигиNavigation.цена} руб.</td>`);
-            arr.push(`<td>${cart.кодКнигиNavigation.наличие}</td>`);
+            arr.push(`<td>${cart.количество}</td>`);
             arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
             arr.push('</tr>');
         });
@@ -292,7 +324,6 @@ class PickupPoint {
                 arr.push(`</div>`);
                 arr.push(`</div>`);
                 arr.push(`</div>`);
-
             });
             $('#div-show-pickup').append(arr.join(""));
         });
@@ -426,7 +457,7 @@ $(function () {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
             var cart = new Cart();
-            cart.AddCartItem($('#h2-title-about-book').text());
+            cart.AddCartItem($('#h2-title-about-book').text(), Number.parseInt($('#input-quantity-about-book').val().toString()));
         } else {
             window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в корзину.");

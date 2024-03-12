@@ -26,15 +26,17 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addCartItem")]
-        public async Task<IActionResult> AddCartItem([FromQuery] string bookName, int userID)
+        public async Task<IActionResult> AddCartItem([FromForm] string bookName, [FromForm] int userID, [FromForm] int quantity)
         {
             Книги книги = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
             if (книги is null) return BadRequest();
             else
             {
+                книги.Наличие -= quantity;
                 Корзина корзина = new Корзина();
                 корзина.КодКниги = книги.КодКниги;
                 корзина.КодПользователя = userID;
+                корзина.Количество = quantity;
                 await db.Корзинаs.AddAsync(корзина);
                 await db.SaveChangesAsync();
                 return Ok();

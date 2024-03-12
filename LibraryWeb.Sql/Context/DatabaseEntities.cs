@@ -163,6 +163,7 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+                entity.Property(e => e.Количество).HasColumnName("Количество");
 
                 entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Корзинаs)
                     .HasForeignKey(d => d.КодКниги)
