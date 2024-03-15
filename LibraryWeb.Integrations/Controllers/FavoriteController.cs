@@ -21,15 +21,21 @@ namespace LibraryWeb.Integrations.Controllers
         /// <returns></returns>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("existFavorite")]
-        public async Task<IActionResult> CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName)
+        public IActionResult CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName)
         {
-            var userFavorites = await GetFavoriteItem(userID);
-            Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.FirstOrDefault(x => x.Название == bookName).КодКниги);
-            var item = from p in userFavorites
-                       where p.КодКниги == favorBook.КодКниги
-                       select p;
-            if (item.Any()) { return BadRequest(); }
-            else { return Ok(); }
+            List<Избранное> listUsersBooks = GetFavoriteItem(userID);
+
+            var userFavoriteBooks = from usersBooks in listUsersBooks
+                                    where usersBooks.КодКниги == (db.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги)
+                                    select usersBooks;
+            if (userFavoriteBooks.Any())
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         /// <summary>
@@ -38,9 +44,9 @@ namespace LibraryWeb.Integrations.Controllers
         /// <param name="userID">Код пользователя</param>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]
-        public async Task<IActionResult> GetAllFavorite([FromQuery] int userID)
+        public IActionResult GetAllFavorite([FromQuery] int userID)
         {
-            var userFavorites = await GetFavoriteItem(userID);
+            var userFavorites = GetFavoriteItem(userID);
             if (userFavorites is null) return BadRequest();
             return Json(userFavorites);
         }
@@ -62,6 +68,19 @@ namespace LibraryWeb.Integrations.Controllers
             }
         }
 
-        private Task<List<Избранное>> GetFavoriteItem(int userID) => db.Избранноеs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("deleteFavorite")]
+        public async Task<IActionResult> RemoveExistFavorite([FromForm] string bookName)
+        {
+            Избранное bookInFavorite = db.Избранноеs.Where(favoriteBook => favoriteBook.КодКниги == (db.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги)).Single();
+            db.Избранноеs.Remove(bookInFavorite);
+            await db.SaveChangesAsync();
+            return Ok();
+        }
+
+        private List<Избранное> GetFavoriteItem(int userID)
+        {
+            return (userID <= 0) ? default : db.Избранноеs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToList();
+        }
     }
 }

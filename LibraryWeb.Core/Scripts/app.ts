@@ -62,18 +62,15 @@ class Authentication {
 }
 
 class Favorite {
-    private bookName: string;
 
-    constructor(bookName: string = "") {
-        this.bookName = bookName;
-    }
-
-    AddToFavorite() {
-        this.checkIfFavoriteExists().then((result) => {
+    AddToFavorite(bookName: string) {
+        checkIfFavoriteExists(bookName).then((result) => {
             if (result) {
-                $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': this.bookName, 'userID': sessionStorage.getItem('userid') });
-            } else { 
                 $('#btn-favorite-about-book').text('Удалить из избранного');
+            } else { 
+                $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': bookName, 'userID': sessionStorage.getItem('userid') }, () => {
+                    window.location.reload();
+                });
             }
         });
     }
@@ -90,13 +87,9 @@ class Favorite {
         }));
     }
 
-    private checkIfFavoriteExists() {
-        return new Promise((resolve) => {
-            $.get(`/${baseUrl}/favorite/existFavorite`, { 'userID': sessionStorage.getItem('userid'), 'bookName': $('#h2-title-about-book').text() }, () => {
-                resolve(true);
-            }).fail(() => {
-                resolve(false);
-            });
+    RemoveFromFavorite(bookName: string) {
+        $.post(`/${baseUrl}/favorite/deleteFavorite`, { 'bookName': bookName }, () => {
+            window.location.reload();
         });
     }
 }
@@ -117,6 +110,7 @@ class Book {
     }
 
     createAboutBook(book) {
+
         $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
         $('#h2-title-about-book').text(`${book.название}`);
         $('#p-author-about-book').text(`${book.автор}`);
@@ -124,6 +118,18 @@ class Book {
         $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
         $('#p-quantity-about-book').text(`${book.наличие}`);
         $('#input-quantity-about-book').attr('max', `${book.наличие}`);
+
+        if (sessionStorage.getItem('userid') == undefined) { }
+        else {
+            checkIfFavoriteExists(book.название).then((result) => {
+                if (result) {
+                    $('#btn-favorite-about-book').text('Удалить из избранного');
+                }
+                else {
+                    $('#btn-favorite-about-book').text('Добавить в избранное');
+                }
+            });
+        }
     }
 
     tileBook(books) {
@@ -317,6 +323,16 @@ class PickupPoint {
     }
 }
 
+function checkIfFavoriteExists(currentBook:string) {
+    return new Promise((resolve) => {
+        $.get(`/${baseUrl}/favorite/existFavorite`, { 'userID': sessionStorage.getItem('userid'), 'bookName': currentBook }, () => {
+            resolve(true);
+        }).fail(() => {
+            resolve(false);
+        });
+    });
+}
+
 function setCookie(name: string, val: string) {
     const date = new Date();
     const value = val;
@@ -432,8 +448,13 @@ $(function () {
     $('#btn-favorite-about-book').on('click', function (event) {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
-            var favorClass = new Favorite($('#h2-title-about-book').text());
-            favorClass.AddToFavorite();
+            var favorClass = new Favorite();
+            if ($('#btn-favorite-about-book').text().includes('Добавить')) {
+                favorClass.AddToFavorite($('#h2-title-about-book').text());
+            } else {
+                favorClass.RemoveFromFavorite($('#h2-title-about-book').text());
+            }
+            
         } else {
             window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
@@ -459,8 +480,7 @@ $(function () {
 
         if (window.location.href.includes('/book/name')) {
             var bookByName = new Book();
-            var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
-            bookByName.createAboutBook(dataStorage);
+            bookByName.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
@@ -474,7 +494,7 @@ $(function () {
 
                 var books = new Book();
                 books.AllBook();
-                $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); });
+                $.get(`/${baseUrl}/pickup/allPickupPoints`, ((data) => { sessionStorage.setItem('pickup_point_data', JSON.stringify(data))} ));
                 break;
             }
             case '/cart': {
