@@ -17,30 +17,38 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getOrder")]
-        public async Task<IActionResult> GetAllOrders([FromQuery] int userID)
+        public async Task<IActionResult> GetAllOrders([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
             db.Заказыs.Include(x => x.КодКнигиNavigation).Load();
-            var userOrders = await db.Заказыs.Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+            var userOrders = await db.Заказыs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
             if (userOrders is null) return BadRequest();
             return Json(userOrders);
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addOrder")]
-        public async Task<IActionResult> AddNewOrder([FromQuery] string bookName, int userID)
+        public async Task<IActionResult> AddNewOrder([FromForm] string[] bookName, [FromForm] int userID)
         {
-            Книги книги = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
-            if (книги is null) return BadRequest();
-            else
+            var data = from userBooks in bookName
+                       from databaseBooks in db.Книгиs
+                       where databaseBooks.Название == userBooks
+                       select new Заказы
+                       {
+                           КодКниги = databaseBooks.КодКниги,
+                           КодПользователя = userID,
+                           ДатаЗаказа = DateOnly.FromDateTime(DateTime.Now.Date),
+                           Статус = "Доставлен"
+                       };
+
+            if (data.Any())
             {
-                Заказы заказ = new Заказы();
-                заказ.КодКниги = книги.КодКниги;
-                заказ.КодПользователя = userID;
-                заказ.ДатаЗаказа = DateOnly.FromDateTime(DateTime.Now.Date);
-                заказ.Статус = "Успешно";
-                await db.Заказыs.AddAsync(заказ);
+                await db.Заказыs.AddRangeAsync(data);
                 await db.SaveChangesAsync();
                 return Ok();
+            }
+            else
+            {
+                return BadRequest();
             }
         }
     }

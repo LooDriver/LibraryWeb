@@ -44,8 +44,7 @@ namespace LibraryWeb.Core.Controllers
 
             try
             {
-                SecurityToken validatedToken;
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                 return true;
             }
             catch
@@ -54,19 +53,17 @@ namespace LibraryWeb.Core.Controllers
             }
         }
 
-        private TokenValidationParameters GetValidationParameters()
+        private static TokenValidationParameters GetValidationParameters()
         {
             return new TokenValidationParameters()
             {
-                ValidateLifetime = true, // Because there is expiration in the generated token
-                ValidateAudience = true, // Ensure that the token audience matches our audience value
-                ValidateIssuer = true,   // Ensure that the token issuer matches our issuer value
+                ValidateLifetime = true,
+                ValidateAudience = true, 
+                ValidateIssuer = true,  
                 ValidIssuer = AuthOptions.ISSUER,
                 ValidAudience = AuthOptions.AUDIENCE,
-                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey() // The same key as the one that generate the token
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey() 
             };
         }
-
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,7 +18,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             db = new DatabaseEntities();
         }
 
-        private string JWTCreate(Пользователи user)
+        private static string JWTCreate(Пользователи user)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
             var jwt = new JwtSecurityToken(
@@ -33,28 +34,24 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]
-        public IActionResult CheckLogin([FromBody] Пользователи logins)
+        public async Task<IActionResult> CheckLogin([FromForm] Пользователи logins)
         {
-            var item = db.Пользователиs.Where(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
-            if (item.Any())
-            {
-                var authKey = new
-                {
-                    auth_key = JWTCreate(logins),
-                    role = item.Select(x => x.КодРоли).Single(),
-                    userID = item.Select(x => x.КодПользователя).Single()
-                };
-                return Ok(authKey);
-            }
+            Пользователи usersExists = await db.Пользователиs.FirstOrDefaultAsync(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
+            if (usersExists is null) { return Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа или зарегистрируетесь"); }
             else
             {
-                return Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа или зарегистрируетесь");
+                return Ok(new
+                {
+                    auth_key = JWTCreate(logins),
+                    role = usersExists.КодРоли,
+                    userID = usersExists.КодПользователя
+                });
             }
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] Пользователи registers)
+        public async Task<IActionResult> RegisterUser([FromForm] Пользователи registers)
         {
             if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
             {

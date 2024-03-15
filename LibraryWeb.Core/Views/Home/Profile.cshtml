@@ -10,19 +10,39 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card">
-                <div class="text-center">
-                    <img id="img-photo-profile" class="img-fluid  mb-3" alt="Изображение профиля">
-                    <input type="file" id="input-photo-edit" />
-                    <button class="btn btn-primary mb-2" id="btn-photo-change">Изменить картинку</button>
+                <div>
+                    <a class="btn" data-bs-toggle="modal" data-bs-target="#div-profile-edit-photo-modal">
+                        <img id="img-photo-profile" class="img-fluid rounded-circle mb-3" alt="Изображение профиля" width="150" height="250">
+                    </a>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Информация о пользователе</h5>
-                    <p class="card-text" id="p-user-email"></p>
-                    <p class="card-text" id="p-user-surname"></p>
-                    <p class="card-text" id="p-user-name"></p>
-                    <button class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#div-profile-edit-modal" id="btn-modal-profile-edit">Редактировать профиль</button>
+                    <form>
+                        <div class="mb-3">
+                            <label for="input-form-edit-login" class="form-label">Логин аккаунта</label>
+                            <input type="text" class="form-control" id="input-form-edit-login" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-edit-surname" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="input-form-edit-surname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-edit-name" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="input-form-edit-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-password-edit" class="form-label">Новый пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-edit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
+                            <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
+                            <span id="span-edit-error"></span>
+                        </div>
+                        <button type="submit" class="btn btn-outline-warning" id="btn-profile-information-edit">Изменить</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -50,40 +70,49 @@
     </div>
 </div>
 
-<div class="modal fade" id="div-profile-edit-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="div-profile-edit-password-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-centred">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Редактирование профиля</h3>
+                <h3 class="modal-title">Смена пароля</h3>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="input-form-edit-surname" class="form-label">Фамилия</label>
-                        <input type="text" class="form-control" id="input-form-edit-surname" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-form-edit-name" class="form-label">Имя</label>
-                        <input type="text" class="form-control" id="input-form-edit-name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-form-edit-email" class="form-label">Электронная почта</label>
-                        <input type="text" class="form-control" id="input-form-edit-email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-form-password-edit" class="form-label">Новый пароль</label>
-                        <input type="password" class="form-control" id="input-form-password-edit" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
-                        <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
-                        <span id="span-edit-error"></span>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="input-form-password-edit" class="form-label">Новый пароль</label>
+                    <input type="password" class="form-control" id="input-form-password-edit" required>
+                </div>
+                <div class="mb-3">
+                    <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
+                    <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
+                    <span id="span-edit-error"></span>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-warning" id="btn-form-profile-edit">Редактировать</button>
+                <button type="submit" class="btn btn-primary btn-warning" id="btn-form-profile-edit">Подтвердить</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="div-profile-edit-photo-modal" tabindex="-1" aria-labelledby="Модальное окно для смены фото профиля" aria-hidden="true">
+    <div class="modal-dialog modal-centred">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Смена фото профиля</h4>
+            </div>
+            <div class="modal-body">
+                <div id="div-show-picture">
+                    <img id="img-photo-edit-modal" class="img-thumbnail" alt="Изображение профиля" width="150" height="150">
+                    <img id="img-photo-edit-modal-small" class="img-fluid rounded mb-3" alt="Изображение профиля" width="50" height="50">
+                </div>
+
+                <div class="text-center">
+                    <input type="file" id="input-photo-edit" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-outline-warning" id="btn-profile-photo-change">Подтвердить</button>
             </div>
         </div>
     </div>

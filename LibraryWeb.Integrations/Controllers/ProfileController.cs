@@ -1,6 +1,7 @@
 ﻿using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -15,9 +16,9 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("profileInformation")]
-        public IActionResult GetProfileInformation([FromQuery] int userID)
+        public async Task<IActionResult> GetProfileInformation([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
+            Пользователи userProfile = await db.Пользователиs.AsNoTracking().FirstOrDefaultAsync(f => f.КодПользователя == userID, cancellationToken);
             if (userProfile is null) return BadRequest();
             return Json(new
             {
@@ -29,28 +30,11 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpGet("getCurrentProfile")]
-        public async Task<IActionResult> GetCurrentProfile([FromQuery] int userID)
+        [HttpPost("editProfile")]
+        public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromForm] Пользователи пользователи)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
-            if (userProfile is null) return BadRequest();
-            else
-            {
-                return Json(new
-                {
-                    Name = userProfile.Имя,
-                    Surname = userProfile.Фамилия,
-                    Login = userProfile.Логин
-                });
-            }
-        }
-
-        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        [HttpPut("editProfile")]
-        public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromBody] Пользователи пользователи)
-        {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
-            if (userProfile is null || пользователи.Пароль == "") return BadRequest("Поле с паролем не может быть пустым");
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
+            if (userProfile is null || пользователи.Пароль.Length <= 0) return BadRequest("Поле с паролем не может быть пустым");
             else
             {
                 userProfile.Фамилия = пользователи.Фамилия;
@@ -64,10 +48,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editPhoto")]
-        public async Task<IActionResult> PutNewPhoto([FromQuery] int userID, [FromBody] string photoData)
+        public async Task<IActionResult> PutNewPhoto([FromForm] int userID, [FromForm] string photoData)
         {
-            Пользователи userProfile = db.Пользователиs.FirstOrDefault(f => f.КодПользователя == userID);
-            if (userProfile is null || photoData == "") return BadRequest("Картинка не может быть пустая");
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
+            if (userProfile is null || photoData.Length == 0) return BadRequest("Картинка не может быть пустая");
             userProfile.Фото = Convert.FromBase64String(photoData);
             await db.SaveChangesAsync();
             return Ok();

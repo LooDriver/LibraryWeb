@@ -11,6 +11,8 @@ public partial class Корзина
 
     public int КодКниги { get; set; }
 
+    public int Количество { get; set; }
+
     public virtual Книги КодКнигиNavigation { get; set; } = null!;
 
     public virtual Пользователи КодПользователяNavigation { get; set; } = null!;

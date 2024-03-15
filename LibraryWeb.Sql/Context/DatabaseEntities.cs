@@ -1,5 +1,6 @@
 ﻿using LibraryWeb.Sql.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Sql.Context
@@ -28,19 +29,25 @@ namespace LibraryWeb.Sql.Context
         {
             try
             {
-                SqlConnection connection = new SqlConnection(connectionString);
-                connection.Open();
-                connection.Dispose();
-                return true;
+                if (connectionString.Contains(".db"))
+                {
+                    return File.Exists(connectionString[(connectionString.IndexOf('=') + 1)..]);
+                }
+                else
+                {
+                    using(SqliteConnection connection = new SqliteConnection(connectionString))
+                    {
+                        connection.Open();
+                        return true;
+                    }
+                }
             }
             catch (SqlException ex)
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
         }
@@ -62,7 +69,7 @@ namespace LibraryWeb.Sql.Context
         public virtual DbSet<Роли> Ролиs { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(connectionString);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite(connectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -156,6 +163,7 @@ namespace LibraryWeb.Sql.Context
                 entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+                entity.Property(e => e.Количество).HasColumnName("Количество");
 
                 entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Корзинаs)
                     .HasForeignKey(d => d.КодКниги)

@@ -17,24 +17,17 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
-        public JsonResult GetBooks() => Json(db.Книгиs.Take(db.Книгиs.Count()));
+        public JsonResult GetBooks() => Json(db.Книгиs.AsNoTracking().Take(db.Книгиs.Count()));
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet]
-        public async Task<JsonResult> GetBookByName([FromQuery] string name)
+        public async Task<JsonResult> GetBookByName([FromQuery] string name, CancellationToken cancellationToken = default)
         {
-            var bookName = await db.Книгиs.FirstOrDefaultAsync(x => x.Название == name);
-            int bookId = bookName != null ? bookName.КодКниги : 0;
-            Книги книги = await db.Книгиs.FindAsync(bookId);
-            if (книги == null) { return Json(null); }
+            var bookName = await db.Книгиs.AsNoTracking().FirstOrDefaultAsync(x => x.Название == name, cancellationToken);
+            if (bookName is null) { return Json(default); }
             else
             {
-                return Json(new
-                {
-                    Book = книги,
-                    Author = книги.Автор,
-                    Genre = книги.Жанр
-                });
+                return Json(bookName);
             }
         }
     }

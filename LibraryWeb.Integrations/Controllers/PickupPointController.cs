@@ -1,5 +1,6 @@
 ﻿using LibraryWeb.Sql.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
@@ -14,6 +15,6 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allPickupPoints")]
-        public JsonResult GetPickupPoint() => Json(db.ПунктыВыдачиs.Take(db.ПунктыВыдачиs.Count()));
+        public JsonResult GetPickupPoint() => Json(db.ПунктыВыдачиs.AsNoTracking().Take(db.ПунктыВыдачиs.Count()));
     }
 }
