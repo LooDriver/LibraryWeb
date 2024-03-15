@@ -149,26 +149,13 @@ class Cart {
         }));
     }
     DeleteCartItem(orderDelete) {
-        $.ajax({
-            url: `/${baseUrl}/cart/deleteCartItem?orderDel=${orderDelete}`,
-            method: 'delete',
-            async: true
-        }).done(() => {
+        $.post(`/${baseUrl}/cart/deleteCartItem`, { 'orderDel': orderDelete }, () => {
             window.location.reload();
         });
     }
-    ClearCart(elementHref) {
-        var books = new Book();
-        document.querySelectorAll(`${elementHref}`).forEach(links => {
-            if (links.getAttribute('href').length > 0) {
-                $.ajax({
-                    url: `/${baseUrl}/cart/deleteCartItem?orderDel=${books.clearUrlBook(decodeURI(links.getAttribute('href')))}`,
-                    method: 'delete',
-                    async: true
-                }).done(() => {
-                    window.location.reload();
-                });
-            }
+    ClearCart() {
+        $.post(`/${baseUrl}/cart/clearCart`, { 'userID': sessionStorage.getItem('userid') }, () => {
+            window.location.reload();
         });
     }
     selectFillPickupPoint() {
@@ -219,7 +206,7 @@ class Profile {
     }
     ShowProfileInfo() {
         $.get(`/${baseUrl}/profile/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
-            $('#input-form-edit-email').val(`${data.login}`);
+            $('#input-form-edit-login').val(`${data.login}`);
             $('#input-form-edit-surname').val(`${data.surname}`);
             $('#input-form-edit-name').val(`${data.name}`);
             $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
@@ -246,9 +233,11 @@ class Profile {
 class Order {
     AddNewOrder(elementHref) {
         var books = new Book();
+        var orderBooks = [];
         document.querySelectorAll(`${elementHref}`).forEach(links => {
-            $.post(`/${baseUrl}/order/addOrder`, { 'bookName': books.clearUrlBook(decodeURI(links.getAttribute('href'))), 'userID': sessionStorage.getItem('userid') });
+            orderBooks.push(books.clearUrlBook(decodeURI(links.getAttribute('href'))));
         });
+        $.post(`/${baseUrl}/order/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid') });
     }
     ShowOrders() {
         $.get(`/${baseUrl}/order/getOrder`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
@@ -256,35 +245,35 @@ class Order {
         }));
     }
     tableOrderFill(orders) {
-        var arr = [];
+        var ordersUser = [];
         var countOrders = 1;
         orders.forEach(orders => {
             var bookName = orders.кодКнигиNavigation.название;
-            arr.push('<tr>');
-            arr.push(`<th scope="row">${countOrders++}</th>`);
-            arr.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
-            arr.push(`<td>${orders.датаЗаказа}</td>`);
-            arr.push(`<td>${orders.статус}</td>`);
-            arr.push('</tr>');
+            ordersUser.push('<tr>');
+            ordersUser.push(`<th scope="row">${countOrders++}</th>`);
+            ordersUser.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
+            ordersUser.push(`<td>${orders.датаЗаказа}</td>`);
+            ordersUser.push(`<td>${orders.статус}</td>`);
+            ordersUser.push('</tr>');
         });
-        $('#tbody-profile-table').append(arr.join(""));
+        $('#tbody-profile-table').append(ordersUser.join(""));
     }
 }
 class PickupPoint {
     ShowPickupPoints() {
         $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) {
-            var arr = [];
+            var pickupPointNames = [];
             data.forEach(data => {
-                arr.push(`<div class="col-md-2 mt-3 card-wrapper">`);
-                arr.push(`<div class="card">`);
-                arr.push(`<div class="card-body">`);
-                arr.push(`<h5 class="card-title">${data.название}</h5>`);
-                arr.push(`<p class="card-text">${data.адрес}</p>`);
-                arr.push(`</div>`);
-                arr.push(`</div>`);
-                arr.push(`</div>`);
+                pickupPointNames.push(`<div class="col-md-2 mt-3 card-wrapper">`);
+                pickupPointNames.push(`<div class="card">`);
+                pickupPointNames.push(`<div class="card-body">`);
+                pickupPointNames.push(`<h5 class="card-title">${data.название}</h5>`);
+                pickupPointNames.push(`<p class="card-text">${data.адрес}</p>`);
+                pickupPointNames.push(`</div>`);
+                pickupPointNames.push(`</div>`);
+                pickupPointNames.push(`</div>`);
             });
-            $('#div-show-pickup').append(arr.join(""));
+            $('#div-show-pickup').append(pickupPointNames.join(""));
         });
     }
 }
@@ -358,7 +347,7 @@ $(function () {
     $('#btn-profile-information-edit').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
-            var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-email').val().toString(), $('#input-form-password-edit').val().toString());
+            var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-login').val().toString(), $('#input-form-password-edit').val().toString());
             profile.EditProfileInfo();
         }
         else {
@@ -368,7 +357,7 @@ $(function () {
     $('#btn-order-clear').on('click', function (event) {
         event.preventDefault();
         var cart = new Cart();
-        cart.ClearCart('#a-redirect-cart-about-book');
+        cart.ClearCart();
     });
     $('#btn-logout-profile').on('click', function () {
         Logout();
@@ -481,7 +470,7 @@ $(function () {
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication('', '', $('#input-form-email').val().toString(), $('#input-form-password').val().toString(), 1);
+        var enter = new Authentication('', '', $('#input-form-login-auth').val().toString(), $('#input-form-password-auth').val().toString(), 1);
         enter.Login();
         if ($('#span-login-error').text().toString() == "") {
             $('#div-login-modal').modal('hide');
@@ -490,7 +479,7 @@ $(function () {
     $('#btn-form-register').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-register').val() == $('#input-form-password-repeat').val()) {
-            var register = new Authentication($('#input-form-surname').val().toString(), $('#input-form-name').val().toString(), $('#input-form-email-register').val().toString(), $('#input-form-password-register').val().toString());
+            var register = new Authentication($('#input-form-surname-register').val().toString(), $('#input-form-name-register').val().toString(), $('#input-form-username-register').val().toString(), $('#input-form-password-register').val().toString());
             register.Register();
         }
         else {

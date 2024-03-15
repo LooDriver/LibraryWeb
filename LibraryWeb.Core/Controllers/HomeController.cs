@@ -44,8 +44,7 @@ namespace LibraryWeb.Core.Controllers
 
             try
             {
-                SecurityToken validatedToken;
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                 return true;
             }
             catch
@@ -54,7 +53,7 @@ namespace LibraryWeb.Core.Controllers
             }
         }
 
-        private TokenValidationParameters GetValidationParameters()
+        private static TokenValidationParameters GetValidationParameters()
         {
             return new TokenValidationParameters()
             {

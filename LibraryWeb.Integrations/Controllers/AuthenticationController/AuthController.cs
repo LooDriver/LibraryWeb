@@ -18,7 +18,7 @@ namespace LibraryWeb.Integrations.Controllers.AuthenticationController
             db = new DatabaseEntities();
         }
 
-        private string JWTCreate(Пользователи user)
+        private static string JWTCreate(Пользователи user)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
             var jwt = new JwtSecurityToken(

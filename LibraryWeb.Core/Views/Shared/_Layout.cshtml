@@ -65,11 +65,11 @@
             </div>
         </nav>
     </header>
-    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="Модальное окно избранного" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Избранное</h5>
+                    <h5 class="modal-title">Избранное</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -96,13 +96,12 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="input-form-email" class="form-label">Адрес электронной почты</label>
-                            <input type="email" class="form-control" required placeholder="Почта" id="input-form-email" aria-describedby="emailHelp">
-                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                            <label for="input-form-login-auth" class="form-label">Логин аккаунта</label>
+                            <input type="text" class="form-control" placeholder="Логин от аккаунта" id="input-form-login-auth" aria-describedby="Логин для входа в аккаунт" required>
                         </div>
                         <div class="mb-3">
-                            <label for="input-form-password" class="form-label">Пароль</label>
-                            <input type="password" class="form-control" id="input-form-password" required>
+                            <label for="input-form-password-auth" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" placeholder="Пароль от аккаунта" id="input-form-password-auth" required>
                             <span id="span-login-error"></span><br>
                             <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
                         </div>
@@ -125,13 +124,14 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="input-form-email-register" class="form-label">Адрес электронной почты</label>
-                            <input type="text" class="form-control" id="input-form-email-register" aria-describedby="emailHelp" required>
-                            <label for="input-form-email-register" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control" id="input-form-surname" required>
-                            <label for="input-form-email-register" class="form-label">Имя</label>
-                            <input type="text" class="form-control" id="input-form-name" required>
-                            <div id="emailHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                            <label for="input-form-username-register" class="form-label">Логин</label>
+                            <input type="text" class="form-control" id="input-form-username-register" aria-describedby="Логин от аккаунта" required>
+
+                            <label for="input-form-surname-register" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="input-form-surname-register" required>
+
+                            <label for="input-form-name-register" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="input-form-name-register" required>
                         </div>
                         <div class="mb-3">
                             <label for="input-form-password-register" class="form-label">Пароль</label>
