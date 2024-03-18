@@ -35,7 +35,7 @@ namespace LibraryWeb.Core
                         ValidAudience = AuthOptions.AUDIENCE,
 
                         IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuer = true, 
+                        ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero

@@ -8,7 +8,6 @@ namespace LibraryWeb.Core.Controllers
 
     public class HomeController : Controller
     {
-
         [Route("/")]
         public IActionResult Index() => View();
 
@@ -58,11 +57,11 @@ namespace LibraryWeb.Core.Controllers
             return new TokenValidationParameters()
             {
                 ValidateLifetime = true,
-                ValidateAudience = true, 
-                ValidateIssuer = true,  
+                ValidateAudience = true,
+                ValidateIssuer = true,
                 ValidIssuer = AuthOptions.ISSUER,
                 ValidAudience = AuthOptions.AUDIENCE,
-                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey() 
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
             };
         }
     }

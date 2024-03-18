@@ -1,10 +1,10 @@
 ﻿using LibraryWeb.Sql.Context;
-using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class BooksController : Controller
     {
@@ -17,6 +17,7 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
+
         public JsonResult GetBooks() => Json(db.Книгиs.AsNoTracking().Take(db.Книгиs.Count()));
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]

@@ -4,7 +4,7 @@ namespace LibraryWeb.Integrations
     {
         public static void Main(string[] args)
         {
-        
+
         }
     }
 }

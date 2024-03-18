@@ -35,7 +35,7 @@ namespace LibraryWeb.Sql.Context
                 }
                 else
                 {
-                    using(SqliteConnection connection = new SqliteConnection(connectionString))
+                    using (SqliteConnection connection = new SqliteConnection(connectionString))
                     {
                         connection.Open();
                         return true;

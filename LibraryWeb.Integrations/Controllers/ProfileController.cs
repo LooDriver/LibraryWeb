@@ -34,13 +34,12 @@ namespace LibraryWeb.Integrations.Controllers
         public async Task<IActionResult> PutEditProfileInformation([FromQuery] int userID, [FromForm] Пользователи пользователи)
         {
             Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
-            if (userProfile is null || пользователи.Пароль.Length <= 0) return BadRequest("Поле с паролем не может быть пустым");
+            if (userProfile is null) return BadRequest();
             else
             {
                 userProfile.Фамилия = пользователи.Фамилия;
                 userProfile.Имя = пользователи.Имя;
                 userProfile.Логин = пользователи.Логин;
-                userProfile.Пароль = пользователи.Пароль;
                 await db.SaveChangesAsync();
                 return Ok();
             }
@@ -56,5 +55,19 @@ namespace LibraryWeb.Integrations.Controllers
             await db.SaveChangesAsync();
             return Ok();
         }
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("editPassword")]
+        public async Task<IActionResult> PutNewPassword([FromForm] int userID, [FromForm] string password)
+        {
+            Пользователи userProfile = await db.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
+            if (userProfile is null) return BadRequest();
+            else
+            {
+                userProfile.Пароль = password;
+                await db.SaveChangesAsync();
+                return Ok();
+            }
+        }
+
     }
 }

@@ -9,32 +9,16 @@
             <form>
                 <div class="form-row">
                     <div class="col">
-                        <input type="text" class="form-control" placeholder="Поиск">
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="deliveryOption" id="pickupOption" value="pickup">
-                            <label class="form-check-label" for="pickupOption">Самовывоз</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="deliveryOption" id="courierOption" value="courier">
-                            <label class="form-check-label" for="courierOption">Курьер</label>
-                        </div>
+                        <input type="text" class="form-control" placeholder="Поиск заказа">
                     </div>
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Применить</button>
                     </div>
                 </div>
-                <div class="form-row mt-3" id="pickupLocation" style="display: none;">
+                <div class="form-row mt-3" id="pickupLocation">
                     <div class="col">
                         <label for="select-pickup-point">Адрес пункта выдачи</label>
                         <select class="form-control" id="select-pickup-point"></select>
-                    </div>
-                </div>
-                <div class="form-row mt-3" id="deliveryAddress" style="display: none;">
-                    <div class="col">
-                        <label for="homeAddress">Адрес доставки</label>
-                        <input type="text" class="form-control" id="homeAddress" placeholder="Введите ваш адрес">
                     </div>
                 </div>
                 <div class="row mt-4">
@@ -69,27 +53,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const pickupOption = document.getElementById('pickupOption');
-        const courierOption = document.getElementById('courierOption');
-        const pickupLocation = document.getElementById('pickupLocation');
-        const deliveryAddress = document.getElementById('deliveryAddress');
-
-        pickupOption.addEventListener('change', function () {
-            if (pickupOption.checked) {
-                pickupLocation.style.display = 'block';
-                deliveryAddress.style.display = 'none';
-            }
-        });
-
-        courierOption.addEventListener('change', function () {
-            if (courierOption.checked) {
-                pickupLocation.style.display = 'none';
-                deliveryAddress.style.display = 'block';
-            }
-        });
-    });
-</script>

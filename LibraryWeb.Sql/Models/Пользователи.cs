@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LibraryWeb.Sql.Models;
+﻿namespace LibraryWeb.Sql.Models;
 
 public partial class Пользователи
 {

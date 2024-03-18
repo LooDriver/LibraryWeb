@@ -1,20 +1,19 @@
 const baseUrl = 'api';
 class Authentication {
-    constructor(surname = "", name = "", username = "", password = "", role = 2) {
-        this.defaultRole = 2;
+    constructor(surname = "", name = "", username = "", password = "") {
         this.user = {
             Фамилия: "",
             Имя: "",
             Логин: "",
             Пароль: "",
-            КодРоли: this.defaultRole
+            КодРоли: 2
         };
         this.user = {
             Фамилия: surname,
             Имя: name,
             Логин: username,
             Пароль: password,
-            КодРоли: role
+            КодРоли: 2
         };
     }
     Login() {
@@ -192,14 +191,12 @@ class Cart {
 }
 class Profile {
     constructor(name = "", surname = "", username = "", password = "", photo = null) {
-        this.defaultRole = 2;
         this.userProfile = {
             Фамилия: "",
             Имя: "",
             Логин: "",
             Пароль: "",
             Фото: new Uint8Array(0),
-            КодРоли: this.defaultRole
         };
         this.userProfile = {
             Фамилия: surname,
@@ -207,7 +204,6 @@ class Profile {
             Логин: username,
             Пароль: password,
             Фото: photo,
-            КодРоли: this.defaultRole
         };
     }
     ShowProfileInfo() {
@@ -223,11 +219,8 @@ class Profile {
     }
     EditProfileInfo() {
         $.post(`/${baseUrl}/profile/editProfile?userID=${sessionStorage.getItem('userid')}`, this.userProfile, () => {
-            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
-            $('#span-edit-error').empty();
-            Logout();
-        }).fail((error) => {
-            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+            window.location.reload();
+            sessionStorage.setItem('userlogin', this.userProfile.Логин);
         });
     }
     EditProfilePhoto() {
@@ -235,15 +228,24 @@ class Profile {
             window.location.reload();
         });
     }
+    EditProfilePassword() {
+        $.post(`/${baseUrl}/profile/editPassword`, { 'userID': sessionStorage.getItem('userid'), password: this.userProfile.Пароль }, () => {
+            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
+            $('#span-edit-error').empty();
+            Logout();
+        }).fail((error) => {
+            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+        });
+    }
 }
 class Order {
-    AddNewOrder(elementHref) {
+    AddNewOrder(elementHref, pickupPoint) {
         var books = new Book();
         var orderBooks = [];
         document.querySelectorAll(`${elementHref}`).forEach(links => {
             orderBooks.push(books.clearUrlBook(decodeURI(links.getAttribute('href'))));
         });
-        $.post(`/${baseUrl}/order/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid') });
+        $.post(`/${baseUrl}/order/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid'), 'selectedPoint': pickupPoint });
     }
     ShowOrders() {
         $.get(`/${baseUrl}/order/getOrder`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
@@ -253,6 +255,7 @@ class Order {
     tableOrderFill(orders) {
         var ordersUser = [];
         var countOrders = 1;
+        console.log(orders);
         orders.forEach(orders => {
             var bookName = orders.кодКнигиNavigation.название;
             ordersUser.push('<tr>');
@@ -260,6 +263,7 @@ class Order {
             ordersUser.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
             ordersUser.push(`<td>${orders.датаЗаказа}</td>`);
             ordersUser.push(`<td>${orders.статус}</td>`);
+            ordersUser.push(`<td>${orders.кодПунктаВыдачиNavigation.название}</td>`);
             ordersUser.push('</tr>');
         });
         $('#tbody-profile-table').append(ordersUser.join(""));
@@ -359,15 +363,20 @@ $(function () {
             });
         });
     });
-    $('#btn-profile-information-edit').on('click', function (event) {
+    $('#btn-form-profile-edit').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
-            var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-login').val().toString(), $('#input-form-password-edit').val().toString());
-            profile.EditProfileInfo();
+            var passwordEdit = new Profile('', '', '', $('#input-form-password-edit').val().toString());
+            passwordEdit.EditProfilePassword();
         }
         else {
             $('#span-edit-error').text('Пароли должны быть одинаковыми.').css('color', 'red');
         }
+    });
+    $('#btn-profile-information-edit').on('click', function (event) {
+        event.preventDefault();
+        var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-login').val().toString(), '');
+        profile.EditProfileInfo();
     });
     $('#btn-order-clear').on('click', function (event) {
         event.preventDefault();
@@ -426,9 +435,7 @@ $(function () {
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
-            $('#btn-login').removeAttr('data-bs-toggle');
-            $('#btn-login').removeAttr('data-bs-target');
-            $('#btn-login').attr('href', '/profile');
+            $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
         }
         switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
             case '/': {
@@ -485,11 +492,12 @@ $(function () {
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
         var order = new Order();
-        order.AddNewOrder('#a-redirect-cart-about-book');
+        var selectedPickupPoint = $('#select-pickup-point option:selected').index();
+        order.AddNewOrder('#a-redirect-cart-about-book', (selectedPickupPoint + 1));
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication('', '', $('#input-form-login-auth').val().toString(), $('#input-form-password-auth').val().toString(), 1);
+        var enter = new Authentication('', '', $('#input-form-login-auth').val().toString(), $('#input-form-password-auth').val().toString());
         enter.Login();
         if ($('#span-login-error').text().toString() == "") {
             $('#div-login-modal').modal('hide');

@@ -8,6 +8,7 @@ namespace LibraryWeb.Integrations.Controllers
     [Route("api/[controller]")]
     public class OrderController : Controller
     {
+
         DatabaseEntities db;
 
         public OrderController()
@@ -19,15 +20,14 @@ namespace LibraryWeb.Integrations.Controllers
         [HttpGet("getOrder")]
         public async Task<IActionResult> GetAllOrders([FromQuery] int userID, CancellationToken cancellationToken = default)
         {
-            db.Заказыs.Include(x => x.КодКнигиNavigation).Load();
-            var userOrders = await db.Заказыs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
+            var userOrders = await db.Заказыs.AsNoTracking().Include(books => books.КодКнигиNavigation).Include(pickupPoint => pickupPoint.КодПунктаВыдачиNavigation).Where(f => f.КодПользователя == userID).ToListAsync(cancellationToken);
             if (userOrders is null) return BadRequest();
             return Json(userOrders);
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addOrder")]
-        public async Task<IActionResult> AddNewOrder([FromForm] string[] bookName, [FromForm] int userID)
+        public async Task<IActionResult> AddNewOrder([FromForm] string[] bookName, [FromForm] int userID, [FromForm] int selectedPoint)
         {
             var data = from userBooks in bookName
                        from databaseBooks in db.Книгиs
@@ -36,6 +36,7 @@ namespace LibraryWeb.Integrations.Controllers
                        {
                            КодКниги = databaseBooks.КодКниги,
                            КодПользователя = userID,
+                           КодПунктаВыдачи = selectedPoint,
                            ДатаЗаказа = DateOnly.FromDateTime(DateTime.Now.Date),
                            Статус = "Доставлен"
                        };
