@@ -1,4 +1,4 @@
-﻿using LibraryWeb.Integrations.Controllers.AuthenticationController;
+﻿using LibraryWeb.Integrations.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +8,7 @@ namespace LibraryWeb.Core.Controllers
 
     public class HomeController : Controller
     {
+
         [Route("/")]
         public IActionResult Index() => View();
 

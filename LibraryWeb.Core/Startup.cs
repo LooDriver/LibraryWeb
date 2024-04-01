@@ -1,6 +1,9 @@
 ﻿using EasyData.Services;
-using LibraryWeb.Integrations.Controllers.AuthenticationController;
+using LibraryWeb.Integrations.Controllers;
+using LibraryWeb.Integrations.Interfaces;
+using LibraryWeb.Integrations.Services;
 using LibraryWeb.Sql.Context;
+using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -43,6 +46,13 @@ namespace LibraryWeb.Core
                 });
             services.AddAuthorization();
 
+            services.AddTransient<IBookRepository<Книги>, BookService>();
+            services.AddScoped<ICartRepository<Корзина>, CartService>();
+            services.AddScoped<IFavoriteRepository<Избранное>, FavoriteService>();
+            services.AddScoped<IOrderRepository<Заказы>, OrderService>();
+            services.AddScoped<IPickupPointRepository<ПунктыВыдачи>, PickupPointService>();
+            services.AddScoped<IProfileRepository<Пользователи>, ProfileService>();
+            services.AddScoped<IAuthRepository<Пользователи>, AuthService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
