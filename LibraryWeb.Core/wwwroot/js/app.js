@@ -255,7 +255,6 @@ class Order {
     tableOrderFill(orders) {
         var ordersUser = [];
         var countOrders = 1;
-        console.log(orders);
         orders.forEach(orders => {
             var bookName = orders.кодКнигиNavigation.название;
             ordersUser.push('<tr>');
@@ -437,11 +436,12 @@ $(function () {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
             $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
         }
+        if (sessionStorage.getItem('pickup_point_data') == null)
+            $.get(`/${baseUrl}/pickup/allPickupPoints`, ((data) => { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); }));
         switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
             case '/': {
                 var books = new Book();
                 books.AllBook();
-                $.get(`/${baseUrl}/pickup/allPickupPoints`, ((data) => { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); }));
                 break;
             }
             case '/cart': {
