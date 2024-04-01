@@ -1,20 +1,20 @@
-﻿using LibraryWeb.Sql.Context;
+﻿using LibraryWeb.Integrations.Interfaces;
+using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
     [Route("api/[controller]")]
     public class PickupController : Controller
     {
-        DatabaseEntities db;
-        public PickupController()
+        private readonly IPickupPointRepository<ПунктыВыдачи> _pickupPointService;
+        public PickupController(IPickupPointRepository<ПунктыВыдачи> pickupPointService)
         {
-            db = new DatabaseEntities();
+            _pickupPointService = pickupPointService;
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allPickupPoints")]
-        public JsonResult GetPickupPoint() => Json(db.ПунктыВыдачиs.AsNoTracking().Take(db.ПунктыВыдачиs.Count()));
+        public JsonResult GetPickupPoint() => Json(_pickupPointService.GetAll());
     }
 }
