@@ -23,13 +23,19 @@
         <div class="text-center">
             <div class="input-group mb-3 col-auto">
                 <input type="number" class="form-control" id="input-quantity-about-book" placeholder="Количество" min="1" value="1">
-
-                <div class="input-group-append">
-                    <button class="btn btn-primary" id="btn-cart-book">Добавить в корзину</button>
-                </div>
             </div>
             <span id="span-information-quantity"></span>
         </div>
         <a class="btn btn-primary" id="btn-favorite-about-book">Добавить в избранное</a>
+        <a class="btn btn-primary" id="btn-cart-book">Добавить в корзину</a>
+        <hr/>
+        <div class="container mt-5">
+            <div id="form-new-comments" style="display: none;">
+                <label for="comment">Ваш комментарий:</label><br>
+                <textarea class="form-control" id="textarea-user-comment" name="comment" rows="4" cols="50"></textarea><br>
+                <button class="btn btn-primary" id="btn-new-comment" type="button">Оставить комментарий</button>
+            </div>
+            <section id="section-users-comments"></section>
+        </div>
     </div>
 </div>
