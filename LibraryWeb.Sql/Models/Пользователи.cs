@@ -21,5 +21,7 @@ public partial class Пользователи
 
     public virtual Роли КодРолиNavigation { get; set; } = null!;
 
+    public virtual ICollection<Комментарии> Комментарииs { get; set; } = new List<Комментарии>();
+
     public virtual ICollection<Корзина> Корзинаs { get; set; } = new List<Корзина>();
 }
