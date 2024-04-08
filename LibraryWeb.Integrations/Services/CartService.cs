@@ -51,12 +51,27 @@ namespace LibraryWeb.Integrations.Services
         public bool Delete(string cartItemDelete)
         {
             var cartDelete = _dbContext.Корзинаs.FirstOrDefault(books => books.КодКнигиNavigation.Название == cartItemDelete);
+            var books = _dbContext.Книгиs.FirstOrDefault(books => books.КодКниги == cartDelete.КодКниги);
             if (cartDelete is null) return false;
             else
             {
+                books.Наличие += cartDelete.Количество;
                 _dbContext.Корзинаs.Remove(cartDelete);
                 _dbContext.SaveChanges();
                 return true;
+            }
+        }
+
+        public bool CheckExistsCartItem(int userID, string bookName)
+        {
+            var userOrderList = GetAll(userID).Where(books => books.КодКниги == _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги).Select(usersOrderItems => usersOrderItems);
+            if (userOrderList.Any())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

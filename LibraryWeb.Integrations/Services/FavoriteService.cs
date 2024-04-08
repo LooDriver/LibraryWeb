@@ -31,7 +31,7 @@ namespace LibraryWeb.Integrations.Services
             }
         }
 
-        public bool CheckCheckExistFavorite(int userID, string bookName)
+        public bool CheckExistFavorite(int userID, string bookName)
         {
             var userFavoriteBooks = GetAll(userID).Where(books => books.КодКниги == _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги).Select(usersFavoriteBooks => usersFavoriteBooks);
             if (userFavoriteBooks.Any())
@@ -57,10 +57,5 @@ namespace LibraryWeb.Integrations.Services
         }
 
         public List<Избранное> GetAll(int userID = 0) => [.. _dbContext.Избранноеs.AsNoTracking().Include(books => books.КодКнигиNavigation).Where(user => user.КодПользователя == userID)];
-
-        public List<Избранное> GetAllByUserId(int userID = 0)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

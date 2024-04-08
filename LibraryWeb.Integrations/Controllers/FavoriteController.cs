@@ -20,7 +20,7 @@ namespace LibraryWeb.Integrations.Controllers
         /// <returns></returns>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("existFavorite")]
-        public IActionResult CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName) => (_favoriteService.CheckCheckExistFavorite(userID, bookName)) ? Ok() : BadRequest();
+        public IActionResult CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName) => (_favoriteService.CheckExistFavorite(userID, bookName)) ? Ok() : BadRequest();
 
         /// <summary>
         /// Получения всех книг которые находятся у текущего пользователя в избранном

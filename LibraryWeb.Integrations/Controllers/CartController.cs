@@ -15,6 +15,10 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpGet("existCartItem")]
+        public IActionResult CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName) => (_cartService.CheckExistsCartItem(userID, bookName)) ? Ok() : BadRequest();
+
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allCartItems")]
         public IActionResult GetAllCartItems([FromQuery] int userID) => Json(_cartService.GetAll(userID));
 

@@ -1,5 +1,4 @@
 ﻿using LibraryWeb.Integrations.Interfaces;
-using LibraryWeb.Sql.Context;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -12,8 +11,6 @@ namespace LibraryWeb.Integrations.Controllers
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly DatabaseEntities _context;
-
         private readonly IAuthRepository<Пользователи> _authRepository;
 
         public AuthController(IAuthRepository<Пользователи> authRepository)
