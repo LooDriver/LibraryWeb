@@ -22,11 +22,11 @@ namespace LibraryWeb.Core
 
         public void ConfigureServices(IServiceCollection services)
         {
-            DatabaseEntities.connectionString = Configuration.GetConnectionString("SQLITE");
+            DatabaseEntities.connectionString = Configuration.GetConnectionString("MSSQLSERVER");
             services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             services.AddDbContext<DatabaseEntities>(options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString(DatabaseEntities.connectionString));
+                options.UseSqlServer(DatabaseEntities.connectionString);
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -53,6 +53,7 @@ namespace LibraryWeb.Core
             services.AddScoped<IPickupPointRepository<ПунктыВыдачи>, PickupPointService>();
             services.AddScoped<IProfileRepository<Пользователи>, ProfileService>();
             services.AddScoped<IAuthRepository<Пользователи>, AuthService>();
+            services.AddScoped<ICommentsRepository<Комментарии>, CommentService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
