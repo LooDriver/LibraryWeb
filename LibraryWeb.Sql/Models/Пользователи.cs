@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LibraryWeb.Sql.Models;
+﻿namespace LibraryWeb.Sql.Models;
 
 public partial class Пользователи
 {
@@ -23,6 +20,8 @@ public partial class Пользователи
     public virtual ICollection<Избранное> Избранноеs { get; set; } = new List<Избранное>();
 
     public virtual Роли КодРолиNavigation { get; set; } = null!;
+
+    public virtual ICollection<Комментарии> Комментарииs { get; set; } = new List<Комментарии>();
 
     public virtual ICollection<Корзина> Корзинаs { get; set; } = new List<Корзина>();
 }

@@ -1,18 +1,17 @@
-﻿using LibraryWeb.Sql.Context;
+﻿using LibraryWeb.Integrations.Interfaces;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
     [Route("api/[controller]")]
     public class FavoriteController : Controller
     {
-        DatabaseEntities db;
+        private readonly IFavoriteRepository<Избранное> _favoriteService;
 
-        public FavoriteController()
+        public FavoriteController(IFavoriteRepository<Избранное> favoriteService)
         {
-            db = new DatabaseEntities();
+            _favoriteService = favoriteService;
         }
 
         /// <summary>
@@ -21,16 +20,7 @@ namespace LibraryWeb.Integrations.Controllers
         /// <returns></returns>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("existFavorite")]
-        public async Task<IActionResult> CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName)
-        {
-            var userFavorites = await GetFavoriteItem(userID);
-            Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.FirstOrDefault(x => x.Название == bookName).КодКниги);
-            var item = from p in userFavorites
-                       where p.КодКниги == favorBook.КодКниги
-                       select p;
-            if (item.Any()) { return BadRequest(); }
-            else { return Ok(); }
-        }
+        public IActionResult CheckExistFavorite([FromQuery] int userID, [FromQuery] string bookName) => (_favoriteService.CheckExistFavorite(userID, bookName)) ? Ok() : BadRequest();
 
         /// <summary>
         /// Получения всех книг которые находятся у текущего пользователя в избранном
@@ -38,30 +28,14 @@ namespace LibraryWeb.Integrations.Controllers
         /// <param name="userID">Код пользователя</param>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getFavorite")]
-        public async Task<IActionResult> GetAllFavorite([FromQuery] int userID)
-        {
-            var userFavorites = await GetFavoriteItem(userID);
-            if (userFavorites is null) return BadRequest();
-            return Json(userFavorites);
-        }
+        public IActionResult GetAllFavorite([FromQuery] int userID) => Json(_favoriteService.GetAll(userID));
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addFavorite")]
-        public async Task<IActionResult> AddNewFavorite([FromForm] string nameBook, [FromForm] int userID)
-        {
-            Книги favorBook = await db.Книгиs.FindAsync(db.Книгиs.FirstOrDefault(x => x.Название == nameBook).КодКниги);
-            if (favorBook is null) return BadRequest();
-            else
-            {
-                Избранное избранное = new Избранное();
-                избранное.КодКниги = favorBook.КодКниги;
-                избранное.КодПользователя = userID;
-                await db.Избранноеs.AddAsync(избранное);
-                await db.SaveChangesAsync();
-                return Ok();
-            }
-        }
+        public IActionResult AddNewFavorite([FromForm] string nameBook, [FromForm] int userID) => (_favoriteService.Add(nameBook, userID)) ? Ok() : BadRequest();
 
-        private Task<List<Избранное>> GetFavoriteItem(int userID) => db.Избранноеs.AsNoTracking().Include(x => x.КодКнигиNavigation).Where(f => f.КодПользователя == userID).ToListAsync();
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("deleteFavorite")]
+        public IActionResult RemoveExistFavorite([FromForm] string bookName) => (_favoriteService.Delete(bookName)) ? Ok() : BadRequest();
     }
 }

@@ -1,6 +1,4 @@
 ﻿using LibraryWeb.Sql.Models;
-using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Sql.Context
@@ -9,46 +7,11 @@ namespace LibraryWeb.Sql.Context
     public partial class DatabaseEntities : DbContext
     {
         public static string connectionString { get; set; }
-        public DatabaseEntities()
-        {
-            if (IsConnect(connectionString))
-            {
-                return;
-            }
-            else
-            {
-                Database.EnsureCreated();
-            }
-        }
         public DatabaseEntities(DbContextOptions<DatabaseEntities> options) : base(options)
         {
-
-        }
-
-        private static bool IsConnect(string connectionString)
-        {
-            try
+            if (Database.EnsureCreated())
             {
-                if (connectionString.Contains(".db"))
-                {
-                    return File.Exists(connectionString[(connectionString.IndexOf('=') + 1)..]);
-                }
-                else
-                {
-                    using(SqliteConnection connection = new SqliteConnection(connectionString))
-                    {
-                        connection.Open();
-                        return true;
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                return false;
-            }
-            catch (Exception ex)
-            {
-                return false;
+                return;
             }
         }
 
@@ -60,6 +23,8 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Книги> Книгиs { get; set; }
 
+        public virtual DbSet<Комментарии> Комментарииs { get; set; }
+
         public virtual DbSet<Корзина> Корзинаs { get; set; }
 
         public virtual DbSet<Пользователи> Пользователиs { get; set; }
@@ -68,8 +33,7 @@ namespace LibraryWeb.Sql.Context
 
         public virtual DbSet<Роли> Ролиs { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite(connectionString);
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(connectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -78,6 +42,12 @@ namespace LibraryWeb.Sql.Context
                 entity.HasKey(e => e.КодЗаказа);
 
                 entity.ToTable("Заказы");
+
+                entity.HasIndex(e => e.КодКниги, "IX_Заказы_Код_книги");
+
+                entity.HasIndex(e => e.КодПользователя, "IX_Заказы_Код_пользователя");
+
+                entity.HasIndex(e => e.КодПунктаВыдачи, "IX_Заказы_Код_пункта_выдачи");
 
                 entity.Property(e => e.КодЗаказа).HasColumnName("Код_заказа");
                 entity.Property(e => e.ДатаЗаказа).HasColumnName("Дата_заказа");
@@ -106,6 +76,10 @@ namespace LibraryWeb.Sql.Context
                 entity.HasKey(e => e.КодИзбранного);
 
                 entity.ToTable("Избранное");
+
+                entity.HasIndex(e => e.КодКниги, "IX_Избранное_Код_книги");
+
+                entity.HasIndex(e => e.КодПользователя, "IX_Избранное_Код_пользователя");
 
                 entity.Property(e => e.КодИзбранного).HasColumnName("Код_избранного");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
@@ -140,6 +114,8 @@ namespace LibraryWeb.Sql.Context
 
                 entity.ToTable("Книги");
 
+                entity.HasIndex(e => e.КодИздательства, "IX_Книги_Код_издательства");
+
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.Автор).HasMaxLength(50);
                 entity.Property(e => e.Жанр).HasMaxLength(50);
@@ -154,16 +130,43 @@ namespace LibraryWeb.Sql.Context
                     .HasConstraintName("FK_Книги_Издательство");
             });
 
+            modelBuilder.Entity<Комментарии>(entity =>
+            {
+                entity.HasKey(e => e.КодКомментария).HasName("PK_Комментарий");
+
+                entity.ToTable("Комментарии");
+
+                entity.Property(e => e.КодКомментария).HasColumnName("Код_комментария");
+                entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
+                entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
+                entity.Property(e => e.ТекстКомментария)
+                    .HasMaxLength(150)
+                    .HasColumnName("Текст_комментария");
+
+                entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Комментарииs)
+                    .HasForeignKey(d => d.КодКниги)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Комментарии_Книги");
+
+                entity.HasOne(d => d.КодПользователяNavigation).WithMany(p => p.Комментарииs)
+                    .HasForeignKey(d => d.КодПользователя)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Комментарий_Пользователи");
+            });
+
             modelBuilder.Entity<Корзина>(entity =>
             {
                 entity.HasKey(e => e.КодКорзины);
 
                 entity.ToTable("Корзина");
 
+                entity.HasIndex(e => e.КодКниги, "IX_Корзина_Код_книги");
+
+                entity.HasIndex(e => e.КодПользователя, "IX_Корзина_Код_пользователя");
+
                 entity.Property(e => e.КодКорзины).HasColumnName("Код_корзины");
                 entity.Property(e => e.КодКниги).HasColumnName("Код_книги");
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
-                entity.Property(e => e.Количество).HasColumnName("Количество");
 
                 entity.HasOne(d => d.КодКнигиNavigation).WithMany(p => p.Корзинаs)
                     .HasForeignKey(d => d.КодКниги)
@@ -181,6 +184,8 @@ namespace LibraryWeb.Sql.Context
                 entity.HasKey(e => e.КодПользователя);
 
                 entity.ToTable("Пользователи");
+
+                entity.HasIndex(e => e.КодРоли, "IX_Пользователи_Код_роли");
 
                 entity.Property(e => e.КодПользователя).HasColumnName("Код_пользователя");
                 entity.Property(e => e.Имя).HasMaxLength(50);

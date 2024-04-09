@@ -1,44 +1,52 @@
-﻿using LibraryWeb.Core;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using System.Net;
+﻿using LibraryWeb.Integrations.Controllers;
+using LibraryWeb.Integrations.Interfaces;
+using LibraryWeb.Sql.Models;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Xunit;
 
 namespace LibraryWeb.IntegrationTest.ApiTest
 {
     public class BooksApiTest
     {
-        private HttpClient _client;
+        private readonly Mock<IBookRepository<Книги>> _booksService;
 
         public BooksApiTest()
         {
-            var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>());
-            _client = server.CreateClient();
+            _booksService = new Mock<IBookRepository<Книги>>();
         }
 
-        [Theory]
-        [InlineData("GET")]
-        public async Task BooksGetAllTestAsync(string method)
+        [Fact]
+        public void GetBooksList_BooksList()
         {
-            var request = new HttpRequestMessage(new HttpMethod(method), "/api/books/allBooks");
+            var fakeBooks = new List<Книги> { new Книги { Название = "Book 1" }, new Книги { Название = "Book 2" } };
+            var mockRepository = new Mock<IBookRepository<Книги>>();
+            mockRepository.Setup(repo => repo.GetAll(0)).Returns(fakeBooks);
 
-            var response = await _client.SendAsync(request);
+            var controller = new BooksController(mockRepository.Object);
 
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var result = controller.GetBooks();
+
+            var okResult = Assert.IsType<JsonResult>(result);
+            var model = Assert.IsAssignableFrom<IEnumerable<Книги>>(okResult.Value);
+            Assert.Equal(2, model.Count());
         }
 
-        [Theory]
-        [InlineData("GET", "Идиот")]
-        public async Task BooksGetById(string method, string name)
+        [Fact]
+        public async Task GetCurrent_Json_BookAsync()
         {
-            var request = new HttpRequestMessage(new HttpMethod(method), $"/book/name?{name}");
+            const string currentBook = "Я, робот";
+            var fakeBook = new Книги { Название = currentBook };
+            var mockRepository = new Mock<IBookRepository<Книги>>();
+            mockRepository.Setup(repo => repo.GetByNameAsync(currentBook)).ReturnsAsync(fakeBook);
 
-            var response = await _client.SendAsync(request);
+            var controller = new BooksController(mockRepository.Object);
 
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var result = await controller.GetBookByName(currentBook);
+
+            var okResult = Assert.IsType<JsonResult>(result);
+            var model = Assert.IsAssignableFrom<Книги>(okResult.Value);
+            Assert.Equal(currentBook, model.Название);
         }
     }
 }

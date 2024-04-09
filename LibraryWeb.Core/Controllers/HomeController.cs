@@ -1,4 +1,4 @@
-﻿using LibraryWeb.Integrations.Controllers.AuthenticationController;
+﻿using LibraryWeb.Integrations.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -58,11 +58,11 @@ namespace LibraryWeb.Core.Controllers
             return new TokenValidationParameters()
             {
                 ValidateLifetime = true,
-                ValidateAudience = true, 
-                ValidateIssuer = true,  
+                ValidateAudience = true,
+                ValidateIssuer = true,
                 ValidIssuer = AuthOptions.ISSUER,
                 ValidAudience = AuthOptions.AUDIENCE,
-                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey() 
+                IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey()
             };
         }
     }

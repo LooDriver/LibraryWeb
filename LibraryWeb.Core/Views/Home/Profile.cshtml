@@ -12,7 +12,7 @@
             <div class="card">
                 <div>
                     <a class="btn" data-bs-toggle="modal" data-bs-target="#div-profile-edit-photo-modal">
-                        <img id="img-photo-profile" class="img-fluid rounded-circle mb-3" alt="Изображение профиля" width="150" height="250">
+                        <img id="img-photo-profile" class="img-fluid rounded-circl e mb-3" alt="Изображение профиля" width="150" height="250">
                     </a>
                 </div>
             </div>
@@ -32,16 +32,9 @@
                             <label for="input-form-edit-name" class="form-label">Имя</label>
                             <input type="text" class="form-control" id="input-form-edit-name" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="input-form-password-edit" class="form-label">Новый пароль</label>
-                            <input type="password" class="form-control" id="input-form-password-edit" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
-                            <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
-                            <span id="span-edit-error"></span>
-                        </div>
                         <button type="submit" class="btn btn-outline-warning" id="btn-profile-information-edit">Изменить</button>
+
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#div-profile-edit-password-modal">Смена пароля</button>
                     </form>
                 </div>
             </div>
@@ -58,10 +51,10 @@
                                     <th>Название книги</th>
                                     <th>Дата заказа</th>
                                     <th>Статус</th>
+                                    <th>Пункт выдачи</th>
                                 </tr>
                             </thead>
-                            <tbody id="tbody-profile-table">
-                            </tbody>
+                            <tbody id="tbody-profile-table"></tbody>
                         </table>
                     </div>
                 </div>
@@ -70,7 +63,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="div-profile-edit-password-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="div-profile-edit-password-modal" tabindex="-1" aria-labelledby="Модальное окно для смен пароля" aria-hidden="true">
     <div class="modal-dialog modal-centred">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +98,6 @@
                     <img id="img-photo-edit-modal" class="img-thumbnail" alt="Изображение профиля" width="150" height="150">
                     <img id="img-photo-edit-modal-small" class="img-fluid rounded mb-3" alt="Изображение профиля" width="50" height="50">
                 </div>
-
                 <div class="text-center">
                     <input type="file" id="input-photo-edit" />
                 </div>

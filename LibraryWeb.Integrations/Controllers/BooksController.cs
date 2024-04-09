@@ -1,34 +1,25 @@
-﻿using LibraryWeb.Sql.Context;
+﻿using LibraryWeb.Integrations.Interfaces;
 using LibraryWeb.Sql.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Integrations.Controllers
 {
     [Route("api/[controller]")]
     public class BooksController : Controller
     {
-        DatabaseEntities db;
+        private readonly IBookRepository<Книги> _bookService;
 
-        public BooksController()
+        public BooksController(IBookRepository<Книги> bookService)
         {
-            db = new DatabaseEntities();
+            _bookService = bookService;
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
-        public JsonResult GetBooks() => Json(db.Книгиs.AsNoTracking().Take(db.Книгиs.Count()));
+        public JsonResult GetBooks() => Json(_bookService.GetAll());
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet]
-        public async Task<JsonResult> GetBookByName([FromQuery] string name, CancellationToken cancellationToken = default)
-        {
-            var bookName = await db.Книгиs.AsNoTracking().FirstOrDefaultAsync(x => x.Название == name, cancellationToken);
-            if (bookName is null) { return Json(default); }
-            else
-            {
-                return Json(bookName);
-            }
-        }
+        public async Task<JsonResult> GetBookByName([FromQuery] string name) => Json(await _bookService.GetByNameAsync(name));
     }
 }

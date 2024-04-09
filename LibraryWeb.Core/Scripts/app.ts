@@ -2,25 +2,23 @@
 
 class Authentication {
 
-    private readonly defaultRole: number = 2;
-
     user = {
         Фамилия: "",
         Имя: "",
         Логин: "",
         Пароль: "",
-        КодРоли: this.defaultRole
+        КодРоли: 2
     };
 
 
-    constructor(surname: string = "", name: string = "", username: string = "", password: string = "", role: number = 2) {
+    constructor(surname: string = "", name: string = "", username: string = "", password: string = "") {
 
         this.user = {
             Фамилия: surname,
             Имя: name,
             Логин: username,
             Пароль: password,
-            КодРоли: role
+            КодРоли: 2
         };
     }
 
@@ -34,6 +32,9 @@ class Authentication {
                 sessionStorage.setItem('userid', data.userID);
 
                 $('#span-login-error').text("");
+                if ($('#span-login-error').text().toString() == "") {
+                    ($('#div-login-modal') as any).modal('hide');
+                }
                 window.location.reload();
                 if (data.role == 1) { $('#a-admin-panel').css('display', 'inline'); }
 
@@ -62,18 +63,15 @@ class Authentication {
 }
 
 class Favorite {
-    private bookName: string;
 
-    constructor(bookName: string = "") {
-        this.bookName = bookName;
-    }
-
-    AddToFavorite() {
-        this.checkIfFavoriteExists().then((result) => {
+    AddToFavorite(bookName: string) {
+        checkIfFavoriteOrCartExists(bookName, `/${baseUrl}/favorite/existFavorite`).then((result) => {
             if (result) {
-                $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': this.bookName, 'userID': sessionStorage.getItem('userid') });
-            } else { 
                 $('#btn-favorite-about-book').text('Удалить из избранного');
+            } else { 
+                $.post(`/${baseUrl}/favorite/addFavorite`, { 'nameBook': bookName, 'userID': sessionStorage.getItem('userid') }, () => {
+                    window.location.reload();
+                });
             }
         });
     }
@@ -90,13 +88,9 @@ class Favorite {
         }));
     }
 
-    private checkIfFavoriteExists() {
-        return new Promise((resolve) => {
-            $.get(`/${baseUrl}/favorite/existFavorite`, { 'userID': sessionStorage.getItem('userid'), 'bookName': $('#h2-title-about-book').text() }, () => {
-                resolve(true);
-            }).fail(() => {
-                resolve(false);
-            });
+    RemoveFromFavorite(bookName: string) {
+        $.post(`/${baseUrl}/favorite/deleteFavorite`, { 'bookName': bookName }, () => {
+            window.location.reload();
         });
     }
 }
@@ -117,6 +111,8 @@ class Book {
     }
 
     createAboutBook(book) {
+
+        
         $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
         $('#h2-title-about-book').text(`${book.название}`);
         $('#p-author-about-book').text(`${book.автор}`);
@@ -124,6 +120,32 @@ class Book {
         $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
         $('#p-quantity-about-book').text(`${book.наличие}`);
         $('#input-quantity-about-book').attr('max', `${book.наличие}`);
+
+        var comment = new Comments();
+        comment.ShowAllComments($('#h2-title-about-book').text());
+
+        if (sessionStorage.getItem('userid') == undefined) {}
+        else {
+            $('#form-new-comments').show();
+            checkIfFavoriteOrCartExists(book.название, `/${baseUrl}/favorite/existFavorite`).then((result) => {
+                if (result) {
+                    $('#btn-favorite-about-book').text('Удалить из избранного');
+                }
+                else {
+                    $('#btn-favorite-about-book').text('Добавить в избранное');
+                }
+            });
+            checkIfFavoriteOrCartExists(book.название, `/${baseUrl}/cart/existCartItem`).then((result) => {
+                if (result) {
+                    $('#btn-cart-book').text('Удалить из корзины');
+                }
+                else {
+                    $('#btn-cart-book').text('Добавить в корзину');
+                }
+            });
+        }
+
+        
     }
 
     tileBook(books) {
@@ -154,15 +176,24 @@ class Book {
 }
 
 class Cart {
-
     AddCartItem(orderName: string, quantity = 0) {
-        if (quantity > Number.parseInt($('#p-quantity-about-book').text().toString())) {
-            $('#span-information-quantity').text(`Количество не может быть больше максимального значения ${$('#input-quantity-about-book').attr('max')}`).css('color', 'red');
-        }
-        else {
-            $('#span-information-quantity').empty();
-            $.post(`/${baseUrl}/cart/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity });
-        }
+        const maxQuantity = Number.parseInt($('#p-quantity-about-book').text().toString());
+        checkIfFavoriteOrCartExists(orderName, `/${baseUrl}/cart/existCartItem`).then((result) => {
+            if (result) {
+                $('#btn-cart-book').text('Удалить из корзины');
+            }
+            else {
+                if (quantity > maxQuantity || quantity <= 0) {
+                    $('#span-information-quantity').text(`Количество не может быть больше максимального значения ${$('#input-quantity-about-book').attr('max')} или меньше нуля`).css('color', 'red');
+                    $('#input-quantity-about-book').val('1');
+                }
+                else {
+                    $.post(`/${baseUrl}/cart/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
+                        window.location.reload();
+                    });
+                }
+            }
+        });
     }
 
     ShowCartList() {
@@ -172,7 +203,7 @@ class Cart {
     }
 
     DeleteCartItem(orderDelete: string) {
-        $.post(`/${baseUrl}/cart/deleteCartItem`, { 'orderDel': orderDelete }, () => {
+        $.post(`/${baseUrl}/cart/deleteCartItem`, { 'cartItemDelete': orderDelete }, () => {
             window.location.reload();
         });
     }
@@ -215,15 +246,12 @@ class Cart {
 
 class Profile {
 
-    private readonly defaultRole: number = 2;
-
     userProfile = {
         Фамилия: "",
         Имя: "",
         Логин: "",
         Пароль: "",
         Фото: new Uint8Array(0),
-        КодРоли: this.defaultRole
     }
 
     constructor(name: string = "", surname: string = "", username: string = "", password: string = "", photo: Uint8Array = null) {
@@ -234,7 +262,6 @@ class Profile {
             Логин: username,
             Пароль: password,
             Фото: photo,
-            КодРоли: this.defaultRole
         };
     }
 
@@ -243,6 +270,7 @@ class Profile {
             $('#input-form-edit-login').val(`${data.login}`);
             $('#input-form-edit-surname').val(`${data.surname}`);
             $('#input-form-edit-name').val(`${data.name}`);
+
             $('#img-photo-profile').attr('src', `data:image/png;base64,${data.photo}`);
             $('#img-photo-edit-modal').attr('src', `data:image/png;base64,${data.photo}`);
             $('#img-photo-edit-modal-medium').attr('src', `data:image/png;base64,${data.photo}`);
@@ -251,11 +279,8 @@ class Profile {
     }
     EditProfileInfo() {
         $.post(`/${baseUrl}/profile/editProfile?userID=${sessionStorage.getItem('userid')}`, this.userProfile, () => {
-            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
-            $('#span-edit-error').empty();
-            Logout();
-        }).fail((error) => {
-            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+            window.location.reload();
+            sessionStorage.setItem('userlogin', this.userProfile.Логин);
         });
     }
     EditProfilePhoto() {
@@ -263,18 +288,26 @@ class Profile {
             window.location.reload();
         });
     }
+    EditProfilePassword() {
+        $.post(`/${baseUrl}/profile/editPassword`, { 'userID': sessionStorage.getItem('userid'), password: this.userProfile.Пароль }, () => {
+            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
+            $('#span-edit-error').empty();
+            Logout();
+        }).fail((error) => {
+            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
+        });
+    }
 }
 
 class Order {
-    AddNewOrder(elementHref: string) {
+    AddNewOrder(elementHref: string, pickupPoint:number) {
         var books = new Book();
         var orderBooks = [];
         document.querySelectorAll(`${elementHref}`).forEach(links => {
             orderBooks.push(books.clearUrlBook(decodeURI(links.getAttribute('href'))));
         });
-        $.post(`/${baseUrl}/order/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid')});
+        $.post(`/${baseUrl}/order/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid'), 'selectedPoint': pickupPoint });
     }
-
     ShowOrders() {
         $.get(`/${baseUrl}/order/getOrder`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
             this.tableOrderFill(data);
@@ -291,6 +324,7 @@ class Order {
             ordersUser.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
             ordersUser.push(`<td>${orders.датаЗаказа}</td>`);
             ordersUser.push(`<td>${orders.статус}</td>`);
+            ordersUser.push(`<td>${orders.кодПунктаВыдачиNavigation.название}</td>`);
             ordersUser.push('</tr>');
         });
         $('#tbody-profile-table').append(ordersUser.join(""));
@@ -315,6 +349,41 @@ class PickupPoint {
             $('#div-show-pickup').append(pickupPointNames.join(""));
         });
     }
+}
+
+class Comments {
+    AddNewComment(comments: string) {
+        $.post(`/${baseUrl}/comment/addComment`, { 'comment': comments, 'userID': sessionStorage.getItem('userid'), 'bookName': $('#h2-title-about-book').text() }, () => {
+            $('#textarea-user-comment').empty();
+            window.location.reload();
+        });
+    }
+    ShowAllComments(book:string) {
+        $.get(`/${baseUrl}/comment/getAllComments`, { 'bookName': book }, (data) => {
+            this.CreateComments(data);
+        });
+    }
+
+    CreateComments(comments) {
+        var commentArr = [];
+        comments.forEach(comments => {
+            commentArr.push('<div class="comment">');
+            commentArr.push(`<span class="author">${comments.кодПользователяNavigation.логин}</span>`); 
+            commentArr.push(`<div class="content">'${comments.текстКомментария}</div>`);
+            commentArr.push('</div>');
+        });
+        $('#section-users-comments').append(commentArr.join('\n'));
+    }
+}
+
+function checkIfFavoriteOrCartExists(currentBook:string, url:string) {
+    return new Promise<boolean>((resolve) => {
+        $.get(url, { 'userID': sessionStorage.getItem('userid'), 'bookName': currentBook }, () => {
+            resolve(true);
+        }).fail(() => {
+            resolve(false);
+        });
+    });
 }
 
 function setCookie(name: string, val: string) {
@@ -387,6 +456,18 @@ function Logout() {
 
 $(function () {
 
+    $('#btn-new-comment').on('click', function (event) {
+        event.preventDefault();
+        var comments = new Comments();
+        if (getCookie('auth_key') != "") {
+            comments.AddNewComment($('#textarea-user-comment').val().toString());
+        }
+        else {
+            alert("Войдите для того чтобы оставить комментарии");
+        }
+
+    });
+
     $('#btn-profile-photo-change').on('click', function (event) {
         event.preventDefault();
         readFileAsByteArray(($('#input-photo-edit').get(0) as HTMLInputElement), (byteArray) => {
@@ -398,13 +479,20 @@ $(function () {
         });
     });
 
-    $('#btn-profile-information-edit').on('click', function (event) {
+    $('#btn-form-profile-edit').on('click', function (event) {
         event.preventDefault();
         if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
-            var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-login').val().toString(), $('#input-form-password-edit').val().toString());
-            profile.EditProfileInfo();
+            var passwordEdit = new Profile('', '', '', $('#input-form-password-edit').val().toString());
+            passwordEdit.EditProfilePassword();
         }
         else { $('#span-edit-error').text('Пароли должны быть одинаковыми.').css('color', 'red'); }
+    });
+
+    $('#btn-profile-information-edit').on('click', function (event) {
+        event.preventDefault();
+        var profile = new Profile($('#input-form-edit-name').val().toString(), $('#input-form-edit-surname').val().toString(), $('#input-form-edit-login').val().toString(), '');
+        profile.EditProfileInfo();
+
     });
 
     $('#btn-order-clear').on('click', function (event) {
@@ -424,18 +512,21 @@ $(function () {
             var favorite = new Favorite();
             favorite.ShowListFavorite();
         } else {
-            window.location.href = "/";
-            alert("Войдите в профиль для сохранение книги в избранное.");
+            $('#div-favorite-list').text('Здесь пока ничего нету, для того чтобы добавить книгу в избранное нужно зайти в свои профиль');
         }
     });
 
     $('#btn-favorite-about-book').on('click', function (event) {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
-            var favorClass = new Favorite($('#h2-title-about-book').text());
-            favorClass.AddToFavorite();
+            var favorClass = new Favorite();
+            if ($('#btn-favorite-about-book').text().includes('Добавить')) {
+                favorClass.AddToFavorite($('#h2-title-about-book').text());
+            } else {
+                favorClass.RemoveFromFavorite($('#h2-title-about-book').text());
+            }
+            
         } else {
-            window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в избранное.");
         }
 
@@ -444,9 +535,13 @@ $(function () {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
             var cart = new Cart();
-            cart.AddCartItem($('#h2-title-about-book').text(), Number.parseInt($('#input-quantity-about-book').val().toString()));
+            if ($('#btn-cart-book').text().includes('Добавить')) {
+                cart.AddCartItem($('#h2-title-about-book').text(), Number.parseInt($('#input-quantity-about-book').val().toString()));
+            }
+            else {
+                cart.DeleteCartItem($('#h2-title-about-book').text());
+            }
         } else {
-            window.location.href = "/";
             alert("Войдите в профиль для сохранение книги в корзину.");
         }
     });
@@ -459,22 +554,19 @@ $(function () {
 
         if (window.location.href.includes('/book/name')) {
             var bookByName = new Book();
-            var dataStorage = JSON.parse(sessionStorage.getItem('bookData'));
-            bookByName.createAboutBook(dataStorage);
+            bookByName.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
         }
         if (sessionStorage.getItem('userlogin') != null) {
             $('#p-user-login').text(`Добро пожаловать - ${sessionStorage.getItem('userlogin')}`);
-            $('#btn-login').removeAttr('data-bs-toggle');
-            $('#btn-login').removeAttr('data-bs-target');
-            $('#btn-login').attr('href', '/profile');
+            $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
         }
+        if (sessionStorage.getItem('pickup_point_data') == null) $.get(`/${baseUrl}/pickup/allPickupPoints`, ((data) => { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)) }));
 
         switch (window.location.href.substring((window.location.href.indexOf('8') + 1))) {
             case '/': {
 
                 var books = new Book();
                 books.AllBook();
-                $.get(`/${baseUrl}/pickup/allPickupPoints`, function (data) { sessionStorage.setItem('pickup_point_data', JSON.stringify(data)); });
                 break;
             }
             case '/cart': {
@@ -531,15 +623,13 @@ $(function () {
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
         var order = new Order();
-        order.AddNewOrder('#a-redirect-cart-about-book');
+        var selectedPickupPoint = $('#select-pickup-point option:selected').index();
+        order.AddNewOrder('#a-redirect-cart-about-book', (selectedPickupPoint + 1));
     });
     $('#btn-form-login').on('click', function (event) {
         event.preventDefault();
-        var enter = new Authentication('', '', $('#input-form-login-auth').val().toString(), $('#input-form-password-auth').val().toString(), 1);
+        var enter = new Authentication('', '', $('#input-form-login-auth').val().toString(), $('#input-form-password-auth').val().toString());
         enter.Login();
-        if ($('#span-login-error').text().toString() == "") {
-            ($('#div-login-modal') as any).modal('hide');
-        }
     });
 
     $('#btn-form-register').on('click', function (event) {

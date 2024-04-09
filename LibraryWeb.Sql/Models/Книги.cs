@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LibraryWeb.Sql.Models;
+﻿namespace LibraryWeb.Sql.Models;
 
 public partial class Книги
 {
@@ -28,6 +25,8 @@ public partial class Книги
     public virtual ICollection<Избранное> Избранноеs { get; set; } = new List<Избранное>();
 
     public virtual Издательство КодИздательстваNavigation { get; set; } = null!;
+
+    public virtual ICollection<Комментарии> Комментарииs { get; set; } = new List<Комментарии>();
 
     public virtual ICollection<Корзина> Корзинаs { get; set; } = new List<Корзина>();
 }
