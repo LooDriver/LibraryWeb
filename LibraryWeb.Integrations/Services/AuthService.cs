@@ -17,7 +17,7 @@ namespace LibraryWeb.Integrations.Services
         public async Task<Пользователи> CheckLogin(Пользователи logins)
         {
             Пользователи usersExists = await _dbContext.Пользователиs.FirstOrDefaultAsync(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
-            if (usersExists is null) { return default; }
+            if (usersExists is null) { return null; }
             else
             {
                 return usersExists;
@@ -42,7 +42,5 @@ namespace LibraryWeb.Integrations.Services
                 return false;
             }
         }
-
-
     }
 }

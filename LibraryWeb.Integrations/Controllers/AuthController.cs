@@ -33,11 +33,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]
-        public async Task<IActionResult> CheckLogin([FromForm] Пользователи logins)
+        public async Task<IActionResult> LoginExistUser([FromForm] Пользователи logins)
         {
             var currentUser = await _authRepository.CheckLogin(logins);
-            return (currentUser != null) ? Ok(new { auth_key = JWTCreate(logins), role = currentUser.КодРоли, userID = currentUser.КодПользователя }) : Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа");
-
+            return (currentUser is not null) ? Json(new { auth_key = JWTCreate(logins), role = currentUser.КодРоли, userID = currentUser.КодПользователя }) : Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа");
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
