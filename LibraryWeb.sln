@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Core", "LibraryW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Sql", "LibraryWeb.Sql\LibraryWeb.Sql.csproj", "{68931511-7D7B-4708-A345-A43FC4A27979}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.IntegrationTest", "LibraryWeb.IntegrationTest\LibraryWeb.IntegrationTest.csproj", "{6C61FE3D-8046-4E40-9DC1-2CEEEF8D6E6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.UnitTests", "LibraryWeb.IntegrationTest\LibraryWeb.UnitTests.csproj", "{6C61FE3D-8046-4E40-9DC1-2CEEEF8D6E6A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryWeb.Integrations", "LibraryWeb.Integrations\LibraryWeb.Integrations.csproj", "{FE1E17C4-E9DD-46C7-A5C8-BF3C27065E9C}"
 EndProject
