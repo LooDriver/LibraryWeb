@@ -31,7 +31,7 @@ namespace LibraryWeb.Integrations.Services
 
         public async Task<bool> RegisterUsers(Пользователи registers)
         {
-            if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
+            if (!string.IsNullOrEmpty(registers.Логин) && !string.IsNullOrEmpty(registers.Пароль))
             {
                 await _dbContext.Пользователиs.AddAsync(registers);
                 await _dbContext.SaveChangesAsync();
