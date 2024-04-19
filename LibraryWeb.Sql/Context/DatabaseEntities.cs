@@ -7,7 +7,13 @@ namespace LibraryWeb.Sql.Context
     public partial class DatabaseEntities : DbContext
     {
         public static string connectionString { get; set; }
+
         public DatabaseEntities(DbContextOptions<DatabaseEntities> options) : base(options)
+        {
+
+        }
+
+        public DatabaseEntities()
         {
             if (Database.EnsureCreated())
             {
@@ -32,8 +38,6 @@ namespace LibraryWeb.Sql.Context
         public virtual DbSet<ПунктыВыдачи> ПунктыВыдачиs { get; set; }
 
         public virtual DbSet<Роли> Ролиs { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(connectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

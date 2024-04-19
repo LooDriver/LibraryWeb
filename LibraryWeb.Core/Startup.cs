@@ -13,37 +13,41 @@ namespace LibraryWeb.Core
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IWebHostEnvironment _currentEnvironment;
+        public IConfiguration _configuration { get; }
 
-        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment currentEnvironment)
+        {
+            _configuration = configuration;
+            _currentEnvironment = currentEnvironment;
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            DatabaseEntities.connectionString = Configuration.GetConnectionString("MSSQLSERVER");
             services.AddControllersWithViews().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-            services.AddDbContext<DatabaseEntities>(options =>
-            {
-                options.UseSqlServer(DatabaseEntities.connectionString);
-            });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = AuthOptions.ISSUER,
-                        ValidAudience = AuthOptions.AUDIENCE,
+            AddDb(services);
+            ConfigureDependencies(services);
+        }
 
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+        public virtual void ConfigureDependencies(IServiceCollection services)
+        {
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuerSigningKey = true,
+                       ValidIssuer = AuthOptions.ISSUER,
+                       ValidAudience = AuthOptions.AUDIENCE,
+
+                       IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                       ValidateLifetime = true,
+                       ClockSkew = TimeSpan.Zero
+                   };
+               });
             services.AddAuthorization();
 
             services.AddTransient<IBookRepository<Книги>, BookService>();
@@ -75,6 +79,20 @@ namespace LibraryWeb.Core
                 });
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddDb(IServiceCollection services)
+        {
+            if (_currentEnvironment.IsEnvironment("Testing"))
+            {
+                services.AddDbContext<DatabaseEntities>(options =>
+                    options.UseInMemoryDatabase("TestingDB"));
+            }
+            else
+            {
+                services.AddDbContextPool<DatabaseEntities>(options =>
+                    options.UseSqlServer(_configuration.GetConnectionString("MSSQLSERVER")));
+            }
         }
     }
 }
