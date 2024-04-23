@@ -27,8 +27,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.NotEmpty(models);
         }
 
-        [InlineData("Книга 1")]
         [Theory]
+        [InlineData("Книга 1")]
         public async Task Get_CurrentBook_Json_Async(string bookName)
         {
             var response = await _fixture.Client.GetAsync($"/api/books?name={bookName}");

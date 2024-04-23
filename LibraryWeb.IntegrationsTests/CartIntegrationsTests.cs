@@ -15,8 +15,8 @@ namespace LibraryWeb.IntegrationsTests
             _fixture = fixture;
         }
 
-        [InlineData("3")]
         [Theory]
+        [InlineData("3")]
         public async Task GetAll_CartItems_Json_Async(string userID)
         {
             var response = await _fixture.Client.GetAsync($"/api/cart/allCartItems?userID={userID}");
@@ -29,8 +29,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.NotEmpty(cartItems);
         }
 
-        [InlineData("3", "Книга 1")]
         [Theory]
+        [InlineData("1", "Книга 1")]
         public async Task Success_CheckExist_CartItem_Async(string userID, string bookName)
         {
             var response = await _fixture.Client.GetAsync($"/api/cart/existCartItem?userID={userID}&bookName={bookName}");
@@ -38,8 +38,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [InlineData("5", "Книга 1")]
         [Theory]
+        [InlineData("5", "Книга 1")]
         public async Task Bad_CheckExist_CartItem_Async(string userID, string bookName)
         {
             var response = await _fixture.Client.GetAsync($"/api/cart/existCartItem?userID={userID}&bookName={bookName}");
@@ -47,8 +47,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [InlineData("Книга 1", "2", "1")]
         [Theory]
+        [InlineData("Книга 1", "1", "1")]
         public async Task Success_AddNew_CartItem_Async(string bookName, string userID, string quantity)
         {
             var formData = new Dictionary<string, string>
@@ -61,8 +61,8 @@ namespace LibraryWeb.IntegrationsTests
             await TestAddCartItem(formData, HttpStatusCode.OK);
         }
 
-        [InlineData("", "", "")]
         [Theory]
+        [InlineData("", "", "")]
         public async Task Bad_AddNew_CartItem_Async(string bookName, string userID, string quantity)
         {
             var formData = new Dictionary<string, string>
@@ -75,8 +75,8 @@ namespace LibraryWeb.IntegrationsTests
             await TestAddCartItem(formData, HttpStatusCode.BadRequest);
         }
 
-        [InlineData("Книга 1")]
         [Theory]
+        [InlineData("Книга 1")]
         public async Task Success_DeleteExist_CartItem_Async(string bookName)
         {
             var formData = new Dictionary<string, string>
@@ -93,8 +93,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [InlineData("NotExistBook")]
         [Theory]
+        [InlineData("NotExistBook")]
         public async Task Bad_DeleteNotExist_CartItem_Async(string bookName)
         {
             var formData = new Dictionary<string, string>
@@ -111,8 +111,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        [InlineData("2")]
         [Theory]
+        [InlineData("2")]
         public async Task Success_Clear_CartItems_Async(string userID)
         {
             var formData = new Dictionary<string, string>
@@ -129,8 +129,8 @@ namespace LibraryWeb.IntegrationsTests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [InlineData("-1")]
         [Theory]
+        [InlineData("-1")]
         public async Task Bad_Clear_CartItems_Async(string userID)
         {
             var formData = new Dictionary<string, string>

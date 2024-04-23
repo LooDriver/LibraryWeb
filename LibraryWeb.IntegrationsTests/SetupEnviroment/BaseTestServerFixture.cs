@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryWeb.IntegrationsTests.SetupEnviroment
 {
-    public class BaseTestServerFixture
+    public class BaseTestServerFixture : IDisposable
     {
         public TestServer TestServer { get; }
         public DatabaseEntities DbContext { get; }
@@ -26,7 +26,6 @@ namespace LibraryWeb.IntegrationsTests.SetupEnviroment
 
         private void FillData()
         {
-            DbContext.Database.EnsureDeleted();
             TestDataSeeder.SeedPublishers(DbContext);
             TestDataSeeder.SeedBooks(DbContext);
             TestDataSeeder.SeedRoles(DbContext);
@@ -36,6 +35,7 @@ namespace LibraryWeb.IntegrationsTests.SetupEnviroment
             TestDataSeeder.SeedComments(DbContext);
             TestDataSeeder.SeedPickupPoints(DbContext);
             TestDataSeeder.SeedCarts(DbContext);
+            TestDataSeeder.SeedFavorites(DbContext);
         }
 
         public void Dispose()
