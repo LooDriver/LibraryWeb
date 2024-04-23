@@ -23,7 +23,7 @@ namespace LibraryWeb.UnitTests
         public void GetAllPickupPoint_Json()
         {
             var fakePickupPoint = new List<ПунктыВыдачи> { new ПунктыВыдачи { Адрес = "Test", Название = "1231" } };
-            _pickupPointServices.Setup(repo => repo.GetAll(0)).Returns(fakePickupPoint);
+            _pickupPointServices.Setup(repo => repo.GetAll()).Returns(fakePickupPoint);
 
             var result = _pickupPointController.GetPickupPoint();
 

@@ -14,9 +14,9 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Пользователи> CheckLogin(Пользователи logins)
+        public async Task<Пользователи> CheckLogin(string username, string password)
         {
-            Пользователи usersExists = await _dbContext.Пользователиs.FirstOrDefaultAsync(x => x.Логин == logins.Логин && x.Пароль == logins.Пароль);
+            Пользователи usersExists = await _dbContext.Пользователиs.FirstOrDefaultAsync(logins => logins.Логин == username && logins.Пароль == password);
             if (usersExists is null) { return null; }
             else
             {
@@ -24,16 +24,11 @@ namespace LibraryWeb.Integrations.Services
             }
         }
 
-        public List<Пользователи> GetAll(int userID = 0)
+        public async Task<bool> RegisterUsers(string surname, string name, string username, string password, int role = 2)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> RegisterUsers(Пользователи registers)
-        {
-            if (registers.Логин.Length > 0 && registers.Пароль.Length > 0)
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                await _dbContext.Пользователиs.AddAsync(registers);
+                await _dbContext.Пользователиs.AddAsync(new Пользователи { КодРоли = role, Имя = name, Фамилия = surname, Логин = username, Пароль = password });
                 await _dbContext.SaveChangesAsync();
                 return true;
             }

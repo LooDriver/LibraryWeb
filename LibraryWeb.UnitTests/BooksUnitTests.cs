@@ -23,7 +23,7 @@ namespace LibraryWeb.UnitTests
         public void GetBooksList_Json_BooksList()
         {
             var fakeBooks = new List<Книги> { new Книги { Название = "Book 1" } };
-            _booksService.Setup(repo => repo.GetAll(0)).Returns(fakeBooks);
+            _booksService.Setup(repo => repo.GetAll()).Returns(fakeBooks);
 
             var result = _booksController.GetBooks();
 

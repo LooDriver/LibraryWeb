@@ -33,10 +33,5 @@ namespace LibraryWeb.Integrations.Services
         }
 
         public List<Комментарии> GetAll(string bookName) => [.. _dbContext.Комментарииs.Include(users => users.КодПользователяNavigation).Where(books => books.КодКнигиNavigation.Название == bookName).Select(comment => comment)];
-
-        public List<Комментарии> GetAll(int userID = 0)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

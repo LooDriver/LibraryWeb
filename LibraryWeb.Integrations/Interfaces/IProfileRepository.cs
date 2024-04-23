@@ -2,11 +2,11 @@
 
 namespace LibraryWeb.Integrations.Interfaces
 {
-    public interface IProfileRepository<T> : IRepository<T>
+    public interface IProfileRepository<T>
     {
         Task<Пользователи> GetById(int userID);
 
-        Task<bool> EditProfileAsync(int userID, Пользователи пользователи);
+        Task<bool> EditProfileAsync(int userID, string name, string surname, string username);
 
         Task<bool> EditProfilePhotoAsync(int userID, string newPhoto);
 

@@ -51,10 +51,10 @@ namespace LibraryWeb.Integrations.Services
         public bool Delete(string cartItemDelete)
         {
             var cartDelete = _dbContext.Корзинаs.FirstOrDefault(books => books.КодКнигиNavigation.Название == cartItemDelete);
-            var books = _dbContext.Книгиs.FirstOrDefault(books => books.КодКниги == cartDelete.КодКниги);
             if (cartDelete is null) return false;
             else
             {
+                var books = _dbContext.Книгиs.FirstOrDefault(books => books.КодКниги == cartDelete.КодКниги);
                 books.Наличие += cartDelete.Количество;
                 _dbContext.Корзинаs.Remove(cartDelete);
                 _dbContext.SaveChanges();

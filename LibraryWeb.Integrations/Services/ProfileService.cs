@@ -15,15 +15,15 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public async Task<bool> EditProfileAsync(int userID, Пользователи пользователи)
+        public async Task<bool> EditProfileAsync(int userID, string name, string surname, string username)
         {
             Пользователи userProfile = await _dbContext.Пользователиs.FirstOrDefaultAsync(f => f.КодПользователя == userID);
             if (userProfile is null) return false;
             else
             {
-                userProfile.Фамилия = пользователи.Фамилия;
-                userProfile.Имя = пользователи.Имя;
-                userProfile.Логин = пользователи.Логин;
+                userProfile.Фамилия = surname;
+                userProfile.Имя = name;
+                userProfile.Логин = username;
                 await _dbContext.SaveChangesAsync();
                 return true;
             }

@@ -30,7 +30,7 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editProfile")]
-        public async Task<IActionResult> UpdateProfileData([FromQuery] int userID, [FromForm] Пользователи пользователи) => (await _profileService.EditProfileAsync(userID, пользователи)) ? Ok() : BadRequest();
+        public async Task<IActionResult> UpdateProfileData([FromQuery] int userID, [FromForm] string name, [FromForm] string surname, [FromForm] string username) => (await _profileService.EditProfileAsync(userID, name, surname, username)) ? Ok() : BadRequest();
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editPhoto")]

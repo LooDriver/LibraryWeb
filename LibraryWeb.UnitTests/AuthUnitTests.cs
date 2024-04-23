@@ -24,12 +24,13 @@ namespace LibraryWeb.UnitTests
         {
             Пользователи fakeUser = new Пользователи
             {
-                Логин = "test123"
+                Логин = "test123",
+                Пароль = "123"
             };
 
-            _authServices.Setup(repo => repo.CheckLogin(fakeUser)).ReturnsAsync(fakeUser);
+            _authServices.Setup(repo => repo.CheckLogin("test123", "123")).ReturnsAsync(fakeUser);
 
-            var result = await _authController.LoginExistUser(fakeUser);
+            var result = await _authController.LoginExistUser("test123", "123");
 
             var okResult = Assert.IsType<JsonResult>(result);
 
@@ -80,12 +81,13 @@ namespace LibraryWeb.UnitTests
         {
             Пользователи fakeUser = new Пользователи
             {
-                Логин = ""
+                Логин = "",
+                Пароль = ""
             };
 
-            _authServices.Setup(repo => repo.CheckLogin(fakeUser)).ReturnsAsync((Пользователи)null);
+            _authServices.Setup(repo => repo.CheckLogin("123", "123")).ReturnsAsync(fakeUser);
 
-            var result = await _authController.LoginExistUser(fakeUser);
+            var result = await _authController.LoginExistUser("", "");
 
             var badResult = Assert.IsType<UnauthorizedObjectResult>(result);
 

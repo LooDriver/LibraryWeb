@@ -1,7 +1,7 @@
 ﻿namespace LibraryWeb.Integrations.Interfaces
 {
-    public interface IPickupPointRepository<T> : IRepository<T>
+    public interface IPickupPointRepository<T>
     {
-
+        List<T> GetAll();
     }
 }

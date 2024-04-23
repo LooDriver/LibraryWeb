@@ -16,13 +16,13 @@ namespace LibraryWeb.Integrations.Services
 
         public bool Add(string bookName, int userID)
         {
-            Книги favorBook = _dbContext.Книгиs.Find(_dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги);
-            if (favorBook is null) return false;
+            var favoBookData = _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName);
+            if (favoBookData is null) return false;
             else
             {
                 Избранное избранное = new Избранное
                 {
-                    КодКниги = favorBook.КодКниги,
+                    КодКниги = favoBookData.КодКниги,
                     КодПользователя = userID
                 };
                 _dbContext.Избранноеs.Add(избранное);
@@ -56,6 +56,6 @@ namespace LibraryWeb.Integrations.Services
             }
         }
 
-        public List<Избранное> GetAll(int userID = 0) => [.. _dbContext.Избранноеs.AsNoTracking().Include(books => books.КодКнигиNavigation).Where(user => user.КодПользователя == userID)];
+        public List<Избранное> GetAll(int userID) => [.. _dbContext.Избранноеs.AsNoTracking().Include(books => books.КодКнигиNavigation).Where(user => user.КодПользователя == userID)];
     }
 }
