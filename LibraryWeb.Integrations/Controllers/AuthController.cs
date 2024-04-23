@@ -18,9 +18,9 @@ namespace LibraryWeb.Integrations.Controllers
             _authRepository = authRepository;
         }
 
-        private static string JWTCreate(Пользователи user)
+        private static string JWTCreate(string username)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Логин) };
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
             var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
                     audience: AuthOptions.AUDIENCE,
@@ -33,15 +33,15 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginExistUser([FromForm] Пользователи logins)
+        public async Task<IActionResult> LoginExistUser([FromForm] string username, [FromForm] string password)
         {
-            var currentUser = await _authRepository.CheckLogin(logins);
-            return (currentUser is not null) ? Json(new { auth_key = JWTCreate(logins), role = currentUser.КодРоли, userID = currentUser.КодПользователя }) : Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа");
+            var currentUser = await _authRepository.CheckLogin(username, password);
+            return (currentUser is not null) ? Json(new { auth_key = JWTCreate(username), role = currentUser.КодРоли, userID = currentUser.КодПользователя }) : Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа");
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromForm] Пользователи registers) => (await _authRepository.RegisterUsers(registers)) ? Ok() : BadRequest("Все поля должны быть заполнены.");
+        public async Task<IActionResult> RegisterUser([FromForm] string surname, [FromForm] string name, [FromForm] string username, [FromForm] string password) => (await _authRepository.RegisterUsers(surname, name, username, password)) ? Ok() : BadRequest("Все поля должны быть заполнены.");
     }
     public class AuthOptions
     {

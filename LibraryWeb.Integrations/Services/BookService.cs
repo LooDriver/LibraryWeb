@@ -14,7 +14,7 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public List<Книги> GetAll(int userID = 0) => [.. _dbContext.Книгиs.Take(_dbContext.Книгиs.Count())];
+        public List<Книги> GetAll() => [.. _dbContext.Книгиs.Take(_dbContext.Книгиs.Count())];
 
         public async Task<Книги> GetByNameAsync(string name) => await _dbContext.Книгиs.AsNoTracking().FirstOrDefaultAsync(books => books.Название == name);
     }

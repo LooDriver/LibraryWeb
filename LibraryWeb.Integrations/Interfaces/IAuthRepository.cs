@@ -2,9 +2,9 @@
 
 namespace LibraryWeb.Integrations.Interfaces
 {
-    public interface IAuthRepository<T> : IRepository<T>
+    public interface IAuthRepository<T>
     {
-        Task<Пользователи> CheckLogin(Пользователи logins);
-        Task<bool> RegisterUsers(Пользователи registers);
+        Task<Пользователи> CheckLogin(string username, string password);
+        Task<bool> RegisterUsers(string surname, string name, string username, string password, int role = 2);
     }
 }

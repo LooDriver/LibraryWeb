@@ -13,6 +13,6 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public List<ПунктыВыдачи> GetAll(int userID = 0) => [.. _dbContext.ПунктыВыдачиs.Take(_dbContext.ПунктыВыдачиs.Count())];
+        public List<ПунктыВыдачи> GetAll() => [.. _dbContext.ПунктыВыдачиs.Take(_dbContext.ПунктыВыдачиs.Count())];
     }
 }
