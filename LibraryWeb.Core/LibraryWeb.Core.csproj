@@ -8,8 +8,26 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
+	<PropertyGroup>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	</PropertyGroup>
 
-  <ItemGroup>
+	<Target Name="EnsureNodeJsInstalled" BeforeTargets="BeforeBuild" Condition="!Exists('$(NodeJsExe)')">
+		<PropertyGroup>
+			<NodeJsExe>$(MSBuildThisFileDirectory)node\node.exe</NodeJsExe>
+		</PropertyGroup>
+
+		<Message Text="Node.js executable path: $(NodeJsExe)" Importance="high" />
+
+		<Error Condition="!Exists('$(NodeJsExe)')" Text="Could not find node.js. Ensure that node.js is installed and that it is available in the system PATH." />
+	</Target>
+
+	<PropertyGroup>
+		<TypeScriptCompilerPath>$(NodeJsExe)</TypeScriptCompilerPath>
+	</PropertyGroup>
+
+
+	<ItemGroup>
     <PackageReference Include="EasyData.AspNetCore" Version="1.5.5" />
     <PackageReference Include="EasyData.EntityFrameworkCore.Relational" Version="1.5.5" />
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />

@@ -28,7 +28,7 @@ class Book {
     }
     static showCommentsIfLoggedIn(bookTitle) {
         Comment.ShowAllComments(bookTitle);
-        sessionStorage.getItem('userid').length == 0 ? $('#form-new-comments').hide() : $('#form-new-comments').show();
+        sessionStorage.getItem('userid') !== undefined ? $('#form-new-comments').hide() : $('#form-new-comments').show();
     }
     static setupFavoriteButton(bookTitle, url) {
         this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');

@@ -94,7 +94,6 @@ $(function () {
     $('#btn-favorite-about-book').on('click', function (event) {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
-            var favorClass = new Favorite();
             if ($('#btn-favorite-about-book').text().includes('Добавить')) {
                 Favorite.AddBookToFavorite($('#h2-title-about-book').text());
             }
@@ -188,5 +187,11 @@ $(function () {
             $('#span-register-error').text("Пароли должны быть одинаковые").css('color', 'red');
         }
     });
+    $('#section-users-comments').on('click', '.a-redirect-comment-user-profile', function (event) {
+        event.preventDefault();
+        var username = $(this).closest('.a-redirect-comment-user-profile').find('.author').text();
+        sessionStorage.setItem('commentUsername', username);
+        window.location.href = "/profile";
+        Profile.ShowProfileInfo();
+    });
 });
-//# sourceMappingURL=main.js.map

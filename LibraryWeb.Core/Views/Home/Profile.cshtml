@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div>
-                    <a class="btn" data-bs-toggle="modal" data-bs-target="#div-profile-edit-photo-modal">
+                    <a id="a-profile-modal-image" class="btn" data-bs-toggle="modal" data-bs-target="#div-profile-edit-photo-modal">
                         <img id="img-photo-profile" class="img-fluid rounded-circl e mb-3" alt="Изображение профиля" width="150" height="250">
                     </a>
                 </div>
@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Информация о пользователе</h5>
-                    <form>
+                    <form class="form-user-information">
                         <div class="mb-3">
                             <label for="input-form-edit-login" class="form-label">Логин аккаунта</label>
                             <input type="text" class="form-control" id="input-form-edit-login" required>
@@ -34,7 +34,7 @@
                         </div>
                         <button type="submit" class="btn btn-outline-warning" id="btn-profile-information-edit">Изменить</button>
 
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#div-profile-edit-password-modal">Смена пароля</button>
+                        <button type="button" class="btn btn-outline-danger" id="btn-profile-information-password-edit" data-bs-toggle="modal" data-bs-target="#div-profile-edit-password-modal">Смена пароля</button>
                     </form>
                 </div>
             </div>

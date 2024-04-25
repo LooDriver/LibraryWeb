@@ -60,10 +60,10 @@ namespace LibraryWeb.IntegrationsTests
         {
             var formData = new Dictionary<string, string>
             {
-                {"Имя", "Новый пользователь 1" },
-                {"Фамилия", "Новый пользователь 1" },
-                {"Логин", "newuser1" },
-                {"Пароль", "password123" },
+                {"name", "Новый пользователь 1" },
+                {"surname", "Новый пользователь 1" },
+                {"username", "newuser1" },
+                {"password", "password123" },
             };
 
             var content = new FormUrlEncodedContent(formData);
@@ -80,10 +80,10 @@ namespace LibraryWeb.IntegrationsTests
         {
             var formData = new Dictionary<string, string>
             {
-                {"Имя", "Новый пользователь 1" },
-                {"Фамилия", "Новый пользователь 1" },
-                {"Логин", "" },
-                {"Пароль", "" },
+                {"name", "Новый пользователь 1" },
+                {"surname", "Новый пользователь 1" },
+                {"username", "" },
+                {"password", "" },
             };
 
             var content = new FormUrlEncodedContent(formData);

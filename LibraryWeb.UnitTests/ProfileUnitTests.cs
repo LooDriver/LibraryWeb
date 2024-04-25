@@ -42,17 +42,9 @@ namespace LibraryWeb.UnitTests
         [Fact]
         public async Task Success_EditProfile_Async()
         {
-            Пользователи fakeUser = new Пользователи
-            {
-                Фамилия = "Test",
-                Имя = "Test",
-                Логин = "Test",
-                Фото = new byte[5]
-            };
+            _profileServices.Setup(repo => repo.EditProfileAsync(1, "Тест имени", "Тест фамилии", "Тест логина")).ReturnsAsync(true);
 
-            _profileServices.Setup(repo => repo.EditProfileAsync(1, fakeUser)).ReturnsAsync(true);
-
-            var result = await _profileController.UpdateProfileData(1, fakeUser);
+            var result = await _profileController.UpdateProfileData(1, "Тест имени", "Тест фамилии", "Тест логина");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -62,17 +54,9 @@ namespace LibraryWeb.UnitTests
         [Fact]
         public async Task Bad_EditProfile_Async()
         {
-            Пользователи fakeUser = new Пользователи
-            {
-                Фамилия = "Test",
-                Имя = "Test",
-                Логин = "Test",
-                Фото = new byte[5]
-            };
+            _profileServices.Setup(repo => repo.EditProfileAsync(1, "Тест имени", "Тест фамилии", "Тест логина")).ReturnsAsync(false);
 
-            _profileServices.Setup(repo => repo.EditProfileAsync(1, fakeUser)).ReturnsAsync(false);
-
-            var result = await _profileController.UpdateProfileData(1, fakeUser);
+            var result = await _profileController.UpdateProfileData(1, "Тест имени", "Тест фамилии", "Тест логина");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 

@@ -33,7 +33,7 @@ namespace LibraryWeb.Integrations.Services
 
         public bool CheckExistFavorite(int userID, string bookName)
         {
-            var userFavoriteBooks = GetAll(userID).Where(books => books.КодКниги == _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги).Select(usersFavoriteBooks => usersFavoriteBooks);
+            var userFavoriteBooks = _dbContext.Избранноеs.Where(currentUser => currentUser.КодПользователя == userID && currentUser.КодКнигиNavigation.Название == bookName).Select(usersFavoriteBooks => usersFavoriteBooks);
             if (userFavoriteBooks.Any())
             {
                 return true;
@@ -46,7 +46,7 @@ namespace LibraryWeb.Integrations.Services
 
         public bool Delete(string bookName)
         {
-            Избранное bookInFavorite = _dbContext.Избранноеs.Where(favoriteBook => favoriteBook.КодКниги == (_dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги)).Single();
+            Избранное bookInFavorite = _dbContext.Избранноеs.FirstOrDefault(favoriteBook => favoriteBook.КодКнигиNavigation.Название == bookName);
             if (bookInFavorite is null) return false;
             else
             {

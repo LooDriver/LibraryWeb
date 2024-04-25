@@ -64,7 +64,7 @@ namespace LibraryWeb.Integrations.Services
 
         public bool CheckExistsCartItem(int userID, string bookName)
         {
-            var userOrderList = GetAll(userID).Where(books => books.КодКниги == _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName).КодКниги).Select(usersOrderItems => usersOrderItems);
+            var userOrderList = _dbContext.Корзинаs.Where(currentUser => currentUser.КодПользователя == userID && currentUser.КодКнигиNavigation.Название == bookName).Select(userOrder => userOrder);
             if (userOrderList.Any())
             {
                 return true;

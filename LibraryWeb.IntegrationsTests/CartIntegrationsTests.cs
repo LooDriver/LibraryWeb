@@ -39,7 +39,7 @@ namespace LibraryWeb.IntegrationsTests
         }
 
         [Theory]
-        [InlineData("5", "Книга 1")]
+        [InlineData("", "Книга 1")]
         public async Task Bad_CheckExist_CartItem_Async(string userID, string bookName)
         {
             var response = await _fixture.Client.GetAsync($"/api/cart/existCartItem?userID={userID}&bookName={bookName}");

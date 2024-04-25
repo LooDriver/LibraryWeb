@@ -37,7 +37,7 @@ export default class Book {
 
     private static showCommentsIfLoggedIn(bookTitle: string) {
         Comment.ShowAllComments(bookTitle);
-        sessionStorage.getItem('userid').length == 0 ? $('#form-new-comments').hide() : $('#form-new-comments').show();
+        sessionStorage.getItem('userid') !== undefined ? $('#form-new-comments').hide() : $('#form-new-comments').show();
     }
 
     private static setupFavoriteButton(bookTitle: string, url:string) {

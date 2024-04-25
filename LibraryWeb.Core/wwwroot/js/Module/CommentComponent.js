@@ -14,7 +14,7 @@ class Comments {
         var commentArr = [];
         comments.forEach(comments => {
             commentArr.push('<div class="comment">');
-            commentArr.push(`<span class="author">${comments.кодПользователяNavigation.логин}</span>`);
+            commentArr.push(`<a class="btn a-redirect-comment-user-profile"><span class="author">${comments.кодПользователяNavigation.логин}</span></a>`);
             commentArr.push(`<div class="content">'${comments.текстКомментария}</div>`);
             commentArr.push('</div>');
         });

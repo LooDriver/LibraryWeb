@@ -50,11 +50,8 @@ namespace LibraryWeb.Integrations.Services
             return true;
         }
 
-        public List<Пользователи> GetAll(int userID = 0)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Пользователи> GetById(int userID) => await _dbContext.Пользователиs.AsNoTracking().FirstOrDefaultAsync(user => user.КодПользователя == userID);
 
-        public async Task<Пользователи> GetById(int userID) => await _dbContext.Пользователиs.AsNoTracking().FirstAsync(user => user.КодПользователя == userID);
+        public async Task<Пользователи> GetByUsername(string username) => await _dbContext.Пользователиs.AsNoTracking().FirstOrDefaultAsync(commentUser => commentUser.Логин == username);
     }
 }
