@@ -40,16 +40,10 @@ namespace LibraryWeb.UnitTests
         [Fact]
         public async Task SuccessRegister_NewUser_Async()
         {
-            Пользователи fakeNewUser = new Пользователи
-            {
-                Логин = "admin",
-                Пароль = "123456789",
-                КодРоли = 2
-            };
 
-            _authServices.Setup(repo => repo.RegisterUsers(fakeNewUser)).ReturnsAsync(true);
+            _authServices.Setup(repo => repo.RegisterUsers("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(true);
 
-            var result = await _authController.RegisterUser(fakeNewUser);
+            var result = await _authController.RegisterUser("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -59,16 +53,10 @@ namespace LibraryWeb.UnitTests
         [Fact]
         public async Task BadRegister_NewUser_Async()
         {
-            Пользователи fakeNewUser = new Пользователи
-            {
-                Логин = "admin",
-                Пароль = "123456789",
-                КодРоли = 2
-            };
 
-            _authServices.Setup(repo => repo.RegisterUsers(fakeNewUser)).ReturnsAsync(false);
+            _authServices.Setup(repo => repo.RegisterUsers("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(false);
 
-            var result = await _authController.RegisterUser(fakeNewUser);
+            var result = await _authController.RegisterUser("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
 
             var badResult = Assert.IsType<BadRequestObjectResult>(result);
 

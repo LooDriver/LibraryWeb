@@ -31,6 +31,24 @@ namespace LibraryWeb.IntegrationsTests
 
         [Theory]
         [InlineData("1", "Книга 1")]
+        public async Task Success_CheckExists_FavoriteItem_Async(string userID, string bookName)
+        {
+            var response = await _fixture.Client.GetAsync($"/api/favorite/existFavorite?userID={userID}&bookName={bookName}");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("", "Книга 1")]
+        public async Task Bad_CheckExists_FavoriteItem_Async(string userID, string bookName)
+        {
+            var response = await _fixture.Client.GetAsync($"/api/favorite/existFavorite?userID={userID}&bookName={bookName}");
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("1", "Книга 1")]
         public async Task Success_AddNew_FavoriteItem_Async(string userID, string bookName)
         {
             var formData = new Dictionary<string, string>
@@ -63,6 +81,42 @@ namespace LibraryWeb.IntegrationsTests
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
             var response = await _fixture.Client.PostAsync("/api/favorite/addFavorite", content);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("Книга 1")]
+        public async Task Success_RemoveBooks_FavoriteItem_Async(string bookName)
+        {
+            var formData = new Dictionary<string, string>
+            {
+                {"bookName", bookName }
+            };
+
+            var content = new FormUrlEncodedContent(formData);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            var response = await _fixture.Client.PostAsync("/api/favorite/deleteFavorite", content);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Theory]
+        [InlineData("")]
+        public async Task Bad_RemoveBooks_FavoriteItem_Async(string bookName)
+        {
+            var formData = new Dictionary<string, string>
+            {
+                {"bookName", bookName }
+            };
+
+            var content = new FormUrlEncodedContent(formData);
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            var response = await _fixture.Client.PostAsync("/api/favorite/deleteFavorite", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
