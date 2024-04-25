@@ -6,6 +6,8 @@ namespace LibraryWeb.Integrations.Interfaces
     {
         Task<Пользователи> GetById(int userID);
 
+        Task<Пользователи> GetByUsername(string username);
+
         Task<bool> EditProfileAsync(int userID, string name, string surname, string username);
 
         Task<bool> EditProfilePhotoAsync(int userID, string newPhoto);

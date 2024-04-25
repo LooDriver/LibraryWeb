@@ -29,6 +29,20 @@ namespace LibraryWeb.Integrations.Controllers
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpGet("commentProfileInformation")]
+        public async Task<JsonResult> GetUserCommentInformation([FromQuery] string username)
+        {
+            var commentUser = await _profileService.GetByUsername(username);
+            return Json(new
+            {
+                Surname = commentUser.Фамилия,
+                Name = commentUser.Имя,
+                Login = commentUser.Логин,
+                Photo = commentUser.Фото
+            });
+        }
+
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("editProfile")]
         public async Task<IActionResult> UpdateProfileData([FromQuery] int userID, [FromForm] string name, [FromForm] string surname, [FromForm] string username) => (await _profileService.EditProfileAsync(userID, name, surname, username)) ? Ok() : BadRequest();
 
