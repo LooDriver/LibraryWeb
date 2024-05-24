@@ -14,6 +14,14 @@ namespace LibraryWeb.Integrations.Controllers
             _profileService = profileService;
         }
 
+        public Services.ProfileService ProfileService
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("profileInformation")]
         public async Task<IActionResult> GetProfileInformation([FromQuery] int userID)

@@ -18,6 +18,14 @@ namespace LibraryWeb.Integrations.Controllers
             _authRepository = authRepository;
         }
 
+        public Services.AuthService AuthService
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         private static string JWTCreate(string username)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
@@ -33,21 +41,38 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("login")]
-        public async Task<IActionResult> LoginExistUser([FromForm] string username, [FromForm] string password)
+        public async Task<IActionResult> LoginExistUserAsync([FromForm] string username, [FromForm] string password)
         {
-            var currentUser = await _authRepository.CheckLogin(username, password);
+            var currentUser = await _authRepository.CheckLoginAsync(username, password);
             return (currentUser is not null) ? Json(new { auth_key = JWTCreate(username), role = currentUser.КодРоли, userID = currentUser.КодПользователя }) : Unauthorized("Такого пользователя не существует.\nПроверьте данные для входа");
         }
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromForm] string surname, [FromForm] string name, [FromForm] string username, [FromForm] string password) => (await _authRepository.RegisterUsers(surname, name, username, password)) ? Ok() : BadRequest("Все поля должны быть заполнены.");
+        public async Task<IActionResult> RegisterUserAsync([FromForm] string surname, [FromForm] string name, [FromForm] string username, [FromForm] string password) => (await _authRepository.RegisterUsersAsync(surname, name, username, password)) ? Ok() : BadRequest("Все поля должны быть заполнены.");
+
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("validationAccount")]
+        public async Task<IActionResult> ValidationRecoveryAccount([FromForm] string username) => (await _authRepository.ValidationRecoveryAccount(username) ? Ok() : BadRequest("Такого пользователя не существует.\nПроверьте правильность введеного логина"));
+
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpPost("recoveryAccount")]
+        public async Task<IActionResult> RecoveryAccountAsync([FromForm] string username, [FromForm] string newPassword) => (await _authRepository.RecoveryAccountAsync(username, newPassword) ? Ok() : BadRequest());
     }
     public class AuthOptions
     {
         public const string ISSUER = "Server";
         public const string AUDIENCE = "Client";
         const string KEY = "mysupersecret_secretsecretsecretkey!123";
+
+        public AuthController AuthController
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         public static SymmetricSecurityKey GetSymmetricSecurityKey() => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
     }
 }

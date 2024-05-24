@@ -14,6 +14,14 @@ namespace LibraryWeb.Integrations.Controllers
             _cartService = cartService;
         }
 
+        public Services.CartService CartService
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("existCartItem")]
         public IActionResult CheckExistCart([FromQuery] int userID, [FromQuery] string bookName) => (_cartService.CheckExistsCartItem(userID, bookName)) ? Ok() : BadRequest();

@@ -13,6 +13,14 @@ namespace LibraryWeb.Integrations.Controllers
             _pickupPointService = pickupPointService;
         }
 
+        public Services.PickupPointService PickupPointService
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allPickupPoints")]
         public JsonResult GetPickupPoint() => Json(_pickupPointService.GetAll());

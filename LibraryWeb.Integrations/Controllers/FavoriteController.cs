@@ -14,6 +14,14 @@ namespace LibraryWeb.Integrations.Controllers
             _favoriteService = favoriteService;
         }
 
+        public Services.FavoriteService FavoriteService
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         /// <summary>
         /// Получения всех книг которые находятся у текущего пользователя в избранном
         /// </summary>
@@ -32,10 +40,10 @@ namespace LibraryWeb.Integrations.Controllers
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("addFavorite")]
-        public IActionResult AddNewFavorite([FromForm] string nameBook, [FromForm] int userID) => (_favoriteService.Add(nameBook, userID)) ? Ok() : BadRequest();
+        public async Task<IActionResult> AddNewFavorite([FromForm] string nameBook, [FromForm] int userID) => (await _favoriteService.Add(nameBook, userID)) ? Ok() : BadRequest();
 
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpPost("deleteFavorite")]
-        public IActionResult RemoveExistFavorite([FromForm] string bookName) => (_favoriteService.Delete(bookName)) ? Ok() : BadRequest();
+        public async Task<IActionResult> RemoveExistFavorite([FromForm] string bookName) => (await _favoriteService.Delete(bookName)) ? Ok() : BadRequest();
     }
 }

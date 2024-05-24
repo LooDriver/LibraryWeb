@@ -16,7 +16,7 @@ namespace LibraryWeb.Integrations.Services
 
         public async Task<bool> AddAsync(string bookName, int userID, int quantity)
         {
-            Книги книги = await _dbContext.Книгиs.FirstOrDefaultAsync(x => x.Название == bookName);
+            Книги книги = await _dbContext.Книгиs.SingleOrDefaultAsync(x => x.Название == bookName);
             if (книги is null) return false;
             else
             {
@@ -27,6 +27,7 @@ namespace LibraryWeb.Integrations.Services
                     КодПользователя = userID,
                     Количество = quantity
                 };
+
                 await _dbContext.Корзинаs.AddAsync(корзина);
                 await _dbContext.SaveChangesAsync();
                 return true;
@@ -42,37 +43,30 @@ namespace LibraryWeb.Integrations.Services
                 _dbContext.SaveChanges();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public bool Delete(string cartItemDelete)
         {
-            var cartDelete = _dbContext.Корзинаs.FirstOrDefault(books => books.КодКнигиNavigation.Название == cartItemDelete);
-            if (cartDelete is null) return false;
-            else
-            {
-                var books = _dbContext.Книгиs.FirstOrDefault(books => books.КодКниги == cartDelete.КодКниги);
-                books.Наличие += cartDelete.Количество;
-                _dbContext.Корзинаs.Remove(cartDelete);
-                _dbContext.SaveChanges();
-                return true;
-            }
+            var cartDelete = _dbContext.Корзинаs.SingleOrDefault(cart => cart.КодКнигиNavigation.Название == cartItemDelete);
+            if (cartDelete is null)
+                return false;
+
+            var book = _dbContext.Книгиs.SingleOrDefault(b => b.КодКниги == cartDelete.КодКниги);
+            if (book is null)
+                return false;
+
+            book.Наличие += cartDelete.Количество;
+            _dbContext.Корзинаs.Remove(cartDelete);
+
+            _dbContext.SaveChanges();
+            return true;
         }
 
         public bool CheckExistsCartItem(int userID, string bookName)
         {
             var userOrderList = _dbContext.Корзинаs.Where(currentUser => currentUser.КодПользователя == userID && currentUser.КодКнигиNavigation.Название == bookName).Select(userOrder => userOrder);
-            if (userOrderList.Any())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return userOrderList.Any();
         }
 
         public List<Корзина> GetAll(int userID) => [.. _dbContext.Корзинаs.AsNoTracking().Include(books => books.КодКнигиNavigation).Where(user => user.КодПользователя == userID)];
