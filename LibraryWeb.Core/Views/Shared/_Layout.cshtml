@@ -65,6 +65,7 @@
             </div>
         </nav>
     </header>
+
     <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="Модальное окно избранного" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -80,13 +81,14 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-primary" href="/cart">К корзине</a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <a class="btn btn-outline-primary" href="/cart">К корзине</a>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="div-login-modal" tabindex="-1" aria-labelledby="Модальное окно для входа в аккаунт" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -96,25 +98,31 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="input-form-login-auth" class="form-label">Логин аккаунта</label>
-                            <input type="text" class="form-control" placeholder="Логин от аккаунта" id="input-form-login-auth" aria-describedby="Логин для входа в аккаунт" required>
+                            <label for="input-form-login-auth" class="form-label">Логин аккаунта (Обязательно)</label>
+                            <input type="text" class="form-control" placeholder="Логин от аккаунта" id="input-form-login-auth" aria-describedby="Логин для входа в аккаунт">
                         </div>
                         <div class="mb-3">
-                            <label for="input-form-password-auth" class="form-label">Пароль</label>
-                            <input type="password" class="form-control" placeholder="Пароль от аккаунта" id="input-form-password-auth" required>
-                            <span id="span-login-error"></span><br>
-                            <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label>
+                            <label for="input-form-password-auth" class="form-label">Пароль (Обязательно)</label>
+                            <div class="password-input-container">
+                                <input type="password" class="form-control" placeholder="Пароль от аккаунта" id="input-form-password-auth">
+                            </div>
+                            <div id="div-login-error-message"></div>
                         </div>
                     </form>
+                    <div class="mb-3">
+                        <label><a data-bs-toggle="modal" href="#div-register-modal" role="button">Впервые? Регистрация</a></label><br/>
+                        <label><a data-bs-toggle="modal" href="#div-recovery-account-modal" role="button">Забыли пароль?</a></label><br />
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btn-form-login">Авторизация</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-outline-primary" id="btn-form-login">Авторизация</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="div-register-modal" tabindex="-1" aria-labelledby="Модальное окно регистрации нового аккаунта" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -124,36 +132,79 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="input-form-username-register" class="form-label">Логин</label>
-                            <input type="text" class="form-control" id="input-form-username-register" aria-describedby="Логин от аккаунта" required>
+                            <label for="input-form-username-register" class="form-label">Логин (Обязательно)</label>
+                            <input type="text" class="form-control" id="input-form-username-register" aria-describedby="Логин от аккаунта">
 
-                            <label for="input-form-surname-register" class="form-label">Фамилия</label>
+                            <label for="input-form-surname-register" class="form-label">Фамилия (Необязательно)</label>
                             <input type="text" class="form-control" id="input-form-surname-register" required>
 
-                            <label for="input-form-name-register" class="form-label">Имя</label>
+                            <label for="input-form-name-register" class="form-label">Имя (Необязательно)</label>
                             <input type="text" class="form-control" id="input-form-name-register" required>
                         </div>
                         <div class="mb-3">
-                            <label for="input-form-password-register" class="form-label">Пароль</label>
-                            <input type="password" class="form-control" id="input-form-password-register" required>
-                            <label for="input-form-password-repeat" class="form-label">Повторите пароль</label>
-                            <input type="password" class="form-control" id="input-form-password-repeat" required>
-                            <span id="span-register-error"></span><br>
+                            <div>
+                                <label for="input-form-password-register" class="form-label">Пароль (Обязательно)</label>
+                                <input type="password" class="form-control" id="input-form-password-register">
+                            </div>
+                            <div>
+                                <label for="input-form-password-repeat" class="form-label">Повторите пароль (Обязательно)</label>
+                                <input type="password" class="form-control" id="input-form-password-repeat">
+                            </div>
+                            <div id="div-register-error-message"></div>
                             <label><a data-bs-toggle="modal" href="#div-login-modal" role="button">Уже зарегистрированы? Авторизация</a></label>
                         </div>
                     </form>
-                    <button type="submit" class="btn btn-primary" id="btn-form-register">Регистрация</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary" id="btn-form-register">Регистрация</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
-    
 
+    <div class="modal fade" id="div-recovery-account-modal" tabindex="-1" aria-labelledby="Модальное окно восстановления пароля" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Восстановление доступа</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="div-recovery-main-content-modal">
+                    <form>
+                        <div class="mb-3">
+                            <label for="input-form-username-recovery" class="form-label">Логин (Обязательный)</label>
+                            <input type="text" class="form-control" id="input-form-username-recovery" aria-describedby="Логин от аккаунта">
+                            <div id="div-recovery-error-message"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="input-recovery-code" class="form-label">Код подтверждения</label>
+                            <div class="div-input-recovery-code">
+                                <input type="text" maxlength="1" pattern="\d" placeholder="0">
+                                <input type="text" maxlength="1" pattern="\d" placeholder="0">
+                                <input type="text" maxlength="1" pattern="\d" placeholder="0">
+                                <input type="text" maxlength="1" pattern="\d" placeholder="0">
+                            </div>
+                            <div id="div-recovery-code"></div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-primary" id="btn-code-verification">Получить код</button>
+                            <button class="btn btn-outline-primary" id="btn-code-confirm" style="display:none;">Подтвердить код</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-primary" id="btn-form-recovery">Далее</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @RenderBody()
 
     <script src="~/lib/jquery-3.7.1.min.js"></script>
+
     <script src="~/lib/bootstrap/bootstrap.bundle.min.js"></script>
 
     <script src="~/js/dist/main_bundle.js" asp-append-version="true"></script>

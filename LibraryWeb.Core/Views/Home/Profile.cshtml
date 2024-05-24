@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12">
-            <button class="btn btn-danger float-end mb-2" id="btn-logout-profile">Выход</button>
+            <button class="btn btn-outline-danger float-end mb-2" id="btn-logout-profile">Выход</button>
         </div>
     </div>
     <div class="row">
@@ -12,7 +12,7 @@
             <div class="card">
                 <div>
                     <a id="a-profile-modal-image" class="btn" data-bs-toggle="modal" data-bs-target="#div-profile-edit-photo-modal">
-                        <img id="img-photo-profile" class="img-fluid rounded-circl e mb-3" alt="Изображение профиля" width="150" height="250">
+                        <img id="img-photo-profile" class="img-fluid rounded mb-3" alt="Изображение профиля" width="150" height="250">
                     </a>
                 </div>
             </div>
@@ -71,18 +71,18 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="input-form-password-edit" class="form-label">Новый пароль</label>
-                    <input type="password" class="form-control" id="input-form-password-edit" required>
+                    <label for="input-form-password-edit" class="form-label">Новый пароль (Обязательно)</label>
+                    <input type="password" class="form-control" id="input-form-password-edit">
                 </div>
                 <div class="mb-3">
-                    <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль</label>
-                    <input type="password" class="form-control" id="input-form-password-edit-repeat" required>
-                    <span id="span-edit-error"></span>
+                    <label for="input-form-password-edit-repeat" class="form-label">Повторите новый пароль (Обязательно)</label>
+                    <input type="password" class="form-control" id="input-form-password-edit-repeat">
                 </div>
+                <div id="div-error-change-message"></div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-warning" id="btn-form-profile-edit">Подтвердить</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="submit" class="btn btn-outline-primary btn-outline-warning" id="btn-form-profile-edit">Подтвердить</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
                 <button class="btn btn-outline-warning" id="btn-profile-photo-change">Подтвердить</button>
             </div>
         </div>
