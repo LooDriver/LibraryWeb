@@ -30,4 +30,3 @@ class Order {
 }
 Order.orderUrl = '/api/order';
 export default Order;
-//# sourceMappingURL=OrderComponent.js.map

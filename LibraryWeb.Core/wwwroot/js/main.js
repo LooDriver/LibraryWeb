@@ -6,7 +6,8 @@ import Order from './Module/OrderComponent';
 import Pickup from './Module/PickupPointComponent';
 import Cart from './Module/CartComponent';
 import Profile from './Module/ProfileComponent';
-import { getCookie, deleteCookie } from './Utils/cookieUtils';
+import { getCookie } from './Utils/cookieUtils';
+import PickupPoint from './Module/PickupPointComponent';
 function readFileAsByteArray(input, callback) {
     const reader = new FileReader();
     const files = $(input).prop('files');
@@ -36,12 +37,6 @@ function byteArrayToBase64(byteArray) {
         reader.readAsDataURL(blob);
     });
 }
-export function Logout() {
-    deleteCookie("auth_key");
-    deleteCookie("permission");
-    sessionStorage.clear();
-    window.location.href = "/";
-}
 $(function () {
     $('#btn-new-comment').on('click', function (event) {
         event.preventDefault();
@@ -63,11 +58,12 @@ $(function () {
     });
     $('#btn-form-profile-edit').on('click', function (event) {
         event.preventDefault();
-        if ($('#input-form-password-edit').val() == $('#input-form-password-edit-repeat').val()) {
-            Profile.EditProfilePassword($('#input-form-password-edit').val().toString());
+        if ($('#input-form-password-edit').val().toString() != '' && $('#input-form-password-edit-repeat').val().toString() != '') {
+            Profile.EditProfilePassword($('#input-form-password-edit').val().toString(), $('#input-form-password-edit-repeat').val().toString());
         }
         else {
-            $('#span-edit-error').text('Пароли должны быть одинаковыми.').css('color', 'red');
+            $('#div-error-change-message').empty();
+            $('#div-error-change-message').append('<span>Оба поля являются обязательными к заполнению.').css('color', 'red');
         }
     });
     $('#btn-profile-information-edit').on('click', function (event) {
@@ -79,7 +75,7 @@ $(function () {
         Cart.ClearCart();
     });
     $('#btn-logout-profile').on('click', function () {
-        Logout();
+        Auth.LogoutAccount();
     });
     $('#btn-favorite-show').on('click', function (event) {
         event.preventDefault();
@@ -108,9 +104,8 @@ $(function () {
     $('#btn-cart-book').on('click', function (event) {
         event.preventDefault();
         if (getCookie("auth_key") != "") {
-            var cart = new Cart();
             if ($('#btn-cart-book').text().includes('Добавить')) {
-                Cart.AddNewCartItem($('#h2-title-about-book').text(), Number.parseInt($('#input-quantity-about-book').val().toString()));
+                Cart.AddNewCartItem($('#h2-title-about-book').text(), Number.parseInt($('#span-information-quantity').text().toString()));
             }
             else {
                 Cart.DeleteCartItem($('#h2-title-about-book').text());
@@ -121,27 +116,21 @@ $(function () {
         }
     });
     $(document).ready(function () {
-        const permission = getCookie('permission');
-        const userLogin = sessionStorage.getItem('userlogin');
         const currentUrl = window.location.href.substring((window.location.href.indexOf('8') + 1));
-        if (permission === '1')
+        if (getCookie('permission') === '1')
             $('#a-admin-panel').removeAttr('style');
-        $('#p-user-login').text(userLogin ? `Добро пожаловать - ${userLogin}` : 'Войти');
+        $('#p-user-login').text(sessionStorage.getItem('userlogin') ? `Добро пожаловать - ${sessionStorage.getItem('userlogin')}` : 'Войти');
         if (window.location.href.includes('/book/name'))
             Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
-        if (userLogin)
+        if (sessionStorage.getItem('userlogin'))
             $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
-        if (!sessionStorage.getItem('pickup_point_data')) {
-            $.get(`/api/pickup/allPickupPoints`, data => {
-                sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
-            });
-        }
         switch (currentUrl) {
             case '/': {
                 Book.GetAllBooks();
                 break;
             }
             case '/cart': {
+                PickupPoint.SetPickupPointData();
                 Cart.ShowCartList();
                 Cart.selectFillPickupPoint();
                 break;
@@ -157,6 +146,29 @@ $(function () {
             }
         }
     });
+    $('#btn-code-verification').on('click', function (event) {
+        event.preventDefault();
+        Auth.RecoveryAccount($('#input-form-username-recovery').val().toString());
+    });
+    $('#btn-form-recovery').on('click', function (event) {
+        event.preventDefault();
+        if ($('#btn-form-recovery').text().includes('Восстановить')) {
+            if ($('#input-form-password-recovery').val().toString() != '' && $('#input-form-repeat-password-recovery').val().toString() != '') {
+                Auth.ChangeRecoveryAccount($('#input-form-password-recovery').val().toString(), $('#input-form-repeat-password-recovery').val().toString());
+            }
+            else {
+                $('#div-error-password-message').empty();
+                $('#div-error-password-message').append('<span>Оба поля являются обязательными к заполнению.').css('color', 'red');
+            }
+        }
+    });
+    $('#btn-code-confirm').on('click', function (event) {
+        event.preventDefault();
+        var values = $('.div-input-recovery-code input').map(function () {
+            return $(this).val();
+        }).get().join('');
+        Auth.VerificationCode(values);
+    });
     $(document).on('click', '#a-redirect-cart-about-book, #a-redirect-profile-book, #a-redirect-about-book', function (event) {
         event.preventDefault();
         Book.GetCurrentBookByName(Book.clearUrlBook(decodeURI(this.getAttribute('href'))));
@@ -164,6 +176,9 @@ $(function () {
     $('#tbody-cart-items').on('click', '#btn-delete-cart-item', function (event) {
         event.preventDefault();
         Cart.DeleteCartItem($(this).closest('tr').find('.td-book-name').text());
+    });
+    $('#input-range-quantity-about-book').on('change input', function (event) {
+        $('#span-information-quantity').text($(event.target).val().toString());
     });
     $('#tileContainer').on('click', '.btn-about-book', function (event) {
         event.preventDefault();

@@ -1,4 +1,4 @@
-import { Logout } from '../main';
+import Auth from '../Module/AuthorizationComponent';
 class Profile {
     static ShowProfileInfo() {
         if (sessionStorage.getItem('userid') != undefined) {
@@ -24,14 +24,25 @@ class Profile {
             window.location.reload();
         });
     }
-    static EditProfilePassword(password) {
-        $.post(`${this.profileUrl}/editPassword`, { 'userID': sessionStorage.getItem('userid'), 'password': password }, () => {
-            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
-            $('#span-edit-error').empty();
-            Logout();
-        }).fail((error) => {
-            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
-        });
+    static EditProfilePassword(password, repeatPassword) {
+        if (this.validateUserPassword(password, repeatPassword)) {
+            $.post(`${this.profileUrl}/editPassword`, { 'userID': sessionStorage.getItem('userid'), 'password': password }, () => {
+                alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
+                Auth.LogoutAccount();
+            }).fail((error) => {
+                this.handleError(`<span>${error.responseText}</span>`, $('#div-error-change-message'));
+            });
+        }
+        else {
+            this.handleError(`<span>Пароли должны быть одинаковыми.</span>`, $('#div-error-change-message'));
+        }
+    }
+    static handleError(errorMessage, errorElement) {
+        errorElement.empty();
+        errorElement.append(errorMessage).css('color', 'red');
+    }
+    static validateUserPassword(password, repeatPassword) {
+        return password == repeatPassword;
     }
     static DisableElements() {
         $('#a-profile-modal-image').removeAttr('data-bs-toggle').removeAttr('data-bs-target');

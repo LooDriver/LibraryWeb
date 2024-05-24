@@ -2,6 +2,14 @@
 
     private static pickupUrl = '/api/pickup';
 
+    public static SetPickupPointData() {
+        if (!sessionStorage.getItem('pickup_point_data')) {
+            $.get(`/api/pickup/allPickupPoints`, data => {
+                sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
+            });
+        }
+    }
+
     public static ShowPickupPoints() {
         $.get(`${this.pickupUrl}/allPickupPoints`, ((data) => {
 
@@ -13,8 +21,7 @@
                         <p class="card-text">${pickup.адрес}</p>
                         </div>
                     </div>
-                </div>
-            `
+                </div>`
             );
 
             $('#div-show-pickup').append(pickupElements.join(""));
