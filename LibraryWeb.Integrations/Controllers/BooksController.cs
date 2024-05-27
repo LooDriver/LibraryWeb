@@ -14,14 +14,6 @@ namespace LibraryWeb.Integrations.Controllers
             _bookService = bookService;
         }
 
-        public Services.BookService BookService
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
         public JsonResult GetBooks() => Json(_bookService.GetAll());

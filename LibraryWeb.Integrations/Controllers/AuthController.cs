@@ -18,14 +18,6 @@ namespace LibraryWeb.Integrations.Controllers
             _authRepository = authRepository;
         }
 
-        public Services.AuthService AuthService
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         private static string JWTCreate(string username)
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };

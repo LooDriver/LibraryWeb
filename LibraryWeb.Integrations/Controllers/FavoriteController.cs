@@ -14,14 +14,6 @@ namespace LibraryWeb.Integrations.Controllers
             _favoriteService = favoriteService;
         }
 
-        public Services.FavoriteService FavoriteService
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         /// <summary>
         /// Получения всех книг которые находятся у текущего пользователя в избранном
         /// </summary>

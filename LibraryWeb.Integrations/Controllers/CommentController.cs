@@ -14,14 +14,6 @@ namespace LibraryWeb.Integrations.Controllers
             _commentService = commentService;
         }
 
-        public Services.CommentService CommentService
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getAllComments")]
         public JsonResult GetAllComments(string bookName) => Json(_commentService.GetAll(bookName));

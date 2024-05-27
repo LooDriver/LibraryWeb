@@ -13,14 +13,6 @@ namespace LibraryWeb.Integrations.Controllers
             _orderService = orderService;
         }
 
-        public Services.OrderService OrderService
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("getOrder")]
         public JsonResult GetAllOrders([FromQuery] int userID) => Json(_orderService.GetAll(userID));
