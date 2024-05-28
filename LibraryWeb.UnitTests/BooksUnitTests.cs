@@ -41,7 +41,7 @@ namespace LibraryWeb.UnitTests
             var fakeBook = new Книги { Название = currentBook };
             _booksService.Setup(repo => repo.GetByNameAsync(currentBook)).ReturnsAsync(fakeBook);
 
-            var result = await _booksController.GetBookByName(currentBook);
+            var result = await _booksController.GetBookByNameAsync(currentBook);
 
             var okResult = Assert.IsType<JsonResult>(result);
             var model = Assert.IsAssignableFrom<Книги>(okResult.Value);

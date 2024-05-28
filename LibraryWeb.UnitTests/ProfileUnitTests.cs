@@ -30,9 +30,9 @@ namespace LibraryWeb.UnitTests
                 Фото = new byte[5]
             };
 
-            _profileServices.Setup(repo => repo.GetById(1)).ReturnsAsync(fakeUser);
+            _profileServices.Setup(repo => repo.GetByUserIDAsync(1)).ReturnsAsync(fakeUser);
 
-            var result = await _profileController.GetProfileInformation(1);
+            var result = await _profileController.GetProfileInformationAsync(1);
 
             var okResult = Assert.IsType<JsonResult>(result);
 
@@ -44,7 +44,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfileAsync(1, "Тест имени", "Тест фамилии", "Тест логина")).ReturnsAsync(true);
 
-            var result = await _profileController.UpdateProfileData(1, "Тест имени", "Тест фамилии", "Тест логина");
+            var result = await _profileController.UpdateProfileDataAsync(1, "Тест имени", "Тест фамилии", "Тест логина");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -56,7 +56,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfileAsync(1, "Тест имени", "Тест фамилии", "Тест логина")).ReturnsAsync(false);
 
-            var result = await _profileController.UpdateProfileData(1, "Тест имени", "Тест фамилии", "Тест логина");
+            var result = await _profileController.UpdateProfileDataAsync(1, "Тест имени", "Тест фамилии", "Тест логина");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 
@@ -68,7 +68,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfilePhotoAsync(1, "photo")).ReturnsAsync(true);
 
-            var result = await _profileController.UpdateProfilePhoto(1, "photo");
+            var result = await _profileController.UpdateProfilePhotoAsync(1, "photo");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -80,7 +80,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfilePhotoAsync(1, "photo")).ReturnsAsync(false);
 
-            var result = await _profileController.UpdateProfilePhoto(1, "photo");
+            var result = await _profileController.UpdateProfilePhotoAsync(1, "photo");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 
@@ -92,7 +92,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfilePasswordAsync(1, "newPass")).ReturnsAsync(false);
 
-            var result = await _profileController.UpdateProfilePhoto(1, "newPass");
+            var result = await _profileController.UpdateProfilePasswordAsync(1, "newPass");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 
@@ -104,7 +104,7 @@ namespace LibraryWeb.UnitTests
         {
             _profileServices.Setup(repo => repo.EditProfilePasswordAsync(1, "newPass")).ReturnsAsync(true);
 
-            var result = await _profileController.UpdateProfilePassword(1, "newPass");
+            var result = await _profileController.UpdateProfilePasswordAsync(1, "newPass");
 
             var okResult = Assert.IsType<OkResult>(result);
 

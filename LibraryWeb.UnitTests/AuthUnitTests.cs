@@ -28,9 +28,9 @@ namespace LibraryWeb.UnitTests
                 Пароль = "123"
             };
 
-            _authServices.Setup(repo => repo.CheckLogin("test123", "123")).ReturnsAsync(fakeUser);
+            _authServices.Setup(repo => repo.CheckLoginAsync("test123", "123")).ReturnsAsync(fakeUser);
 
-            var result = await _authController.LoginExistUser("test123", "123");
+            var result = await _authController.LoginExistUserAsync("test123", "123");
 
             var okResult = Assert.IsType<JsonResult>(result);
 
@@ -41,9 +41,9 @@ namespace LibraryWeb.UnitTests
         public async Task SuccessRegister_NewUser_Async()
         {
 
-            _authServices.Setup(repo => repo.RegisterUsers("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(true);
+            _authServices.Setup(repo => repo.RegisterUsersAsync("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(true);
 
-            var result = await _authController.RegisterUser("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
+            var result = await _authController.RegisterUserAsync("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -54,9 +54,9 @@ namespace LibraryWeb.UnitTests
         public async Task BadRegister_NewUser_Async()
         {
 
-            _authServices.Setup(repo => repo.RegisterUsers("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(false);
+            _authServices.Setup(repo => repo.RegisterUsersAsync("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля", 2)).ReturnsAsync(false);
 
-            var result = await _authController.RegisterUser("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
+            var result = await _authController.RegisterUserAsync("Тест фамилии", "Тест имени", "Тест логина", "Тест пароля");
 
             var badResult = Assert.IsType<BadRequestObjectResult>(result);
 
@@ -73,9 +73,9 @@ namespace LibraryWeb.UnitTests
                 Пароль = ""
             };
 
-            _authServices.Setup(repo => repo.CheckLogin("123", "123")).ReturnsAsync(fakeUser);
+            _authServices.Setup(repo => repo.CheckLoginAsync("123", "123")).ReturnsAsync(fakeUser);
 
-            var result = await _authController.LoginExistUser("", "");
+            var result = await _authController.LoginExistUserAsync("", "");
 
             var badResult = Assert.IsType<UnauthorizedObjectResult>(result);
 

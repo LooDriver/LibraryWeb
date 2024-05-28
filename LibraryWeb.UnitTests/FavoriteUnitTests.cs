@@ -60,35 +60,35 @@ namespace LibraryWeb.UnitTests
         }
 
         [Fact]
-        public void Success_AddCartItem()
+        public async Task Success_AddCartItem_Async()
         {
             var fakeBook = new Книги { КодКниги = 1, Название = "Тест 1", Наличие = 60 };
 
-            _favoriteServices.Setup(repo => repo.Add(fakeBook.Название, 1)).Returns(true);
+            _favoriteServices.Setup(repo => repo.AddFavoriteBookAsync(fakeBook.Название, 1)).ReturnsAsync(true);
 
-            var result = _favoriteController.AddNewFavorite(fakeBook.Название, 1);
+            var result = await _favoriteController.AddNewFavoriteAsync(fakeBook.Название, 1);
 
             var okResult = Assert.IsType<OkResult>(result);
             Assert.Equal(200, okResult.StatusCode);
         }
 
         [Fact]
-        public void Bad_Add_FavoriteItem()
+        public async Task Bad_Add_FavoriteItem_Async()
         {
-            _favoriteServices.Setup(repo => repo.Add("Тест 1", 1)).Returns(false);
+            _favoriteServices.Setup(repo => repo.AddFavoriteBookAsync("Тест 1", 1)).ReturnsAsync(false);
 
-            var result = _favoriteController.AddNewFavorite("Тест 1", 1);
+            var result = await _favoriteController.AddNewFavoriteAsync("Тест 1", 1);
 
             var badResult = Assert.IsType<BadRequestResult>(result);
             Assert.Equal(400, badResult.StatusCode);
         }
 
         [Fact]
-        public void Success_Remove_FavoriteItem()
+        public async Task Success_Remove_FavoriteItem_Async()
         {
-            _favoriteServices.Setup(repo => repo.Delete("Тест 1")).Returns(true);
+            _favoriteServices.Setup(repo => repo.DeleteFavoriteBookAsync("Тест 1")).ReturnsAsync(true);
 
-            var result = _favoriteController.RemoveExistFavorite("Тест 1");
+            var result = await _favoriteController.RemoveExistFavoriteAsync("Тест 1");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -96,11 +96,11 @@ namespace LibraryWeb.UnitTests
         }
 
         [Fact]
-        public void Bad_RemoveCartItem()
+        public async Task Bad_RemoveCartItem_Async()
         {
-            _favoriteServices.Setup(repo => repo.Delete("Тест 1")).Returns(false);
+            _favoriteServices.Setup(repo => repo.DeleteFavoriteBookAsync("Тест 1")).ReturnsAsync(false);
 
-            var result = _favoriteController.RemoveExistFavorite("Тест 1");
+            var result = await _favoriteController.RemoveExistFavoriteAsync("Тест 1");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 
