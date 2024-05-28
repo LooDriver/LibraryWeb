@@ -14,12 +14,21 @@ namespace LibraryWeb.Integrations.Controllers
             _bookService = bookService;
         }
 
+        /// <summary>
+        /// Метод для получения всех книг из базы данных
+        /// </summary>
+        /// <returns>Json обьект книг для их последующей десериализации</returns>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet("allBooks")]
         public JsonResult GetBooks() => Json(_bookService.GetAll());
 
+        /// <summary>
+        /// Метод для получения подробной информации о конкретной книге
+        /// </summary>
+        /// <param name="name">Название книги</param>
+        /// <returns>Json обьект конкретной книги для его последующей десериализации</returns>
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         [HttpGet]
-        public async Task<JsonResult> GetBookByName([FromQuery] string name) => Json(await _bookService.GetByNameAsync(name));
+        public async Task<JsonResult> GetBookByNameAsync([FromQuery] string name) => Json(await _bookService.GetByNameAsync(name));
     }
 }

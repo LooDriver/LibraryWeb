@@ -49,8 +49,8 @@ namespace LibraryWeb.Integrations.Services
             return true;
         }
 
-        public async Task<Пользователи> GetById(int userID) => await _dbContext.Пользователиs.AsNoTracking().SingleOrDefaultAsync(user => user.КодПользователя == userID);
+        public async Task<Пользователи> GetByUserIDAsync(int userID) => await _dbContext.Пользователиs.AsNoTracking().SingleOrDefaultAsync(user => user.КодПользователя == userID);
 
-        public async Task<Пользователи> GetByUsername(string username) => await _dbContext.Пользователиs.AsNoTracking().SingleOrDefaultAsync(commentUser => commentUser.Логин == username);
+        public async Task<Пользователи> GetByUsernameAsync(string username) => await _dbContext.Пользователиs.AsNoTracking().SingleOrDefaultAsync(commentUser => commentUser.Логин == username);
     }
 }

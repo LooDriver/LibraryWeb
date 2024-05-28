@@ -14,7 +14,7 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public async Task<bool> Add(string bookName, int userID)
+        public async Task<bool> AddFavoriteBookAsync(string bookName, int userID)
         {
             var favoBookData = await _dbContext.Книгиs.SingleOrDefaultAsync(books => books.Название == bookName);
             if (favoBookData is null)
@@ -37,7 +37,7 @@ namespace LibraryWeb.Integrations.Services
             return userFavoriteBooks.Any();
         }
 
-        public async Task<bool> Delete(string bookName)
+        public async Task<bool> DeleteFavoriteBookAsync(string bookName)
         {
             Избранное bookInFavorite = await _dbContext.Избранноеs.SingleOrDefaultAsync(favoriteBook => favoriteBook.КодКнигиNavigation.Название == bookName);
             if (bookInFavorite is null)
