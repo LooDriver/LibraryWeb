@@ -20,15 +20,7 @@ export default class Book {
 
     public static createAboutBook(book) {
 
-        $('#span-information-quantity').text('0');
-        $('#h2-title-about-book').text(`${book.название}`);
-        $('#p-author-about-book').text(`${book.автор}`);
-        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
-        $('#p-quantity-about-book').text(`${book.наличие}`);
-
-        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+        this.setupBookElements(book);
 
         this.showCommentsIfLoggedIn(book.название);
 
@@ -38,11 +30,23 @@ export default class Book {
         }
     }
 
+    private static setupBookElements(book) {
+        $('#span-information-quantity').text('0');
+        $('#h2-title-about-book').text(`${book.название}`);
+        $('#p-author-about-book').text(`Автор - ${book.автор}`);
+        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
+        $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
+        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
+        $('#p-quantity-about-book').text(`${book.наличие}`);
+        $('#p-description-about-book').text(`${book.описание}`);
+        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
+        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+    }
+
     private static showCommentsIfLoggedIn(bookTitle: string) {
         Comment.ShowAllComments(bookTitle);
         sessionStorage.getItem('userid') === null ? $('#form-new-comments').hide() : $('#form-new-comments').show();
     }
-
 
     private static setupFavoriteButton(bookTitle: string, url:string) {
         this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');

@@ -13,19 +13,24 @@ class Book {
             .done(data => this.createTileBooks(data));
     }
     static createAboutBook(book) {
-        $('#span-information-quantity').text('0');
-        $('#h2-title-about-book').text(`${book.название}`);
-        $('#p-author-about-book').text(`${book.автор}`);
-        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
-        $('#p-quantity-about-book').text(`${book.наличие}`);
-        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+        this.setupBookElements(book);
         this.showCommentsIfLoggedIn(book.название);
         if (sessionStorage.getItem('userid') !== undefined) {
             this.setupFavoriteButton(book.название, '/api/favorite/existFavorite');
             this.setupCartButton(book.название, '/api/cart/existCartItem');
         }
+    }
+    static setupBookElements(book) {
+        $('#span-information-quantity').text('0');
+        $('#h2-title-about-book').text(`${book.название}`);
+        $('#p-author-about-book').text(`Автор - ${book.автор}`);
+        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
+        $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
+        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
+        $('#p-quantity-about-book').text(`${book.наличие}`);
+        $('#p-description-about-book').text(`${book.описание}`);
+        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
+        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
     }
     static showCommentsIfLoggedIn(bookTitle) {
         Comment.ShowAllComments(bookTitle);

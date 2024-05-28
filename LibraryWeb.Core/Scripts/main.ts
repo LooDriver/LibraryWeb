@@ -217,7 +217,7 @@ $(function () {
     });
     $('#btn-order-success').on('click', function (event) {
         event.preventDefault();
-        Order.AddNewOrder('#a-redirect-cart-about-book', ($('#select-pickup-point option:selected').index() + 1));
+        Order.AddNewOrder(($('#select-pickup-point option:selected').index() + 1));
         Cart.ClearCart();
     });
     $('#btn-form-login').on('click', function (event) {

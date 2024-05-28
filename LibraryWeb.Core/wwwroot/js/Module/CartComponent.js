@@ -1,21 +1,14 @@
 import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
 class Cart {
     static AddNewCartItem(orderName, quantity = 0) {
-        const maxQuantity = Number.parseInt($('#p-quantity-about-book').text().toString());
         checkIfFavoriteOrCartExists(orderName, `${this.cartUrl}/existCartItem`).then((result) => {
             if (result) {
                 $('#btn-cart-book').text('Удалить из корзины');
             }
             else {
-                if (quantity > maxQuantity || quantity <= 0) {
-                    $('#span-information-quantity').text(`Количество не может быть больше максимального значения ${$('#input-quantity-about-book').attr('max')} или меньше нуля`).css('color', 'red');
-                    $('#input-quantity-about-book').val('1');
-                }
-                else {
-                    $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
-                        window.location.reload();
-                    });
-                }
+                $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
+                    window.location.reload();
+                });
             }
         });
     }
@@ -46,8 +39,14 @@ class Cart {
             </tr>
         `);
         $('#tbody-cart-items').append(cartTableElem.join(""));
-        var sumCostBook = Number.parseInt($('#td-cart-book-cost').text()) * Number.parseInt($('#td-cart-book-count').text());
-        $('#h4-final-sum').text(`Общая сумма - ${isNaN(sumCostBook) ? 0 : sumCostBook} руб.`);
+        this.calculateFinalSum(cartData);
+    }
+    static calculateFinalSum(cartData) {
+        var totalSum = 0;
+        cartData.forEach(cart => {
+            totalSum += cart.кодКнигиNavigation.цена * cart.количество;
+        });
+        $('#h4-final-sum').text(`Общая сумма - ${isNaN(totalSum) ? 0 : totalSum} руб.`);
     }
     static selectFillPickupPoint() {
         var data = JSON.parse(sessionStorage.getItem('pickup_point_data'));
