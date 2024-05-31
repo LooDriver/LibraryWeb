@@ -1,17 +1,15 @@
 import Auth from '../Module/AuthorizationComponent';
 class Profile {
     static ShowProfileInfo() {
-        if (sessionStorage.getItem('userid') != undefined) {
-            $.get(`${this.profileUrl}/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, (data) => {
-                this.SetupElements(data);
-            });
-        }
-        else if (sessionStorage.getItem('commentUsername') != undefined) {
-            $.get(`${this.profileUrl}/commentProfileInformation`, { 'username': sessionStorage.getItem('commentUsername') }, (data) => {
-                this.DisableElements();
-                this.SetupElements(data);
-            });
-        }
+        $.get(`${this.profileUrl}/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, (data) => {
+            this.SetupElements(data);
+        });
+    }
+    static ShowProfileInfoCommentUser() {
+        $.get(`${this.profileUrl}/commentProfileInformation`, { 'username': sessionStorage.getItem('commentUsername') }, (data) => {
+            this.SetupElements(data);
+            this.DisableElements();
+        });
     }
     static EditProfileInfo(name, surname, username) {
         $.post(`${this.profileUrl}/editProfile?userID=${sessionStorage.getItem('userid')}`, { 'name': name, 'surname': surname, 'username': username }, () => {
@@ -49,6 +47,7 @@ class Profile {
         $('#btn-profile-information-edit').hide();
         $('#btn-profile-information-password-edit').hide();
         $('#btn-logout-profile').hide();
+        $('#input-form-edit-login').val('*********');
         $('.form-user-information :input').attr('disabled', 'true');
     }
     static SetupElements(data) {
@@ -59,14 +58,6 @@ class Profile {
         $('#img-photo-edit-modal').attr('src', `data:image/png;base64,${data.photo}`);
         $('#img-photo-edit-modal-medium').attr('src', `data:image/png;base64,${data.photo}`);
         $('#img-photo-edit-modal-small').attr('src', `data:image/png;base64,${data.photo}`);
-    }
-    static Checker() {
-        if (sessionStorage.getItem('userid') != null) {
-            return true;
-        }
-        else if (sessionStorage.getItem('commentUsername') != null) {
-            return false;
-        }
     }
 }
 Profile.profileUrl = '/api/profile';

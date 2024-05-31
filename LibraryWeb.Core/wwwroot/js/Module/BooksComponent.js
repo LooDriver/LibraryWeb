@@ -53,7 +53,7 @@ class Book {
                     <div class="tile-content">
                      <div class="tile-book" style="display:none;">${book.название}</div>
                         <figure>
-                        <button class="btn-about-book" ${book.наличие == 0 ? 'disabled="true"' : ''}>
+                        <button class="btn-book-tiles" ${book.наличие == 0 ? 'disabled="true"' : ''}>
                             <img src="data:image/png;base64,${book.обложка}" width="150" height="200">
                         </button>
                             <figcaption>${book.наличие == 0 ? 'Нету в наличии книги' : ''} ${book.название}</figcaption>
@@ -61,7 +61,7 @@ class Book {
                     </div>
                 </div>
             </div>`);
-        $('#tileContainer').append('<div class="row">' + bookTiles.join('') + '</div>');
+        $('#div-book-tiles').append('<div class="row">' + bookTiles.join('') + '</div>');
     }
     static clearUrlBook(bookUrl) {
         return bookUrl.substr((bookUrl.indexOf('?') + 1));

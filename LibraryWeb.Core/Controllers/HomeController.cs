@@ -31,6 +31,9 @@ namespace LibraryWeb.Core.Controllers
         [Route("profile")]
         public IActionResult Profile() => View();
 
+        [Route("profileComment")]
+        public IActionResult ProfileComment() => View();
+
         [Route("cart")]
         public IActionResult Cart() => View();
 

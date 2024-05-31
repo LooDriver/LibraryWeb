@@ -165,6 +165,13 @@ $(function () {
                 Pickup.ShowPickupPoints();
                 break;
             }
+            case '/profileComment': {
+                if (sessionStorage.getItem('commentUsername') === '') {
+                    window.location.href = '/';
+                }
+                Profile.ShowProfileInfoCommentUser();
+                break;
+            }
         }
     });
 
@@ -210,7 +217,7 @@ $(function () {
         $('#span-information-quantity').text($(event.target).val().toString());
     });
 
-    $('#tileContainer').on('click', '.btn-about-book', function (event) {
+    $('#div-book-tiles').on('click', '.btn-book-tiles', function (event) {
         event.preventDefault();
         Book.GetCurrentBookByName($(this).closest('.tile').find('.tile-book').text());
 
@@ -239,7 +246,7 @@ $(function () {
         event.preventDefault();
         var username = $(this).closest('.a-redirect-comment-user-profile').find('.author').text();
         sessionStorage.setItem('commentUsername', username);
-        window.location.href = "/profile";
-        Profile.ShowProfileInfo();
+        window.location.href = "/profileComment";
+        Profile.ShowProfileInfoCommentUser();
     });
 });
