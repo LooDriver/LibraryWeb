@@ -4,7 +4,7 @@
     {
         List<T> GetAll(int userID);
         bool CheckExistFavorite(int userID, string bookName);
-        bool Add(string bookName, int userID);
-        bool Delete(string bookName);
+        Task<bool> AddFavoriteBookAsync(string bookName, int userID);
+        Task<bool> DeleteFavoriteBookAsync(string bookName);
     }
 }

@@ -14,17 +14,13 @@ namespace LibraryWeb.Integrations.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Пользователи> CheckLogin(string username, string password)
+        public async Task<Пользователи> CheckLoginAsync(string username, string password)
         {
             Пользователи usersExists = await _dbContext.Пользователиs.FirstOrDefaultAsync(logins => logins.Логин == username && logins.Пароль == password);
-            if (usersExists is null) { return null; }
-            else
-            {
-                return usersExists;
-            }
+            return usersExists ?? null;
         }
 
-        public async Task<bool> RegisterUsers(string surname, string name, string username, string password, int role = 2)
+        public async Task<bool> RegisterUsersAsync(string surname, string name, string username, string password, int role = 2)
         {
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
@@ -32,10 +28,24 @@ namespace LibraryWeb.Integrations.Services
                 await _dbContext.SaveChangesAsync();
                 return true;
             }
-            else
+            return false;
+        }
+
+        public async Task<bool> ValidationRecoveryAccount(string username)
+        {
+            Пользователи recoveryAccount = await _dbContext.Пользователиs.FirstOrDefaultAsync(user => user.Логин == username);
+            return recoveryAccount is not null;
+        }
+        public async Task<bool> RecoveryAccountAsync(string username, string newPassword)
+        {
+            Пользователи recoveryAccount = await _dbContext.Пользователиs.FirstOrDefaultAsync(user => user.Логин == username);
+            if (recoveryAccount is not null)
             {
-                return false;
+                recoveryAccount.Пароль = newPassword;
+                await _dbContext.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
     }
 }

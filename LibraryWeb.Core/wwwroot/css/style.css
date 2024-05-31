@@ -4,12 +4,9 @@
     box-sizing: border-box;
 }
 
-.card {
-    margin-bottom: 20px;
-}
-
-.card-wrapper {
-    display: flex;
+.card,
+.tile {
+    margin-bottom: 15px;
 }
 
 .card-wrapper .col-md-2 {
@@ -20,24 +17,34 @@ th, td, tr {
     border: 1px solid black;
 }
 
-button {
+figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+}
+
+figcaption {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.btn-outline-danger,
+.btn-outline-warning,
+.btn-outline-secondary,
+.btn-outline-primary {
+    border-radius: 20px;
+}
+
+.button-center {
     margin: 0 auto;
     display: block;
 }
 
 .tile {
     background-color: transparent;
-    margin-bottom: 20px;
     overflow: hidden;
-}
-
-.btn-about-book {
-    background-color: transparent;
-    border-radius: 8px;
-}
-
-.tile-book {
-    display: none;
 }
 
 .tile img {
@@ -67,151 +74,90 @@ button {
     margin-top: 20px;
 }
 
-.author-genre {
-    margin-bottom: 10px; 
-}
-
-.availability {
-    margin-top: 20px; 
-}
+.author-genre,
+.availability,
 .comment {
     margin-bottom: 20px;
 }
 
 .author {
     font-weight: bold;
-    color: #333; 
+    color: #333;
 }
 
 .content {
     margin-top: 5px;
     padding: 10px;
-    border: 1px solid #ccc; 
-    background-color: #f9f9f9; 
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
 }
 
-/*Стили для Пункта выдачи вкладки*/
-/* Стили для заголовка */
 h1 {
     font-size: 32px;
-    color: #333; 
+    color: #333;
 }
 
-/* Стили для поля поиска */
-.form-control {
-    border-radius: 20px; 
-}
-
-/* Стили для кнопки поиска */
-.btn-outline-secondary {
-    border-radius: 20px; 
-    color: #007bff; 
-    border-color: #007bff; 
-}
-
-.btn-outline-secondary:hover {
-    background-color: #007bff;
-    color: #fff;
-}
-
-/*Стили для профиля*/
-/* Стили для кнопок */
-
-.btn-danger {
-    border-radius: 10px;
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-warning {
-    border-radius: 10px;
-    background-color: #ffc107;
-    border-color: #ffc107;
-}
-
-.btn-secondary {
-    border-radius: 10px;
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-/* Дополнительные стили */
 .modal-header h3,
 .modal-header h4 {
     font-weight: bold;
 }
 
-.modal-content {
-    border-radius: 20px;
-}
-
-.card {
-    margin-bottom: 20px;
-}
-/*Для модального окна смены фото профиля*/
-/* Стили для заголовка модального окна */
 .modal-header h4 {
     font-size: 24px;
     font-weight: bold;
 }
 
-/* Стили для изображений */
 #div-show-picture img {
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
-    transition: transform 0.3s ease; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
 #div-show-picture img:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 }
 
-/* Стили для кнопок */
 .modal-footer .btn {
-    border-radius: 100px;
     padding: 10px 20px;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-.btn-outline-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
-    color: #000; 
-}
-/*Стили для header на главной странице*/
-
-/* Стили для логотипа */
 .navbar-brand {
     font-size: 24px;
     font-weight: bold;
-    color: #333; /* цвет текста */
+    color: #333;
 }
 
-/* Стили для кнопки переключения навигации */
 .navbar-toggler-icon {
-    background-image: url('../favicon.ico'); /* замените 'path_to_icon.svg' на путь к вашей иконке */
+    background-image: url('../favicon.ico');
 }
 
-/* Стили для кнопок навигации и действий пользователя */
-.nav-link,
-.btn {
-    border-radius: 20px; /* закругленные углы */
+.div-input-recovery-code {
+    display: block;
+    justify-content: flex-start;
+    text-align: center;
 }
 
-.btn-primary {
-    background-color: #007bff; /* цвет фона */
-    border-color: #007bff; /* цвет рамки */
+.div-input-recovery-code input[type="text"] {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3; /* цвет фона при наведении */
-    border-color: #0056b3; /* цвет рамки при наведении */
-    color: #fff; /* цвет текста при наведении */
+.div-input-recovery-code input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+#select-pickup-point {
+    width: 100%;
+}
 
-/*стили футера*/
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.mt-4 {
+    margin-top: 1.5rem;
+}

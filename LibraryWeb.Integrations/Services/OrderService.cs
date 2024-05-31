@@ -16,6 +16,8 @@ namespace LibraryWeb.Integrations.Services
 
         public bool Add(string[] bookName, int userID, int pickupPointId)
         {
+            var orderDate = DateOnly.FromDateTime(DateTime.Now.Date);
+
             var userOrder = from userBooks in bookName
                             from databaseBooks in _dbContext.Книгиs
                             where databaseBooks.Название == userBooks
@@ -24,7 +26,7 @@ namespace LibraryWeb.Integrations.Services
                                 КодКниги = databaseBooks.КодКниги,
                                 КодПользователя = userID,
                                 КодПунктаВыдачи = pickupPointId,
-                                ДатаЗаказа = DateOnly.FromDateTime(DateTime.Now.Date),
+                                ДатаЗаказа = orderDate,
                                 Статус = "Доставлен"
                             };
 
@@ -34,10 +36,7 @@ namespace LibraryWeb.Integrations.Services
                 _dbContext.SaveChanges();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public List<Заказы> GetAll(int userID) => [.. _dbContext.Заказыs.AsNoTracking().Include(pickup => pickup.КодПунктаВыдачиNavigation).Include(books => books.КодКнигиNavigation).Where(user => user.КодПользователя == userID)];

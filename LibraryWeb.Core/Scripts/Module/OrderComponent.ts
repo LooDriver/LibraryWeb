@@ -1,12 +1,12 @@
-﻿import Book from './BooksComponent';
+﻿
 export default class Order {
 
     private static orderUrl = '/api/order'
 
-    public static AddNewOrder(elementHref: string, pickupPoint: number) {
+    public static AddNewOrder(pickupPoint: number) {
         var orderBooks = [];
-        document.querySelectorAll(`${elementHref}`).forEach(links => {
-            orderBooks.push(Book.clearUrlBook(decodeURI(links.getAttribute('href'))));
+        document.querySelectorAll('td.td-book-name').forEach(data => {
+            orderBooks.push(data.textContent);
         });
         $.post(`${this.orderUrl}/addOrder`, { 'bookName': orderBooks, 'userID': sessionStorage.getItem('userid'), 'selectedPoint': pickupPoint });
     }
@@ -18,18 +18,16 @@ export default class Order {
     }
 
     private static tableOrderFill(orders) {
-        var ordersUser = [];
         var countOrders = 1;
-        orders.forEach(orders => {
-            var bookName = orders.кодКнигиNavigation.название;
-            ordersUser.push('<tr>');
-            ordersUser.push(`<th scope="row">${countOrders++}</th>`);
-            ordersUser.push(`<td><a id="a-redirect-profile-book" class="btn" href="/book/name?${bookName}"</a>${bookName}</td>`);
-            ordersUser.push(`<td>${orders.датаЗаказа}</td>`);
-            ordersUser.push(`<td>${orders.статус}</td>`);
-            ordersUser.push(`<td>${orders.кодПунктаВыдачиNavigation.название}</td>`);
-            ordersUser.push('</tr>');
-        });
-        $('#tbody-profile-table').append(ordersUser.join(""));
+        const orderTable = orders.map(data => `
+            <tr>
+                <th scope="row">${countOrders++}</th>
+                <td><a id="a-redirect-profile-book" class="btn" href="/book/name?${data.кодКнигиNavigation.название}"</a>${data.кодКнигиNavigation.название}</td>
+                <td>${data.датаЗаказа}</td>
+                <td>${data.статус}</td>
+                <td>${data.кодПунктаВыдачиNavigation.название}</td>
+            </tr>
+        `);
+        $('#tbody-profile-table').append(orderTable.join(""));
     }
 }

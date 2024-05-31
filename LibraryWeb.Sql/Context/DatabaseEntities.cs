@@ -3,21 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryWeb.Sql.Context
 {
-
     public partial class DatabaseEntities : DbContext
     {
-        public static string connectionString { get; set; }
-
         public DatabaseEntities(DbContextOptions<DatabaseEntities> options) : base(options)
         {
-
-        }
-
-        public DatabaseEntities()
-        {
-            if (Database.EnsureCreated())
+            if (Database.CanConnect())
             {
                 return;
+            }
+            else
+            {
+                Database.EnsureCreated();
             }
         }
 

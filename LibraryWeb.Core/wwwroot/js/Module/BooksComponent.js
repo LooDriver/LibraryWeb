@@ -13,22 +13,28 @@ class Book {
             .done(data => this.createTileBooks(data));
     }
     static createAboutBook(book) {
-        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-        $('#h2-title-about-book').text(`${book.название}`);
-        $('#p-author-about-book').text(`${book.автор}`);
-        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
-        $('#p-quantity-about-book').text(`${book.наличие}`);
-        $('#input-quantity-about-book').attr('max', `${book.наличие}`);
+        this.setupBookElements(book);
         this.showCommentsIfLoggedIn(book.название);
         if (sessionStorage.getItem('userid') !== undefined) {
             this.setupFavoriteButton(book.название, '/api/favorite/existFavorite');
             this.setupCartButton(book.название, '/api/cart/existCartItem');
         }
     }
+    static setupBookElements(book) {
+        $('#span-information-quantity').text('0');
+        $('#h2-title-about-book').text(`${book.название}`);
+        $('#p-author-about-book').text(`Автор - ${book.автор}`);
+        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
+        $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
+        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
+        $('#p-quantity-about-book').text(`${book.наличие}`);
+        $('#p-description-about-book').text(`${book.описание}`);
+        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
+        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+    }
     static showCommentsIfLoggedIn(bookTitle) {
         Comment.ShowAllComments(bookTitle);
-        sessionStorage.getItem('userid') !== undefined ? $('#form-new-comments').hide() : $('#form-new-comments').show();
+        sessionStorage.getItem('userid') === null ? $('#form-new-comments').hide() : $('#form-new-comments').show();
     }
     static setupFavoriteButton(bookTitle, url) {
         this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');
@@ -45,14 +51,17 @@ class Book {
             <div class="col-md-2 mt-3">
                 <div class="tile">
                     <div class="tile-content">
-                        <div class="tile-book">${book.название}</div>
-                        <button class="btn-about-book" ${book.наличие == 0 ? 'disabled="true"' : ''}>
-                            <img src="data:image/png;base64,${book.обложка}" width="150" height="200" alt="${book.наличие == 0 ? 'Нету в наличии' : 'Обложка'} книги ${book.название}">
+                     <div class="tile-book" style="display:none;">${book.название}</div>
+                        <figure>
+                        <button class="btn-book-tiles" ${book.наличие == 0 ? 'disabled="true"' : ''}>
+                            <img src="data:image/png;base64,${book.обложка}" width="150" height="200">
                         </button>
+                            <figcaption>${book.наличие == 0 ? 'Нету в наличии книги' : ''} ${book.название}</figcaption>
+                        </figure>
                     </div>
                 </div>
             </div>`);
-        $('#tileContainer').append('<div class="row">' + bookTiles.join('') + '</div>');
+        $('#div-book-tiles').append('<div class="row">' + bookTiles.join('') + '</div>');
     }
     static clearUrlBook(bookUrl) {
         return bookUrl.substr((bookUrl.indexOf('?') + 1));
@@ -60,4 +69,3 @@ class Book {
 }
 Book.bookUrl = '/api/books';
 export default Book;
-//# sourceMappingURL=BooksComponent.js.map

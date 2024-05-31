@@ -1,21 +1,20 @@
-﻿import { Logout } from '../main'
+﻿import Auth from '../Module/AuthorizationComponent';
 
 export default class Profile {
 
     private static profileUrl = '/api/profile';
 
     public static ShowProfileInfo() {
-        if (sessionStorage.getItem('userid') != undefined) {
-            $.get(`${this.profileUrl}/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, (data) => {
-                this.SetupElements(data);
-            });
-        }
-        else if (sessionStorage.getItem('commentUsername') != undefined) {
-            $.get(`${this.profileUrl}/commentProfileInformation`, { 'username': sessionStorage.getItem('commentUsername') }, (data) => {
-                this.DisableElements();
-                this.SetupElements(data);
-            });
-        }
+        $.get(`${this.profileUrl}/profileInformation`, { 'userID': sessionStorage.getItem('userid') }, (data) => {
+            this.SetupElements(data);
+        });
+    }
+
+    public static ShowProfileInfoCommentUser() {
+        $.get(`${this.profileUrl}/commentProfileInformation`, { 'username': sessionStorage.getItem('commentUsername') }, (data) => {
+            this.SetupElements(data);
+            this.DisableElements();
+        });
     }
 
     public static EditProfileInfo(name: string, surname: string, username: string) {
@@ -31,14 +30,28 @@ export default class Profile {
         });
     }
 
-    public static EditProfilePassword(password: string) {
-        $.post(`${this.profileUrl}/editPassword`, { 'userID': sessionStorage.getItem('userid'), 'password': password }, () => {
-            alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
-            $('#span-edit-error').empty();
-            Logout();
-        }).fail((error) => {
-            $('#span-edit-error').text(`${error.responseText}`).css('color', 'red');
-        });
+    public static EditProfilePassword(password: string, repeatPassword:string) {
+        if (this.validateUserPassword(password, repeatPassword)) {
+            $.post(`${this.profileUrl}/editPassword`, { 'userID': sessionStorage.getItem('userid'), 'password': password }, () => {
+                alert('Данные успешно изменены. Авторизуйтесь под новыми данными.');
+                Auth.LogoutAccount();
+            }).fail((error) => {
+                this.handleError(`<span>${error.responseText}</span>`, $('#div-error-change-message'));
+            });
+        }
+        else {
+            this.handleError(`<span>Пароли должны быть одинаковыми.</span>`, $('#div-error-change-message'));
+        }
+       
+    }
+
+    private static handleError(errorMessage: string, errorElement: JQuery<HTMLElement>) {
+        errorElement.empty();
+        errorElement.append(errorMessage).css('color', 'red');
+    }
+
+    private static validateUserPassword(password: string, repeatPassword: string) {
+        return password == repeatPassword;
     }
 
     private static DisableElements() {
@@ -47,7 +60,7 @@ export default class Profile {
         $('#btn-profile-information-edit').hide();
         $('#btn-profile-information-password-edit').hide();
         $('#btn-logout-profile').hide();
-
+        $('#input-form-edit-login').val('*********');
         $('.form-user-information :input').attr('disabled', 'true');
     }
 
@@ -61,14 +74,5 @@ export default class Profile {
         $('#img-photo-edit-modal').attr('src', `data:image/png;base64,${data.photo}`);
         $('#img-photo-edit-modal-medium').attr('src', `data:image/png;base64,${data.photo}`);
         $('#img-photo-edit-modal-small').attr('src', `data:image/png;base64,${data.photo}`);
-    }
-
-    public static Checker() {
-        if (sessionStorage.getItem('userid') != null) {
-            return true;
-        }
-        else if (sessionStorage.getItem('commentUsername') != null) {
-            return false;
-        }
     }
 }

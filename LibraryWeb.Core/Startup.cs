@@ -51,10 +51,11 @@ namespace LibraryWeb.Core
             services.AddAuthorization();
 
             services.AddTransient<IBookRepository<Книги>, BookService>();
+            services.AddTransient<IPickupPointRepository<ПунктыВыдачи>, PickupPointService>();
+
             services.AddScoped<ICartRepository<Корзина>, CartService>();
             services.AddScoped<IFavoriteRepository<Избранное>, FavoriteService>();
             services.AddScoped<IOrderRepository<Заказы>, OrderService>();
-            services.AddScoped<IPickupPointRepository<ПунктыВыдачи>, PickupPointService>();
             services.AddScoped<IProfileRepository<Пользователи>, ProfileService>();
             services.AddScoped<IAuthRepository<Пользователи>, AuthService>();
             services.AddScoped<ICommentsRepository<Комментарии>, CommentService>();
@@ -91,7 +92,7 @@ namespace LibraryWeb.Core
             else
             {
                 services.AddDbContextPool<DatabaseEntities>(options =>
-                    options.UseSqlServer(_configuration.GetConnectionString("MSSQLSERVER")));
+                    options.UseSqlite(_configuration.GetConnectionString("SQLITE")));
             }
         }
     }

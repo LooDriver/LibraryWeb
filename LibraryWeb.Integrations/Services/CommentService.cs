@@ -16,20 +16,19 @@ namespace LibraryWeb.Integrations.Services
 
         public async Task<bool> AddNewCommentAsync(string comment, int userID, string bookName)
         {
-            var book = _dbContext.Книгиs.FirstOrDefault(books => books.Название == bookName);
-            if (book is null) return false;
-            else
+            var book = await _dbContext.Книгиs.SingleOrDefaultAsync(books => books.Название == bookName);
+            if (book is null)
+                return false;
+
+            Комментарии комментарии = new Комментарии
             {
-                Комментарии комментарии = new Комментарии
-                {
-                    КодКниги = book.КодКниги,
-                    КодПользователя = userID,
-                    ТекстКомментария = comment
-                };
-                await _dbContext.Комментарииs.AddAsync(комментарии);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
+                КодКниги = book.КодКниги,
+                КодПользователя = userID,
+                ТекстКомментария = comment
+            };
+            await _dbContext.Комментарииs.AddAsync(комментарии);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public List<Комментарии> GetAll(string bookName) => [.. _dbContext.Комментарииs.Include(users => users.КодПользователяNavigation).Where(books => books.КодКнигиNavigation.Название == bookName).Select(comment => comment)];

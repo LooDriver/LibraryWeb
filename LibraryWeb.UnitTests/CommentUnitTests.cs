@@ -39,7 +39,7 @@ namespace LibraryWeb.UnitTests
         {
             _commentServices.Setup(repo => repo.AddNewCommentAsync("Test", 1, "TestBook")).ReturnsAsync(true);
 
-            var result = await _commentController.AddNewComments("Test", 1, "TestBook");
+            var result = await _commentController.AddNewCommentsAsync("Test", 1, "TestBook");
 
             var okResult = Assert.IsType<OkResult>(result);
 
@@ -51,7 +51,7 @@ namespace LibraryWeb.UnitTests
         {
             _commentServices.Setup(repo => repo.AddNewCommentAsync("Test", 1, "TestBook")).ReturnsAsync(false);
 
-            var result = await _commentController.AddNewComments("Test", 1, "TestBook");
+            var result = await _commentController.AddNewCommentsAsync("Test", 1, "TestBook");
 
             var badResult = Assert.IsType<BadRequestResult>(result);
 

@@ -3,16 +3,16 @@
 }
 
 <div class="row" id="div-about-book">
-    <div class="col-md-4 text-center">
+    <div class="col-md text-center">
         <img src="" alt="Обложка книги" id="img-cover-about-book" />
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9">
         <div class="book-details">
             <h2 id="h2-title-about-book"></h2>
             <p id="p-author-about-book" class="text-muted"></p>
+            <p id="p-publisher-about-book" class="text-muted"></p>
             <p id="p-genre-about-book"></p>
             <p id="p-available-about-book"></p>
-            <p id="p-quantity-about-book" style="display: none;"></p>
         </div>
         <div class="book-description">
             <hr />
@@ -20,17 +20,15 @@
             <p id="p-description-about-book"></p>
             <hr />
         </div>
-        <div class="text-center">
-            <div class="input-group mb-3 col-auto">
-                <input type="number" class="form-control" id="input-quantity-about-book" placeholder="Количество" min="1" value="1">
-            </div>
-            <span id="span-information-quantity"></span>
+        <p>Количество книг: <span id="span-information-quantity"></span></p>
+        <div class="input-group mb-3 col-auto">
+            <input type="range" id="input-range-quantity-about-book" placeholder="Количество" min="1" value="1">
         </div>
-        <a class="btn btn-primary" id="btn-favorite-about-book">Добавить в избранное</a>
-        <a class="btn btn-primary" id="btn-cart-book">Добавить в корзину</a>
+        <a class="btn btn-outline-primary" id="btn-favorite-about-book">Добавить в избранное</a>
+        <a class="btn btn-outline-primary" id="btn-cart-book">Добавить в корзину</a>
         <hr/>
         <div class="container mt-5">
-            <div id="form-new-comments" style="display: none;">
+            <div id="form-new-comments">
                 <label for="comment">Ваш комментарий:</label><br>
                 <textarea class="form-control" id="textarea-user-comment" name="comment" rows="4" cols="50"></textarea><br>
                 <button class="btn btn-primary" id="btn-new-comment" type="button">Оставить комментарий</button>

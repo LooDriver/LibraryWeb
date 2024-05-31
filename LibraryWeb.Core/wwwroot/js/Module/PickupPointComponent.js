@@ -1,4 +1,11 @@
 class PickupPoint {
+    static SetPickupPointData() {
+        if (!sessionStorage.getItem('pickup_point_data')) {
+            $.get(`/api/pickup/allPickupPoints`, data => {
+                sessionStorage.setItem('pickup_point_data', JSON.stringify(data));
+            });
+        }
+    }
     static ShowPickupPoints() {
         $.get(`${this.pickupUrl}/allPickupPoints`, ((data) => {
             const pickupElements = data.map(pickup => `
@@ -9,12 +16,10 @@ class PickupPoint {
                         <p class="card-text">${pickup.адрес}</p>
                         </div>
                     </div>
-                </div>
-            `);
+                </div>`);
             $('#div-show-pickup').append(pickupElements.join(""));
         }));
     }
 }
 PickupPoint.pickupUrl = '/api/pickup';
 export default PickupPoint;
-//# sourceMappingURL=PickupPointComponent.js.map

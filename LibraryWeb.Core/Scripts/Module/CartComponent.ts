@@ -5,21 +5,14 @@ export default class Cart {
     private static cartUrl = '/api/cart';
 
     public static AddNewCartItem(orderName: string, quantity = 0) {
-        const maxQuantity = Number.parseInt($('#p-quantity-about-book').text().toString());
         checkIfFavoriteOrCartExists(orderName, `${this.cartUrl}/existCartItem`).then((result) => {
             if (result) {
                 $('#btn-cart-book').text('Удалить из корзины');
             }
             else {
-                if (quantity > maxQuantity || quantity <= 0) {
-                    $('#span-information-quantity').text(`Количество не может быть больше максимального значения ${$('#input-quantity-about-book').attr('max')} или меньше нуля`).css('color', 'red');
-                    $('#input-quantity-about-book').val('1');
-                }
-                else {
-                    $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
-                        window.location.reload();
-                    });
-                }
+                $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
+                    window.location.reload();
+                });
             }
         });
     }
@@ -35,40 +28,41 @@ export default class Cart {
             window.location.reload();
         });
     }
-
     public static ClearCart() {
+    
         $.post(`${this.cartUrl}/clearCart`, { 'userID': sessionStorage.getItem('userid') }, () => {
             window.location.reload();
         });
     }
 
+    private static cartElementsCreate(cartData) {
 
-    private static cartElementsCreate(cart) {
-        var arr = [];
-        var sumCostBook = 0;
         var countCartBooks = 1;
+        const cartTableElem = cartData.map(cart => `
+            <tr>
+                <th scope="row">${countCartBooks++}</th>
+                    <td class="td-book-name">${cart.кодКнигиNavigation.название}</td>
+                    <td id="td-cart-book-cost">${cart.кодКнигиNavigation.цена} руб.</td>
+                    <td id="td-cart-book-count">${cart.количество}</td>
+                    <td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>
+            </tr>
+        `);
 
-        cart.forEach(cart => {
-            sumCostBook += cart.кодКнигиNavigation.цена * cart.количество;
-            arr.push('<tr>');
-            arr.push(`<th scope="row">${countCartBooks++}</th>`);
-            arr.push(`<td class="td-book-name"><a class="btn" id="a-redirect-cart-about-book" href="/book/name?${cart.кодКнигиNavigation.название}"</a>${cart.кодКнигиNavigation.название}</td>`);
-            arr.push(`<td>${cart.кодКнигиNavigation.цена} руб.</td>`);
-            arr.push(`<td>${cart.количество}</td>`);
-            arr.push(`<td><button type="button" class="btn btn-sm btn-danger" id="btn-delete-cart-item">Удалить</button></td>`);
-            arr.push('</tr>');
+        $('#tbody-cart-items').append(cartTableElem.join(""));
+        this.calculateFinalSum(cartData);
+    }
+
+    private static calculateFinalSum(cartData) {
+        var totalSum = 0;
+        cartData.forEach(cart => {
+            totalSum += cart.кодКнигиNavigation.цена * cart.количество;
         });
-
-        $('#h4-final-sum').text(`Общая сумма - ${sumCostBook} руб.`);
-        $('#tbody-cart-items').append(arr.join(""));
+        $('#h4-final-sum').text(`Общая сумма - ${isNaN(totalSum) ? 0 : totalSum} руб.`);
     }
 
     public static selectFillPickupPoint() {
-        var arr = [];
         var data = JSON.parse(sessionStorage.getItem('pickup_point_data'));
-        data.forEach(data => {
-            arr.push(`<option>${data.адрес} | ${data.название}</option>`);
-        });
-        $('#select-pickup-point').append(arr.join(""));
+        const selectHtmlElem = data.map(select => `<option>${select.адрес} | ${select.название}</option>`)
+        $('#select-pickup-point').append(selectHtmlElem.join(''));
     }
 }
