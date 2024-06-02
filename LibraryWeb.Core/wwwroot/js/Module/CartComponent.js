@@ -1,15 +1,7 @@
-import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
 class Cart {
     static AddNewCartItem(orderName, quantity = 0) {
-        checkIfFavoriteOrCartExists(orderName, `${this.cartUrl}/existCartItem`).then((result) => {
-            if (result) {
-                $('#btn-cart-book').text('Удалить из корзины');
-            }
-            else {
-                $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
-                    window.location.reload();
-                });
-            }
+        $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
+            window.location.reload();
         });
     }
     static ShowCartList() {

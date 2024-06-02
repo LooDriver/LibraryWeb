@@ -1,19 +1,10 @@
-﻿import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
-
-export default class Cart {
+﻿export default class Cart {
 
     private static cartUrl = '/api/cart';
 
     public static AddNewCartItem(orderName: string, quantity = 0) {
-        checkIfFavoriteOrCartExists(orderName, `${this.cartUrl}/existCartItem`).then((result) => {
-            if (result) {
-                $('#btn-cart-book').text('Удалить из корзины');
-            }
-            else {
-                $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
-                    window.location.reload();
-                });
-            }
+        $.post(`${this.cartUrl}/addCartItem`, { 'bookName': orderName, 'userID': sessionStorage.getItem('userid'), 'quantity': quantity }, () => {
+            window.location.reload();
         });
     }
 

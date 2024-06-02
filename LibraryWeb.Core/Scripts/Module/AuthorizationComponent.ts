@@ -7,7 +7,7 @@ export default class AuthFacade {
 
     public static Login(username: string, password: string) {
 
-        if (this.validateUserInformation(username, password)) {
+        if (username !== '' && password !== '') {
             $.post(`${this.authUrl}/login`, { 'username': username, 'password': password }, ((data) => {
                 setCookie("auth_key", data.auth_key);
                 setCookie("permission", data.role);
@@ -22,7 +22,6 @@ export default class AuthFacade {
         } else {
             this.handleError(`<span>Оба поля обязательны к заполнению.</span>`, $('#div-login-error-message'));
         }
-       
     }
 
     public static Register(surname: string, name: string, username: string, password: string) {
@@ -51,7 +50,6 @@ export default class AuthFacade {
         } else {
             this.handleError('<span>Логин является обязательным к заполнению.</span>', $('#div-recovery-error-message'));
         }
-       
     }
 
     public static LogoutAccount() {
@@ -72,7 +70,7 @@ export default class AuthFacade {
     }
 
     public static ChangeRecoveryAccount(password: string, repeatPassword:string) {
-        if (this.validateUserNewPassword(password, repeatPassword)) {
+        if (password == repeatPassword) {
             $.post(`${this.authUrl}/recoveryAccount`, { 'username': sessionStorage.getItem('userlogin-recovery'), 'newPassword': password }, (() => {
                 sessionStorage.removeItem('userlogin-recovery');
                 alert('Данные для входа данного аккаунта изменены.\nИспользуйте новые данные для входа');
@@ -119,13 +117,5 @@ export default class AuthFacade {
 
         $('#div-recovery-main-content-modal').empty();
         $('#div-recovery-main-content-modal').append(passwordForm);
-    }
-
-    private static validateUserInformation(username: string, password: string) {
-        return username != '' && password != '' ? true : false;
-    }
-
-    private static validateUserNewPassword(password: string, repeatPassword: string) {
-        return password == repeatPassword;
     }
 }

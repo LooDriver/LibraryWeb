@@ -1,7 +1,7 @@
 import { setCookie, getCookie, deleteCookie } from '../Utils/cookieUtils';
 class AuthFacade {
     static Login(username, password) {
-        if (this.validateUserInformation(username, password)) {
+        if (username !== '' && password !== '') {
             $.post(`${this.authUrl}/login`, { 'username': username, 'password': password }, ((data) => {
                 setCookie("auth_key", data.auth_key);
                 setCookie("permission", data.role);
@@ -55,7 +55,7 @@ class AuthFacade {
         this.handleError('<span>Код неверный. Проверьте правильность введенного кода.</span>', $('#div-recovery-error-message'));
     }
     static ChangeRecoveryAccount(password, repeatPassword) {
-        if (this.validateUserNewPassword(password, repeatPassword)) {
+        if (password == repeatPassword) {
             $.post(`${this.authUrl}/recoveryAccount`, { 'username': sessionStorage.getItem('userlogin-recovery'), 'newPassword': password }, (() => {
                 sessionStorage.removeItem('userlogin-recovery');
                 alert('Данные для входа данного аккаунта изменены.\nИспользуйте новые данные для входа');
@@ -98,12 +98,6 @@ class AuthFacade {
         `;
         $('#div-recovery-main-content-modal').empty();
         $('#div-recovery-main-content-modal').append(passwordForm);
-    }
-    static validateUserInformation(username, password) {
-        return username != '' && password != '' ? true : false;
-    }
-    static validateUserNewPassword(password, repeatPassword) {
-        return password == repeatPassword;
     }
 }
 AuthFacade.authUrl = '/api/auth';

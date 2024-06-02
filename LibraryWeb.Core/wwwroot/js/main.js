@@ -126,11 +126,11 @@ $(function () {
             $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
         switch (currentUrl) {
             case '/': {
+                PickupPoint.SetPickupPointData();
                 Book.GetAllBooks();
                 break;
             }
             case '/cart': {
-                PickupPoint.SetPickupPointData();
                 Cart.ShowCartList();
                 Cart.selectFillPickupPoint();
                 break;
