@@ -18,7 +18,7 @@ class AuthFacade {
     }
     static Register(surname, name, username, password) {
         $.post(`${this.authUrl}/register`, { 'surname': surname, 'name': name, 'username': username, 'password': password }, (() => {
-            window.location.reload();
+            this.Login(username, password);
         })).fail((error) => {
             this.handleError(`<span>${error.responseText}</span><br>`, $('#div-register-error-message'));
         });
