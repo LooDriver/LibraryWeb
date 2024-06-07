@@ -1,30 +1,21 @@
-﻿import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
-
-export default class Favorite {
+﻿export default class Favorite {
 
     private static favoriteUrl = '/api/favorite';
 
     public static AddBookToFavorite(bookName: string) {
-        checkIfFavoriteOrCartExists(bookName, `${this.favoriteUrl}/existFavorite`).then((result) => {
-            if (result) {
-                $('#btn-favorite-about-book').text('Удалить из избранного');
-            } else {
-                $.post(`${this.favoriteUrl}/addFavorite`, { 'nameBook': bookName, 'userID': sessionStorage.getItem('userid') }, () => {
-                    window.location.reload();
-                });
-            }
+        $.post(`${this.favoriteUrl}/addFavorite`, { 'nameBook': bookName, 'userID': sessionStorage.getItem('userid') }, () => {
+            window.location.reload();
         });
     }
 
     public static ShowListFavorite() {
         $.get(`${this.favoriteUrl}/getFavorite`, { 'userID': sessionStorage.getItem('userid') }, ((data) => {
-            var arr = [];
-            data.forEach(data => {
-                arr.push('<li>');
-                arr.push(`<a class="btn text-align-center" href="/book/name?${encodeURIComponent(data.кодКнигиNavigation.название)}" id="a-redirect-about-book">${data.кодКнигиNavigation.название}</a>`);
-                arr.push('</li>');
-            });
-            $('#div-favorite-list').append(arr.join(""));
+            const favoriteElement = data.map(favoriteData => `
+                <li>
+                    <a class="btn text-align-center" href="/book/name?${encodeURIComponent(favoriteData.кодКнигиNavigation.название)}" id="a-redirect-about-book">${favoriteData.кодКнигиNavigation.название}</a>
+                </li>
+            `);
+            $('#div-favorite-list').append(favoriteElement.join(""));
         }));
     }
 

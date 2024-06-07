@@ -42,7 +42,6 @@ export default class Profile {
         else {
             this.handleError(`<span>Пароли должны быть одинаковыми.</span>`, $('#div-error-change-message'));
         }
-       
     }
 
     private static handleError(errorMessage: string, errorElement: JQuery<HTMLElement>) {

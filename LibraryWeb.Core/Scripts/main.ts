@@ -147,11 +147,11 @@ $(function () {
 
         switch (currentUrl) {
             case '/': {
+                PickupPoint.SetPickupPointData();
                 Book.GetAllBooks();
                 break;
             }
             case '/cart': {
-                PickupPoint.SetPickupPointData();
                 Cart.ShowCartList();
                 Cart.selectFillPickupPoint();
                 break;

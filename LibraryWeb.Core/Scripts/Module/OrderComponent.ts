@@ -1,5 +1,4 @@
-﻿
-export default class Order {
+﻿export default class Order {
 
     private static orderUrl = '/api/order'
 
