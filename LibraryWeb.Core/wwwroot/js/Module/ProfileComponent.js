@@ -62,3 +62,4 @@ class Profile {
 }
 Profile.profileUrl = '/api/profile';
 export default Profile;
+//# sourceMappingURL=ProfileComponent.js.map

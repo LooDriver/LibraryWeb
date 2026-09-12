@@ -1,49 +1,49 @@
-﻿import Auth from './Module/AuthorizationComponent';
-import Comment from './Module/CommentComponent';
+﻿// import Auth from './Module/AuthorizationComponent';
+// import Comment from './Module/CommentComponent';
 import * as Book from './Module/BooksComponent';
-import Favorite from './Module/FavoriteComponent';
-import Order from './Module/OrderComponent';
-import Pickup from './Module/PickupPointComponent';
-import Cart from './Module/CartComponent';
-import Profile from './Module/ProfileComponent';
-//Загрузка компонентов для корректной работы сайта
+// import Favorite from './Module/FavoriteComponent';
+// import Order from './Module/OrderComponent';
+// import Pickup from './Module/PickupPointComponent';
+// import Cart from './Module/CartComponent';
+// import Profile from './Module/ProfileComponent';
+// //Загрузка компонентов для корректной работы сайта
 
-//Загрузка компонента для работы с "куки"
-import { getCookie } from './Utils/cookieUtils';
-import PickupPoint from './Module/PickupPointComponent';
+// //Загрузка компонента для работы с "куки"
+// import { getCookie } from './Utils/cookieUtils';
+// import PickupPoint from './Module/PickupPointComponent';
 
-function readFileAsByteArray(input: HTMLInputElement, callback: (byteArray: Uint8Array) => void) {
-    const reader = new FileReader();
+// function readFileAsByteArray(input: HTMLInputElement, callback: (byteArray: Uint8Array) => void) {
+//     const reader = new FileReader();
 
-    const files = $(input).prop('files');
+//     const files = $(input).prop('files');
 
-    if (files && files.length > 0) {
-        const file = files[0];
+//     if (files && files.length > 0) {
+//         const file = files[0];
 
-        reader.onload = (event) => {
-            const arrayBuffer = event.target?.result as ArrayBuffer;
-            const byteArray = new Uint8Array(arrayBuffer);
-            callback(byteArray);
-        };
+//         reader.onload = (event) => {
+//             const arrayBuffer = event.target?.result as ArrayBuffer;
+//             const byteArray = new Uint8Array(arrayBuffer);
+//             callback(byteArray);
+//         };
 
-        reader.readAsArrayBuffer(file);
-    }
-}
+//         reader.readAsArrayBuffer(file);
+//     }
+// }
 
-function byteArrayToBase64(byteArray: Uint8Array): Promise<string | null> {
-    return new Promise((resolve) => {
-        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
-        const reader = new FileReader();
-        reader.onload = () => {
-            if (typeof reader.result === 'string') {
-                resolve(reader.result.split(',')[1]);
-            } else {
-                resolve(null);
-            }
-        };
-        reader.readAsDataURL(blob);
-    });
-}
+// function byteArrayToBase64(byteArray: Uint8Array): Promise<string | null> {
+//     return new Promise((resolve) => {
+//         const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+//         const reader = new FileReader();
+//         reader.onload = () => {
+//             if (typeof reader.result === 'string') {
+//                 resolve(reader.result.split(',')[1]);
+//             } else {
+//                 resolve(null);
+//             }
+//         };
+//         reader.readAsDataURL(blob);
+//     });
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
     // $('#btn-new-comment').on('click', function (event) {
@@ -131,44 +131,45 @@ document.addEventListener('DOMContentLoaded', () => {
     //     }
     // });
 
-        const currentUrl = window.location.href.substring((window.location.href.indexOf('8') + 1));
+    const currentUrl = window.location.href.substring((window.location.href.indexOf('8') + 1));
 
-        // if (getCookie('permission') === '1') $('#a-admin-panel').removeAttr('style');
+    // if (getCookie('permission') === '1') $('#a-admin-panel').removeAttr('style');
 
-        // $('#p-user-login').text(sessionStorage.getItem('userlogin') ? `Добро пожаловать - ${sessionStorage.getItem('userlogin')}` : 'Войти');
+    // $('#p-user-login').text(sessionStorage.getItem('userlogin') ? `Добро пожаловать - ${sessionStorage.getItem('userlogin')}` : 'Войти');
 
-        // if (window.location.href.includes('/book/name')) Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
+    if (window.location.href.includes('/book/name')) Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
 
-        // if (sessionStorage.getItem('userlogin')) $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
+    // if (sessionStorage.getItem('userlogin')) $('#btn-login').removeAttr('data-bs-toggle data-bs-target').attr('href', '/profile');
 
-        switch (currentUrl) {
-            case '/': {
-                // PickupPoint.SetPickupPointData();
-                Book.GetAllBooks();
-                break;
-            }
-            case '/cart': {
-                // Cart.ShowCartList();
-                // Cart.selectFillPickupPoint();
-                break;
-            }
-            case '/profile': {
-                // Order.ShowOrders()
-                // Profile.ShowProfileInfo();
-                break;
-            }
-            case '/pickup-point': {
-                // Pickup.ShowPickupPoints();
-                break;
-            }
-            case '/profileComment': {
-                // if (sessionStorage.getItem('commentUsername') === '') {
-                //     window.location.href = '/';
-                // }
-                // Profile.ShowProfileInfoCommentUser();
-                break;
-            }
+    switch (currentUrl) {
+        case '/': {
+            // PickupPoint.SetPickupPointData();
+            Book.GetAllBooks();
+            if (window.location.href.includes('/book/name')) Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
+            break;
         }
+        case '/cart': {
+            // Cart.ShowCartList();
+            // Cart.selectFillPickupPoint();
+            break;
+        }
+        case '/profile': {
+            // Order.ShowOrders()
+            // Profile.ShowProfileInfo();
+            break;
+        }
+        case '/pickup-point': {
+            // Pickup.ShowPickupPoints();
+            break;
+        }
+        case '/profileComment': {
+            // if (sessionStorage.getItem('commentUsername') === '') {
+            //     window.location.href = '/';
+            // }
+            // Profile.ShowProfileInfoCommentUser();
+            break;
+        }
+    }
     // $('#btn-code-verification').on('click', function (event) {
     //     event.preventDefault();
     //     Auth.RecoveryAccount($('#input-form-username-recovery').val().toString());
@@ -217,9 +218,18 @@ document.addEventListener('DOMContentLoaded', () => {
     //     $('#span-information-quantity').text($(event.target).val().toString());
     // });
 
+    document.addEventListener('click', (event: MouseEvent) => {
+        const target = (event.target as HTMLElement).closest<HTMLElement>(
+            'div-book-tiles, .btn-book-tiles'
+        );
+        if (!target) return;
+        const bookTile = target.closest('.tile')?.querySelector('.tile-book')?.textContent?.trim();
+        Book.GetCurrentBookByName(bookTile);
+
+    });
+
     // $('#div-book-tiles').on('click', '.btn-book-tiles', function (event) {
     //     event.preventDefault();
-    //     Book.GetCurrentBookByName($(this).closest('.tile').find('.tile-book').text());
 
     // });
     // $('#btn-order-success').on('click', function (event) {

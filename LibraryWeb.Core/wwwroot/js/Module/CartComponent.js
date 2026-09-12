@@ -48,3 +48,4 @@ class Cart {
 }
 Cart.cartUrl = '/api/cart';
 export default Cart;
+//# sourceMappingURL=CartComponent.js.map

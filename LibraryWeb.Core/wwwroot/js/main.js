@@ -1,38 +1,13 @@
 import * as Book from './Module/BooksComponent';
-function readFileAsByteArray(input, callback) {
-    const reader = new FileReader();
-    const files = $(input).prop('files');
-    if (files && files.length > 0) {
-        const file = files[0];
-        reader.onload = (event) => {
-            var _a;
-            const arrayBuffer = (_a = event.target) === null || _a === void 0 ? void 0 : _a.result;
-            const byteArray = new Uint8Array(arrayBuffer);
-            callback(byteArray);
-        };
-        reader.readAsArrayBuffer(file);
-    }
-}
-function byteArrayToBase64(byteArray) {
-    return new Promise((resolve) => {
-        const blob = new Blob([byteArray], { type: 'application/octet-stream' });
-        const reader = new FileReader();
-        reader.onload = () => {
-            if (typeof reader.result === 'string') {
-                resolve(reader.result.split(',')[1]);
-            }
-            else {
-                resolve(null);
-            }
-        };
-        reader.readAsDataURL(blob);
-    });
-}
 document.addEventListener('DOMContentLoaded', () => {
     const currentUrl = window.location.href.substring((window.location.href.indexOf('8') + 1));
+    if (window.location.href.includes('/book/name'))
+        Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
     switch (currentUrl) {
         case '/': {
             Book.GetAllBooks();
+            if (window.location.href.includes('/book/name'))
+                Book.createAboutBook(JSON.parse(sessionStorage.getItem('bookData')));
             break;
         }
         case '/cart': {
@@ -57,6 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (rawHref) {
             Book.GetCurrentBookByName(Book.clearUrlBook(decodeURI(rawHref)));
         }
+    });
+    document.addEventListener('click', (event) => {
+        var _a, _b, _c;
+        const target = event.target.closest('div-book-tiles, .btn-book-tiles');
+        if (!target)
+            return;
+        const bookTile = (_c = (_b = (_a = target.closest('.tile')) === null || _a === void 0 ? void 0 : _a.querySelector('.tile-book')) === null || _b === void 0 ? void 0 : _b.textContent) === null || _c === void 0 ? void 0 : _c.trim();
+        Book.GetCurrentBookByName(bookTile);
     });
 });
 //# sourceMappingURL=main.js.map

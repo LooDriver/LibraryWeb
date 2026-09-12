@@ -8,13 +8,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
-import Comment from './CommentComponent';
+import * as Comment from './CommentComponent';
 const BOOK_API_ENDPOINT = '/api/books';
 export function GetCurrentBookByName(bookTitle) {
-    $.get(this.bookUrl, { 'name': bookTitle })
-        .done(data => {
-        sessionStorage.setItem('bookData', JSON.stringify(data));
-        window.location.href = `/book/name?${data.название}`;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const queryParams = new URLSearchParams({ name: bookTitle }).toString();
+            const response = yield fetch(`${BOOK_API_ENDPOINT}?${queryParams}`);
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+            const bookData = yield response.json();
+            sessionStorage.setItem('bookData', JSON.stringify(bookData));
+            window.location.href = `/book/name?${encodeURIComponent(bookData.название)}`;
+        }
+        catch (error) {
+            console.error(`Сетевая ошибка или сбой запроса: ${error}`);
+        }
     });
 }
 export function GetAllBooks() {
@@ -33,28 +43,40 @@ export function GetAllBooks() {
     });
 }
 export function createAboutBook(book) {
-    this.setupBookElements(book);
-    this.showCommentsIfLoggedIn(book.название);
-    if (sessionStorage.getItem('userid') !== undefined) {
-        this.setupFavoriteButton(book.название, '/api/favorite/existFavorite');
-        this.setupCartButton(book.название, '/api/cart/existCartItem');
-    }
+    setupBookElements(book);
+    showCommentsIfLoggedIn(book.название);
 }
 function setupBookElements(book) {
-    $('#span-information-quantity').text('0');
-    $('#h2-title-about-book').text(`${book.название}`);
-    $('#p-author-about-book').text(`Автор - ${book.автор}`);
-    $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-    $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
-    $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
-    $('#p-quantity-about-book').text(`${book.наличие}`);
-    $('#p-description-about-book').text(`${book.описание}`);
-    $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-    $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+    setText('span-information-quantity', '0');
+    setText('h2-title-about-book', `${book.название}`);
+    setText('p-author-about-book', `Автор - ${book.автор}`);
+    setText('p-genre-about-book', `Жанр - ${book.жанр}`);
+    setText('p-publisher-about-book', `Издательство - ${book.кодИздательстваNavigation.название}`);
+    setText('p-available-about-book', `Цена - ${book.цена} руб.`);
+    setText('p-quantity-about-book', `${book.наличие}`);
+    setText('p-description-about-book', `${book.описание}`);
+    setAttr('img-cover-about-book', 'src', `data:image/png;base64,${book.обложка}`);
+    setAttr('input-range-quantity-about-book', 'max', `${book.наличие}`);
+}
+function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.textContent = value;
+    }
+}
+function setAttr(id, attrName, newAttr) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.setAttribute(attrName, newAttr);
+    }
 }
 function showCommentsIfLoggedIn(bookTitle) {
     Comment.ShowAllComments(bookTitle);
-    sessionStorage.getItem('userid') === null ? $('#form-new-comments').hide() : $('#form-new-comments').show();
+    const isLoggedIn = sessionStorage.getItem('userid') !== null;
+    const commentsForm = document.getElementById('form-new-comments');
+    if (commentsForm) {
+        commentsForm.style.display = isLoggedIn ? '' : 'none';
+    }
 }
 function setupFavoriteButton(bookTitle, url) {
     this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');

@@ -22,3 +22,4 @@ class Favorite {
 }
 Favorite.favoriteUrl = '/api/favorite';
 export default Favorite;
+//# sourceMappingURL=FavoriteComponent.js.map

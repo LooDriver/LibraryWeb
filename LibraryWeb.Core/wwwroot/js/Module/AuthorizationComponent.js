@@ -103,3 +103,4 @@ class AuthFacade {
 AuthFacade.authUrl = '/api/auth';
 AuthFacade.generatedCode = '';
 export default AuthFacade;
+//# sourceMappingURL=AuthorizationComponent.js.map

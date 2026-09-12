@@ -23,3 +23,4 @@ class PickupPoint {
 }
 PickupPoint.pickupUrl = '/api/pickup';
 export default PickupPoint;
+//# sourceMappingURL=PickupPointComponent.js.map

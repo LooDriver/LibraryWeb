@@ -19,3 +19,4 @@ export function deleteCookie(name) {
     date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
     document.cookie = name + "=; expires=" + date.toUTCString() + "; path=/";
 }
+//# sourceMappingURL=cookieUtils.js.map
