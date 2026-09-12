@@ -201,7 +201,7 @@ function ShowAllComments(book) {
       const queryParams = new URLSearchParams({
         bookname: book
       }).toString();
-      const response = yield fetch(`${COMMENT_API_ENDPOINT}?${queryParams}`);
+      const response = yield fetch(`${COMMENT_API_ENDPOINT}/getAllComments?${queryParams}`);
       if (!response.ok) {
         throw new Error(`Ошибка HTTP: ${response.status}`);
       }
@@ -218,7 +218,7 @@ function createComments(comments) {
                     <a class="btn a-redirect-comment-user-profile"><span class="author">${comment.кодПользователяNavigation.логин}</span></a>
                     <div class="content">${comment.текстКомментария}</div>
                 </div>`);
-  $('#section-users-comments').append(commentHtmlView.join(''));
+  document.getElementById('section-users-comments').insertAdjacentHTML('beforeend', commentHtmlView.join(''));
 }
 
 /***/ }),
