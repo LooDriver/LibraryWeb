@@ -3,6 +3,7 @@ const path = require('path')
 
 module.exports = {
     entry: './wwwroot/js/main.js',
+    devtool: 'source-map',
     module: {
         rules: [
             { test: /\.(js)$/, use: 'babel-loader' }

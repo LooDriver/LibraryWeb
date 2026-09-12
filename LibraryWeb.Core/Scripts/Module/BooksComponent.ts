@@ -1,68 +1,75 @@
 ﻿import { checkIfFavoriteOrCartExists } from '../Utils/ValidationFavoriteAndCartUtils';
 import Comment from './CommentComponent';
 
-export default class Book {
+const BOOK_API_ENDPOINT = '/api/books';
 
-    private static bookUrl = '/api/books';
+export function GetCurrentBookByName(bookTitle: string) {
+    $.get(this.bookUrl, { 'name': bookTitle })
+        .done(data => {
+            sessionStorage.setItem('bookData', JSON.stringify(data));
+            window.location.href = `/book/name?${data.название}`;
+        });
+}
 
-    public static GetCurrentBookByName(bookTitle: string) {
-        $.get(this.bookUrl, { 'name': bookTitle })
-            .done(data => {
-                sessionStorage.setItem('bookData', JSON.stringify(data));
-                window.location.href = `/book/name?${data.название}`;
-            });
-    }
-
-    public static GetAllBooks() {
-        $.get(`${this.bookUrl}/allBooks`)
-            .done(data => this.createTileBooks(data));
-    }
-
-    public static createAboutBook(book) {
-
-        this.setupBookElements(book);
-
-        this.showCommentsIfLoggedIn(book.название);
-
-        if (sessionStorage.getItem('userid') !== undefined) {
-            this.setupFavoriteButton(book.название, '/api/favorite/existFavorite');
-            this.setupCartButton(book.название, '/api/cart/existCartItem');
+export async function GetAllBooks(): Promise <void> {
+    try {
+        const response = await fetch(`${BOOK_API_ENDPOINT}/allBooks`);
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP: ${response.status}`);
         }
-    }
 
-    private static setupBookElements(book) {
-        $('#span-information-quantity').text('0');
-        $('#h2-title-about-book').text(`${book.название}`);
-        $('#p-author-about-book').text(`Автор - ${book.автор}`);
-        $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
-        $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
-        $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
-        $('#p-quantity-about-book').text(`${book.наличие}`);
-        $('#p-description-about-book').text(`${book.описание}`);
-        $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
-        $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
-    }
+        const books = await response.json();
+        createTileBooks(books);
+    } catch (error) {
+        console.error(`Сетевая ошибка или сбой запроса: ${error}`);
+    }   
+}
 
-    private static showCommentsIfLoggedIn(bookTitle: string) {
-        Comment.ShowAllComments(bookTitle);
-        sessionStorage.getItem('userid') === null ? $('#form-new-comments').hide() : $('#form-new-comments').show();
-    }
+export function createAboutBook(book) {
 
-    private static setupFavoriteButton(bookTitle: string, url:string) {
-        this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');
-    }
+    this.setupBookElements(book);
 
-    private static setupCartButton(bookTitle: string, url:string) {
-        this.setupButton('#btn-cart-book', bookTitle, url, 'Удалить из корзины', 'Добавить в корзину');
-    }
+    this.showCommentsIfLoggedIn(book.название);
 
-    private static setupButton(buttonId: string, bookTitle: string, url: string, successText: string, failureText: string) {
-        checkIfFavoriteOrCartExists(bookTitle, url)
-            .then(result => $(buttonId).text(result ? successText : failureText));
+    if (sessionStorage.getItem('userid') !== undefined) {
+        this.setupFavoriteButton(book.название, '/api/favorite/existFavorite');
+        this.setupCartButton(book.название, '/api/cart/existCartItem');
     }
+}
 
-    private static createTileBooks(books) {
-        const bookTiles = books.map(book => `
+    function setupBookElements(book) {
+    $('#span-information-quantity').text('0');
+    $('#h2-title-about-book').text(`${book.название}`);
+    $('#p-author-about-book').text(`Автор - ${book.автор}`);
+    $('#p-genre-about-book').text(`Жанр - ${book.жанр}`);
+    $('#p-publisher-about-book').text(`Издательство - ${book.кодИздательстваNavigation.название}`);
+    $('#p-available-about-book').text(`Цена - ${book.цена} руб.`);
+    $('#p-quantity-about-book').text(`${book.наличие}`);
+    $('#p-description-about-book').text(`${book.описание}`);
+    $('#img-cover-about-book').attr('src', `data:image/png;base64,${book.обложка}`);
+    $('#input-range-quantity-about-book').attr('max', `${book.наличие}`);
+}
+
+    function showCommentsIfLoggedIn(bookTitle: string) {
+    Comment.ShowAllComments(bookTitle);
+    sessionStorage.getItem('userid') === null ? $('#form-new-comments').hide() : $('#form-new-comments').show();
+}
+
+    function setupFavoriteButton(bookTitle: string, url: string) {
+    this.setupButton('#btn-favorite-about-book', bookTitle, url, 'Удалить из избранного', 'Добавить в избранное');
+}
+
+    function setupCartButton(bookTitle: string, url: string) {
+    this.setupButton('#btn-cart-book', bookTitle, url, 'Удалить из корзины', 'Добавить в корзину');
+}
+
+    function setupButton(buttonId: string, bookTitle: string, url: string, successText: string, failureText: string) {
+    checkIfFavoriteOrCartExists(bookTitle, url)
+        .then(result => $(buttonId).text(result ? successText : failureText));
+}
+
+    function createTileBooks(books) {
+    const bookTiles = books.map(book => `
             <div class="col-md-2 mt-3">
                 <div class="tile">
                     <div class="tile-content">
@@ -77,10 +84,9 @@ export default class Book {
                 </div>
             </div>`);
 
-        $('#div-book-tiles').append('<div class="row">' + bookTiles.join('') + '</div>');
-    }
+        document.getElementById('div-book-tiles').insertAdjacentHTML('beforeend', '<div class="row">' + bookTiles.join('') + '</div>');
+}
 
-    public static clearUrlBook(bookUrl: string) {
-        return bookUrl.substr((bookUrl.indexOf('?') + 1));
-    }
+export function clearUrlBook(bookUrl: string) {
+    return bookUrl.substr((bookUrl.indexOf('?') + 1));
 }
